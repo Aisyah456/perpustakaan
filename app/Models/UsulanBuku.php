@@ -11,10 +11,14 @@ class UsulanBuku extends Model
 
     protected $fillable = [
         'nama_pengusul',
+        'nim',
+        'fakultas',
+        'program_studi',
         'status',
         'judul_buku',
         'pengarang',
         'penerbit',
+        'tahun_terbit',
         'alasan',
         'verifikasi',
     ];

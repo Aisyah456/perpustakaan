@@ -9,7 +9,7 @@ class LibraryGuideController extends Controller
 {
     public function index()
     {
-        $library_guides = LibraryGuide::all();
-        return view('home.panduan.layanan.index', compact('library_guides'));
+        $struktur = LibraryGuide::with('children')->whereNull('parent_id')->get();
+        return view('home.profil.library.struktur', compact('struktur'));
     }
 }

@@ -7,7 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class TurnitinSubmission extends Model
 {
-    use HasFactory;
+
+    public function faculty()
+    {
+        return $this->belongsTo(Faculty::class, 'id_fakultas');
+    }
+
+    public function major()
+    {
+        return $this->belongsTo(Major::class, 'id_prodi');
+    }
+
+    // use HasFactory;
 
     protected $fillable = [
         'nama',

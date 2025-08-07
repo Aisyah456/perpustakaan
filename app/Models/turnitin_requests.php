@@ -8,9 +8,15 @@ class turnitin_requests extends Model
 {
     protected $fillable = [
         'nama',
-        'nim',
+        'nim_nidn',
         'email',
-        'judul',
-        'file_path',
+        'fakultas_prodi',
+        'judul_naskah',
+        'jenis_dokumen',
+        'file',
+        'catatan_pengguna',
+        'status',
+        'hasil_turnitin',
+        'catatan_admin'
     ];
 }

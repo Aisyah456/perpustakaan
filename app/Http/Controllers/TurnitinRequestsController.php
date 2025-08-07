@@ -2,84 +2,58 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Major;
+use App\Models\Faculty;
+use App\Models\Program;
 use Illuminate\Http\Request;
 use App\Models\turnitin_requests;
-use App\Http\Requests\TurnitinRequest;
+use Illuminate\Support\Facades\Storage;
 
 class TurnitinRequestsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        $turnitin_requests = turnitin_requests::latest()->paginate(10);
-        return view('home.turnitin.from', compact('TurnitinRequests'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        return view('home.turnitin.from');
+        $faculties = Faculty::all();
+        $majors = Major::all();
+
+        return view('home.turnitin.from', compact('faculties', 'programs'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+
+    public function getMajors($faculty_id)
+    {
+        $majors = Program::where('faculty_id', $faculty_id)->pluck('nama_prodi', 'id');
+        return response()->json($majors);
+    }
+
     public function store(Request $request)
     {
         $request->validate([
-            'nama' => 'required|string|max:255',
-            'nim' => 'required|string|max:20',
+            'nama' => 'required|string',
+            'nim_nidn' => 'required|string',
             'email' => 'required|email',
-            'judul' => 'required|string|max:255',
-            'file' => 'required|mimes:pdf,doc,docx|max:2048',
+            'faculty_id' => 'required|exists:faculties,id',
+            'program_id' => 'required|exists:programs,id',
+            'judul_naskah' => 'required|string',
+            'jenis_dokumen' => 'required|in:Skripsi,Tesis,Artikel,Lainnya',
+            'catatan_pengguna' => 'nullable|string',
+            'file' => 'required|mimes:pdf,doc,docx|max:20480', // 20MB
         ]);
 
-        $filePath = $request->file('file')->store('turnitin_uploads', 'public');
+        $filePath = $request->file('file')->store('turnitin', 'public');
 
         turnitin_requests::create([
             'nama' => $request->nama,
-            'nim' => $request->nim,
+            'nim_nidn' => $request->nim_nidn,
             'email' => $request->email,
-            'judul' => $request->judul,
+            'faculty_id' => $request->faculty_id,
+            'program_id' => $request->program_id,
+            'judul_naskah' => $request->judul_naskah,
+            'jenis_dokumen' => $request->jenis_dokumen,
+            'catatan_pengguna' => $request->catatan_pengguna,
             'file_path' => $filePath,
         ]);
 
-        return redirect()->route('turnitin.form')->with('success', 'Berhasil mengirimkan Pengajuan berhasil dikirim. Hasil akan dikirim melalui email.');
-    }
-    /**
-     * Display the specified resource.
-     */
-
-    public function show(turnitin_requests $turnitin_requests)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(turnitin_requests $turnitin_requests)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, turnitin_requests $turnitin_requests)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(turnitin_requests $turnitin_requests)
-    {
-        //
+        return redirect()->back()->with('success', 'Permohonan Turnitin berhasil dikirim.');
     }
 }

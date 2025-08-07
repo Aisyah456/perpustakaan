@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Program extends Model
 {
-    use HasFactory;
-    protected $fillable = [
-        'prodi',
-        'fakultas',
-        'nm_dosen'
-    ];
+    protected $fillable = ['kode', 'nama_prodi', 'faculty_id'];
+
+    public function faculty()
+    {
+        return $this->belongsTo(Faculty::class);
+    }
 }

@@ -1,9 +1,7 @@
         <!-- HEADER
         ================================================== -->
         <header class="header-style1 menu_area-light">
-
           <div class="navbar-default border-bottom border-color-light-white">
-
             <!-- start top search -->
             <div class="top-search bg-primary">
               <div class="container-fluid px-lg-1-6 px-xl-2-5 px-xxl-2-9">
@@ -36,79 +34,133 @@
                       <div class="navbar-toggler bg-primary"></div>
 
                       <!-- start menu area -->
-                      <ul class="navbar-nav ms-auto" id="nav" style="display: none;">
-                        <li><a href="/Home">Home</a></li>
+                      <ul class="navbar-nav ms-auto" id="nav">
+                        <li><a href="/Home" class="{{ request()->is('home') ? 'active' : '' }}">Home</a></li>
 
-                        <!-- Tentang Kami -->
-                        <li><a href="/Profil">Profil</a>
-                          <ul>
-                            <li><a href="/perpustakaan/tentang">Sejarah</a></li>
-                            <li><a href="/perpustakaan/visi-misi">Visi Misi</a></li>
-                            <li><a href="/perpustakaan/struktur">Struktur Organisasi</a></li>
-                          </ul>
+                        <!-- Profil -->
+                        <li>
+                          <a href="/profil-perpustakaan"
+                            class="{{ request()->is('profil-perpustakaan') ? 'active' : '' }}">Profil</a>
                         </li>
 
                         <!-- Layanan -->
-                        <li><a href="#">Layanan</a>
+                        <li>
+                          <a href="#" class="{{ request()->is('layanan/*') ? 'active' : '' }}">Layanan</a>
                           <ul>
-                            <li><a href="/layanan/referensi">Layanan Referensi</a></li>
-                            <li><a href="/layanan/sirkulasi">Layanan Sirkulasi</a></a></li>
-                            <li><a href="/layanan/layanan-cek-turnitin-perpustakaan-umht">Uji Plagiarisme (Turnitin)</a>
+                            <li><a href="/layanan/sirkulasi"
+                                class="{{ request()->is('layanan/sirkulasi') ? 'active' : '' }}">Sirkulasi</a></li>
+                            <li><a href="/layanan/referensi"
+                                class="{{ request()->is('layanan/referensi') ? 'active' : '' }}">Referensi</a></li>
+                            <li><a href="https://pustaka.thamrin.ac.id/" target="_blank">Usulan Buku</a></li>
+                            <li><a href="/layanan/cek-pinjaman"
+                                class="{{ request()->is('layanan/cek-pinjaman') ? 'active' : '' }}">Cek Pinjaman</a>
                             </li>
-                            <li><a href="/layanan/layanan-bebas-pustaka-perpustakaan-umht">Bebas Pustaka</a></li>
-                            <li><a href="/layanan/cek-pinjaman">Cek Pinjaman</a></li>
+                            <li><a href="/layanan/layanan-bebas-pustaka-perpustakaan-umht"
+                                class="{{ request()->is('layanan/layanan-bebas-pustaka-perpustakaan-umht') ? 'active' : '' }}">Bebas
+                                Pustaka</a></li>
+                            <li><a href="/home/layanan/konsultasi"
+                                class="{{ request()->is('home/layanan/konsultasi') ? 'active' : '' }}">Layanan
+                                Konsultasi</a></li>
                           </ul>
                         </li>
 
                         <!-- Koleksi -->
-                        <li><a href="#">Koleksi</a>
+                        <li>
+                          <a href="#" class="{{ request()->is('koleksi*') ? 'active' : '' }}">Koleksi</a>
                           <ul>
-                            <li><a href="strategic-planning.html">Buku</a></a></li>
-                            <li><a href="market-analysis.html">Jurnal</a></li>
-                            <li><a href="finance-planning.html">Skripsi</a></li>
-                            <li><a href="investment-idea.html">Koleksi Digital</a></li>
-                            <li><a href="https://eresources.thamrin.ac.id/">Repository Digital</a></li>
-                            <li><a href="investment-idea.html">Katalog Online (OPAC)</a></li>
+                            <li><a href="https://pustaka.thamrin.ac.id/" target="_blank">Katalog Online</a></li>
+                            <li><a href="http://eresources.thamrin.ac.id/" target="_blank">Repository Digital</a></li>
+
+                            <li>
+                              <a href="#">Ebook Kubuku</a>
+                              <ul>
+                                <li><a
+                                    href="https://play.google.com/store/apps/details?id=id.kubuku.kbk7695ac2&pli=1">Play
+                                    Store</a></li>
+                                <li><a href="https://apps.apple.com/id/app/thamrin-digital-library/id6468453717">App
+                                    Store</a></li>
+                              </ul>
+                            </li>
+
+                            <li>
+                              <a href="#">Ebook Gramedia</a>
+                              <ul>
+                                <li><a
+                                    href="https://play.google.com/store/apps/details?id=com.appsfoundry.smartlibrary">Play
+                                    Store</a></li>
+                                <li><a href="https://apps.apple.com/id/app/smart-library/id1352891664">App Store</a>
+                                </li>
+                              </ul>
+                            </li>
+
+                            <li>
+                              <a href="#">Jurnal Internasional</a>
+                              <ul>
+                                <li><a href="https://link.gale.com/apps/PPNU?u=fjkthlt">Bidang Kesehatan &
+                                    Kedokteran</a></li>
+                                <li><a href="https://link.gale.com/apps/PPGS?u=fjktsci">Bidang Teknik</a></li>
+                                <li><a
+                                    href="https://galeapps.gale.com/apps/auth?userGroupName=fjktbus&origURL=https%3A%2F%2Fgo.gale.com%2Fps%2Fstart.do%3Fp%3DPPBE%26u%3Dfjktbus%26aty%3Dsso%3A%2520password&prodId=PPBE">Bidang
+                                    Ekonomi</a></li>
+                                <li><a href="https://link.gale.com/apps/SPJ.SP00?u=jkthum">Bidang Sosial</a></li>
+                              </ul>
+                            </li>
+
+                            <li><a href="https://onesearch.id/Search/Results?filter[]=repoId:IOS19533">OneSearch</a>
+                            </li>
                           </ul>
                         </li>
 
-                        <!-- Panduan -->
+                        <!-- E-Resources -->
+                        <li><a href="/eresources"
+                            class="{{ request()->is('eresources') ? 'active' : '' }}">E-Resources</a></li>
+
+                        <!-- Dokumen -->
                         <li>
-                          <a href="#">Panduan</a>
+                          <a href="#"
+                            class="{{ request()->is('panduan', 'dokumen-internal', 'dokumen-eksternal', 'research-tools') ? 'active' : '' }}">Dokumen</a>
                           <ul>
-                            <li><a href="/panduan/layanan">Panduan Layanan</a>
-                            <li><a href="/panduan/ebook">Panduan Akses e-Book</a>
+                            <li><a href="/panduan" class="{{ request()->is('panduan') ? 'active' : '' }}">Panduan</a>
+                            </li>
+                            <li><a href="/dokumen-internal"
+                                class="{{ request()->is('dokumen-internal') ? 'active' : '' }}">Dokumen Internal</a>
+                            </li>
+                            <li><a href="/dokumen-eksternal"
+                                class="{{ request()->is('dokumen-eksternal') ? 'active' : '' }}">Dokumen Eksternal</a>
+                            </li>
+                            <li><a href="/research-tools"
+                                class="{{ request()->is('research-tools') ? 'active' : '' }}">Research Tools</a></li>
                           </ul>
                         </li>
 
-                        <!-- Berita & Kegiatan -->
+                        <!-- Update -->
                         <li>
-                          <a href="/update">Update</a>
-                          {{-- <ul>
-                            <li><a href="/categori/berita">Berita</a></li>
-                            <li><a href="/categori/artikel">Artikel</a></li>
-                            <li><a href="/categori/agenda">Agenda</a></li>
-
-                          </ul> --}}
+                          <a href="#"
+                            class="{{ request()->is('berita-perpus', 'agenda', 'artikel-perpus', 'koleksi-terbaru') ? 'active' : '' }}">Update</a>
+                          <ul>
+                            <li><a href="/berita-perpus"
+                                class="{{ request()->is('berita-perpus') ? 'active' : '' }}">Berita</a></li>
+                            <li><a href="/agenda-perpus"
+                                class="{{ request()->is('agenda') ? 'active' : '' }}">Agenda</a></li>
+                            <li><a href="/artikel-perpus"
+                                class="{{ request()->is('artikel-perpus') ? 'active' : '' }}">Artikel</a>
+                            </li>
+                            <li><a href="/koleksi-terbaru"
+                                class="{{ request()->is('koleksi-terbaru') ? 'active' : '' }}">Koleksi</a></li>
+                          </ul>
                         </li>
-                        <!-- Kontak -->
-                        <li><a href="/kontak-perpustakaan">Contact</a></li>
                       </ul>
-                      <!-- end menu area -->
 
-                      <!-- start attribute navigation -->
-                      <div class="attr-nav align-items-xl-center ms-xl-auto main-font">
-                        <ul>
-                          <li class="search"><a href="#!"><i class="fas fa-search"></i></a></li>
-                          <li class="d-none d-xl-inline-block"><a href="contact.html"
-                              class="butn-style4 md white-hover text-white"><span>LOGIN</span></a></li>
-                        </ul>
-                      </div>
-                      <!-- end attribute navigation -->
-                    </nav>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </header>
+
+        <style>
+          .navbar-nav li a.active {
+            color: #007bff;
+            font-weight: bold;
+          }
+        </style>

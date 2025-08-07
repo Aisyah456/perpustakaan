@@ -3,34 +3,39 @@
 use App\Models\Menu;
 use App\Models\News;
 use App\Models\Banner;
-use App\Models\LibraryGuide;
+use App\Models\Artikel;
+use App\Models\Partner;
+use App\Models\LibraryEvent;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\MenuController;
 use App\Http\Controllers\NewsController;
-use App\Http\Controllers\StafController;
 use App\Http\Controllers\EbookController;
-use App\Http\Controllers\BannerController;
-use App\Http\Controllers\AdmnewsController;
-use App\Http\Controllers\PustakaController;
+use App\Http\Controllers\LayananController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SejarahController;
 use App\Http\Controllers\StandarsController;
 use App\Http\Controllers\TurnitinController;
+use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\ReferensiController;
+use App\Http\Controllers\StructureController;
 use App\Http\Controllers\UsulanBukuController;
 use App\Http\Controllers\CekPinjamanController;
 use App\Http\Controllers\KoleksiBukuController;
+use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\BebasPustakaController;
 use App\Http\Controllers\LibraryGuideController;
+use App\Http\Controllers\ResearchToolController;
+use App\Http\Controllers\Admin\PlagiatController;
+use App\Http\Controllers\admin\PustakaController;
+use App\Http\Controllers\PublicRequestController;
 use App\Http\Controllers\LiterasiRequestController;
+use App\Http\Controllers\ExternalDocumentController;
 use App\Http\Controllers\TurnitinRequestsController;
-use App\Http\Controllers\Admin\NewsController as AdminNewsController;
-use App\Http\Controllers\Admin\PlagiatController as AdminPlagiatControllers;
-use App\Models\Partner;
+use App\Http\Controllers\Admin\AdminRequestController;
+use App\Http\Controllers\Admin\LibraryEventController;
+use App\Http\Controllers\Admin\equestsTurnitinController;
+use App\Http\Controllers\Admin\InternalDocumentController;
+use App\Http\Controllers\Admin\RequestsTurnitinController;
 
-/*
-|---------------------------------------------  -----------------------------
-| DASBOARD
-|--------------------------------------------------------------------------
-*/
 
 /*
 |--------------------------------------------------------------------------
@@ -41,16 +46,19 @@ use App\Models\Partner;
 // Home
 Route::get('/Home', function () {
     $news = News::latest()->take(3)->get();
-    $menus = Menu::latest()->take(6)->get();
     $banners = Banner::latest()->get();
-    $partners = Partner::latest()->get();
+    $menus = Menu::latest()->take(4)->get();
+    $events = LibraryEvent::latest()->paginate(10);
+    $partners = Partner::all();
+    $library_events = LibraryEvent::latest()->get();
+    $artikels = Artikel::latest()->take(3)->get();
 
-    return view('home.index', compact('news', 'menus', 'banners', 'partners'));
+    return view('home.index', compact('banners', 'menus', 'events', 'news', 'partners', 'library_events', 'artikels'));
 })->name('Home');
 
 // Profil Anggota
-Route::get('/Profil', [StafController::class, 'index']);
-Route::get('/profil/detai/{id}', [StafController::class, 'show']);
+// Route::get('/Profil', [StafController::class, 'index']);
+// Route::get('/profil/detai/{id}', [StafController::class, 'show']);
 
 // Profil Perpustakaan
 Route::view('/perpustakaan/visi-misi', 'home.profil.vismis')->name('perpustakaan.visi-misi');
@@ -73,7 +81,7 @@ Route::get('/news/detailnews/{id}', [NewsController::class, 'show']);
 
 // Layanan Perpustakaan
 Route::view('/layanan/layanan-cek-turnitin-perpustakaan-umht', 'home.turnitin.index');
-Route::view('/layanan/layanan-bebas-pustaka-perpustakaan-umht', 'home.layanan.pustaka.index')->name('layanan.pustaka');
+Route::view('/la   yanan/layanan-bebas-pustaka-perpustakaan-umht', 'home.layanan.pustaka.index')->name('layanan.pustaka');
 Route::view('/pelatihan-literasi-informasi-perpustakaan', 'home.layanan.literasi.index');
 Route::view('/layanan/referensi', 'home.layanan.referensi.index')->name('layanan.referensi');
 Route::view('/layanan/sirkulasi', 'home.layanan.sirkulasi.app')->name('layanan.sirkulasi');
@@ -83,6 +91,7 @@ Route::post('/layanan/turnitin', [TurnitinController::class, 'store'])->name('tu
 // Form Referensi
 Route::post('/referensi/kirim', [ReferensiController::class, 'kirim'])->name('referensi.kirim');
 Route::post('/layanan-referensi/kirim', [ReferensiController::class, 'kirim'])->name('layanan.referensi.kirim');
+
 
 // Form Turnitin & Literasi
 Route::get('/turnitin', [TurnitinRequestsController::class, 'create'])->name('turnitin.form');

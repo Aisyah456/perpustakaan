@@ -112,10 +112,11 @@
 
 
   </section>
-
-  @include('home.libs.footer')
-  </div>
   @include('home.libs.script')
+  </div>s
+  @include('home.libs.footer')
+
+
 
 </body>
 

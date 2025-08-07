@@ -18,6 +18,11 @@ class ReferensiController extends Controller
     {
         return view('admin.layanan.referensi.create');
     }
+    public function show($id)
+    {
+        $data = ReferensiRequest::findOrFail($id);
+        return view('admin.referensi.show', compact('data'));
+    }
 
     public function store(Request $request)
     {

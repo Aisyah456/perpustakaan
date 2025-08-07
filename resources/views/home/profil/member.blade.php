@@ -57,46 +57,62 @@
 
     <!-- ONLINE INSTRUCTORS
         ================================================== -->
-    <div class="container py-5">
-      <h1 class="text-center mb-4 text-2xl font-bold">Struktur Organisasi Perpustakaan</h1>
+    <section class="py-5 bg-light">
+      <div class="container">
+        <div class="text-center mb-5">
+          <h2 class="fw-bold">Struktur Organisasi</h2>
+          <p class="text-muted">Perpustakaan Universitas Mohammad Husni Thamrin</p>
+        </div>
 
-      <div class="flex justify-center mb-8">
-        <div class="bg-white p-6 shadow-lg rounded-xl text-center w-full max-w-md">
-          <h2 class="text-xl font-semibold text-blue-800">Kepala Perpustakaan</h2>
-          <p class="text-gray-600">Dr. Ahmad Syafii, M.Pd</p>
+        {{-- Level 1 (Kepala) --}}
+        <div class="row justify-content-center mb-4">
+          @php
+            $kepala = $struktur->where('level', 1)->first();
+          @endphp
+          @if ($kepala)
+            <div class="col-md-4 text-center">
+              <div class="p-3 bg-white rounded shadow-sm">
+                <img src="{{ asset('storage/' . $kepala->foto) }}" class="img-fluid rounded-circle mb-3"
+                  alt="{{ $kepala->name }}" width="120" height="120">
+                <h5 class="fw-bold">{{ $kepala->name }}</h5>
+                <p class="text-muted">{{ $kepala->position }}</p>
+              </div>
+            </div>
+          @endif
+        </div>
+
+        {{-- Level 2 --}}
+        <div class="row justify-content-center mb-4">
+          @foreach ($struktur->where('level', 2) as $item)
+            <div class="col-md-4 text-center">
+              <div class="p-3 bg-white rounded shadow-sm">
+                <img src="{{ asset('storage/' . $item->foto) }}" class="img-fluid rounded-circle mb-3"
+                  alt="{{ $item->name }}" width="100" height="100">
+                <h6 class="fw-bold">{{ $item->name }}</h6>
+                <p class="text-muted">{{ $item->position }}</p>
+              </div>
+            </div>
+          @endforeach
+        </div>
+
+        {{-- Level 3 --}}
+        <div class="row justify-content-center">
+          @foreach ($struktur->where('level', 3) as $item)
+            <div class="col-md-3 text-center mb-4">
+              <div class="p-3 bg-white rounded shadow-sm">
+                <img src="{{ asset('storage/' . $item->foto) }}" class="img-fluid rounded-circle mb-3"
+                  alt="{{ $item->name }}" width="100" height="100">
+                <h6 class="fw-bold">{{ $item->name }}</h6>
+                <p class="text-muted">{{ $item->position }}</p>
+              </div>
+            </div>
+          @endforeach
         </div>
       </div>
+    </section>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <div class="bg-white p-6 shadow-md rounded-lg">
-          <h3 class="text-lg font-semibold text-green-700">Kepala Layanan Referensi</h3>
-          <p class="text-gray-600">Ibu Sri Wahyuni, S.IP</p>
-        </div>
-        <div class="bg-white p-6 shadow-md rounded-lg">
-          <h3 class="text-lg font-semibold text-green-700">Kepala Layanan Sirkulasi</h3>
-          <p class="text-gray-600">Bapak Dedi Kurniawan, S.Hum</p>
-        </div>
-      </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-white p-6 shadow-sm rounded-md">
-          <h4 class="text-md font-semibold text-indigo-600">Bagian Administrasi</h4>
-          <p class="text-gray-600">Nurhaliza, A.Md</p>
-        </div>
-        <div class="bg-white p-6 shadow-sm rounded-md">
-          <h4 class="text-md font-semibold text-indigo-600">Teknisi & Digitalisasi</h4>
-          <p class="text-gray-600">Andri Firmansyah</p>
-        </div>
-        <div class="bg-white p-6 shadow-sm rounded-md">
-          <h4 class="text-md font-semibold text-indigo-600">Petugas Layanan Pengguna</h4>
-          <p class="text-gray-600">Fatmawati, S.IIP</p>
-        </div>
-      </div>
 
-      <div class="mt-10 text-center">
-        <a href="{{ url('/Home') }}" class="text-blue-600 hover:underline">&larr; Kembali ke Beranda</a>
-      </div>
-    </div>
 
     @include('home.libs.footer')
   </div>

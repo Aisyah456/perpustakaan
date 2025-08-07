@@ -12,12 +12,12 @@ class BannerController extends Controller
     public function index()
     {
         $banners = Banner::latest()->paginate(10);
-        return view('admin.profil.index', compact('banners'));
+        return view('admin.benner.index', compact('banners'));
     }
 
     public function create()
     {
-        return view('admin.profil.create');
+        return view('banners.create');
     }
 
     public function store(Request $request)
@@ -43,7 +43,7 @@ class BannerController extends Controller
 
     public function edit(Banner $banner)
     {
-        return view('admin.profil.edit', compact('banner'));
+        return view('banners.edit', compact('banner'));
     }
 
     public function update(Request $request, Banner $banner)

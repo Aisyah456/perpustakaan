@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\LayananResource;
-use App\Models\Layanan;
+use App\Models\Menu;
 use Illuminate\Http\Request;
+use App\Http\Resources\MenuResource;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+
 
 class LayananController extends Controller
 {
@@ -14,9 +18,9 @@ class LayananController extends Controller
      */
     public function index()
     {
-        $layanans = Layanan::all();
+        $menus = Menu::all();
         return view('home.layanan.index', [
-            'layanans' => LayananResource::collection($layanans)
+            'menus' =>  MenuResource::collection($menus)
         ]);
     }
 
@@ -39,7 +43,7 @@ class LayananController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Layanan $layanan)
+    public function show(Menu $menus)
     {
         //
     }
@@ -47,7 +51,7 @@ class LayananController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Layanan $layanan)
+    public function edit(Menu $menus)
     {
         //
     }
@@ -55,7 +59,7 @@ class LayananController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Layanan $layanan)
+    public function update(Request $request, Menu $menus)
     {
         //
     }
@@ -63,7 +67,7 @@ class LayananController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Layanan $layanan)
+    public function destroy(Menu $menus)
     {
         //
     }

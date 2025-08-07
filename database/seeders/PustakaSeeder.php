@@ -2,46 +2,37 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use App\Models\Pustaka;
+use Illuminate\Support\Carbon;
 
 class PustakaSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        //
-        DB::table('pustakas')->insert([
+        $data = [
             [
-                'name' => 'Ayu',
+                'nama' => 'Ayu',
                 'nim' => '342017001',
-                'fakultas' => 'Sains Dan Teknologi',
-                'jurusam' => 'Teknik Informatika',
-                'thnakademik' => '2021',
-                'created_at' => now(),
-                'updated_at' => now(),
+                'jurusan' => 'Teknik Informatika',
+                'tanggal_permohonan' => Carbon::parse('2025-06-01'),
+                'status' => 'pending',
             ],
             [
-                'name' => 'Dian',
+                'nama' => 'Dian',
                 'nim' => '342017006',
-                'fakultas' => 'Sains Dan Teknologi',
-                'jurusam' => 'Teknik Informatika',
-                'thnakademik' => '2020',
-                'created_at' => now(),
-                'updated_at' => now(),
+                'jurusan' => 'Teknik Informatika',
+                'tanggal_permohonan' => Carbon::parse('2025-06-10'),
+                'status' => 'disetujui',
             ],
-            [
-                'name' => 'Dian',
-                'nim' => '342017006',
-                'fakultas' => 'Sains Dan Teknologi',
-                'jurusam' => 'Teknik Informatika',
-                'thnakademik' => '2020',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-        ]);
+        ];
+
+        foreach ($data as $item) {
+            // Mencegah duplikasi NIM
+            Pustaka::updateOrCreate(
+                ['nim' => $item['nim']], // kunci unik
+                $item
+            );
+        }
     }
 }

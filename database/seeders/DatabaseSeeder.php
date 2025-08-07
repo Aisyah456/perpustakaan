@@ -15,11 +15,35 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        $this->call(PustakaSeeder::class);
+        // $this->call(PustakaSeeder::class);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // User::factory()->create([
+        //     'name' => 'Test User',
+        //     'email' => 'test@example.com',
+        // ]);
+
+        // $this->call([
+        //     GuideSeeder::class,
+        // ]);
+
+        /**
+         * Seed the application's database.
+         */
+
+        // $this->call([
+        //     EresourcesInternalSeeder::class,
+        // ]);
+
+        // $this->call([
+        //     PerpustakaanSeeder::class,
+        // ]);
+
+        $this->call([
+            GuideSeeder::class,
+            EresourcesInternalSeeder::class,
+            PerpustakaanSeeder::class,
+            FacultySeeder::class,
+            MajorSeeder::class,
         ]);
     }
 }

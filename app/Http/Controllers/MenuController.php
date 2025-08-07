@@ -17,7 +17,7 @@ class MenuController extends Controller
      */
     public function index()
     {
-        $menus = Menu::latest()->take(6)->get();
+        $menus = Menu::latest()->take(3)->get();
         return view('home.index', [
             'menus' =>  MenuResource::collection($menus)
         ]);

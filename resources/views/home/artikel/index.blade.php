@@ -158,14 +158,15 @@
       </div>
     </section>
 
+    <!-- BUY TEMPLATE
+    ================================================== -->
+    @include('home.libs.script')
+
     <!-- FOOTER
         ================================================== -->
     @include('home.libs.footer')
   </div>
 
-  <!-- BUY TEMPLATE
-    ================================================== -->
-  @include('home.libs.script')
 
 </body>
 

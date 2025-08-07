@@ -56,8 +56,38 @@
     </section>
 
 
-    <!-- SERVICES
-        ================================================== -->
+    <!-- SERVICES ================================================== -->
+    <section>
+      <div class="container mx-auto px-4 py-6">
+        <table class="table">
+          <thead>
+            <th>
+              Nama Jurusan
+            </th>
+            <th>
+              Kode
+            </th>
+            <th>
+              dosen
+            </th>
+            <th>
+              fakultas
+            </th>
+          </thead>
+          <tbody>
+            @foreach ($majors as $major)
+              <tr>
+                <td>{{ $major->name }}</td>
+                <td>{{ $major->code }}</td>
+                <td>{{ $major->lecture }}</td>
+                <td>{{ $major->faculty->name }}</td>
+              </tr>
+            @endforeach
+          </tbody>
+        </table>
+      </div>
+    </section>
+
     <section class="bg-light">
       <div class="container mx-auto px-4 py-6">
         <div class="bg-white rounded shadow-md p-6">

@@ -1,0 +1,57 @@
+/* Additional custom styles for journal database */
+
+.journal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.journal-card-custom {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.journal-card-custom:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.proquest-bg {
+    background: linear-gradient(135deg, #2d7d7d, #1a5f5f);
+}
+
+.scopus-bg {
+    background: linear-gradient(135deg, #ff6b35, #e55a2b);
+}
+
+.springer-bg {
+    background: linear-gradient(135deg, #ffffff, #f8f9fa);
+    color: #333 !important;
+}
+
+.emerald-bg {
+    background: linear-gradient(135deg, #00a651, #008a44);
+}
+
+.perpusnas-bg {
+    background: linear-gradient(135deg, #1e40af, #1e3a8a);
+}
+
+@media (max-width: 768px) {
+    .journal-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .main-title {
+        font-size: 1.8rem;
+    }
+
+    .mypustaka-text {
+        font-size: 1.5rem;
+    }
+}

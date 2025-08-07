@@ -4453,6 +4453,19 @@ blockquote:before {
     line-height: 41px;
     width: 41px;
 }
+.hover-shadow:hover {
+    transform: scale(1.03);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.show-on-hover:hover {
+    opacity: 0;
+}
+
+.hover-on-show:hover {
+    opacity: 1 !important;
+}
+
 .social-icon-style1 li a:hover,
 .social-icon-style1 li a:focus,
 .social-icon-style1 li a:active {

@@ -39,15 +39,16 @@ class ReferensiController extends Controller
             'nama' => 'required|string|max:255',
             'email' => 'required|email',
             'topik' => 'required|string|max:255',
+            'pesan' => 'required|string',
         ]);
-
         ReferensiRequest::create([
             'nama' => $request->nama,
             'email' => $request->email,
             'topik' => $request->topik,
-            'status' => 'pending',
+            'pesan' => $request->pesan, // Tambahkan ini
+            'status' => 'pending', // atau sesuai kebutuhan
         ]);
 
-        return redirect()->back()->with('success', 'Permintaan referensi berhasil dikirim.');
+        return redirect()->back()->with('success', 'Permintaan referensi anda berhasil dikirim.');
     }
 }

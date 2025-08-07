@@ -43,7 +43,7 @@
       <div class="container" style="position: relative; z-index: 2;">
         <div class="row text-center">
           <div class="col-md-12">
-            <h1>Cek Pinnjaman Buku</h1>
+            <h1>Cek Peminjaman Buku</h1>
           </div>
           <div class="col-md-12">
             <ul>

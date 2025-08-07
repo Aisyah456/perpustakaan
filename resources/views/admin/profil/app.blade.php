@@ -61,7 +61,7 @@
           <div class="row gx-4">
 
             <div class="container">
-              <a href="{{ route('admin.profil.create') }}" class="btn btn-primary mb-3">Tambah Banner</a>
+              <a href="{{ route('admin.vismis.create') }}" class="btn btn-primary mb-3">Tambah Banner</a>
 
               @if (session('success'))
                 <div class="alert alert-success">{{ session('success') }}</div>

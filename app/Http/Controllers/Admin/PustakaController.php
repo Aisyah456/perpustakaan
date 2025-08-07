@@ -3,58 +3,51 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Faculty;
+use App\Models\Major;
+use App\Models\LibraryFree;
 use Illuminate\Http\Request;
-use App\Models\Pustaka;
 
 class PustakaController extends Controller
 {
     public function index()
     {
-        $pustakas = Pustaka::paginate(10);
-        return view('admin.pustaka.index', compact('pustakas'));
-    }
+        $documents = LibraryFree::with(['faculty', 'major'])->latest()->get();
+        $faculties = Faculty::all();
+        $majors = Major::all();
 
-    public function create()
-    {
-        return view('admin.pustaka.create');
+        return view('admin.pustaka.index', compact('documents', 'faculties', 'majors'));
     }
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'nama' => 'required',
-            'nim' => 'required|unique:pustakas,nim',
-            'jurusan' => 'required',
-            'tanggal_permohonan' => 'required|date',
-            'status' => 'required|in:pending,disetujui,ditolak'
+            'nim' => 'required',
+            'faculty_id' => 'required|exists:faculties,id',
+            'major_id' => 'required|exists:majors,id',
+            'no_hp' => 'required',
+            'email' => 'required|email',
+            'jenjang' => 'required',
+            'keperluan' => 'required',
+            'tahun_masuk' => 'required|numeric',
+            'tahun_lulus' => 'required|numeric',
+            'file_karya_ilmiah' => 'required|file|mimes:pdf',
+            'scan_ktm' => 'required|file|mimes:pdf,jpg,jpeg,png',
+            'bukti_upload' => 'nullable|file|mimes:pdf,jpg,jpeg,png',
         ]);
 
-        Pustaka::create($request->all());
-        return redirect()->route('pustaka.index')->with('success', 'Data berhasil ditambahkan');
-    }
+        // Simpan file
+        $validated['file_karya_ilmiah'] = $request->file('file_karya_ilmiah')->store('karya_ilmiah', 'public');
+        $validated['scan_ktm'] = $request->file('scan_ktm')->store('ktm', 'public');
+        if ($request->hasFile('bukti_upload')) {
+            $validated['bukti_upload'] = $request->file('bukti_upload')->store('bukti_upload', 'public');
+        }
 
-    public function edit(Pustaka $pustaka)
-    {
-        return view('admin.pustaka.edit', compact('pustaka'));
-    }
+        $validated['status'] = 'pending'; // default status
 
-    public function update(Request $request, Pustaka $pustaka)
-    {
-        $request->validate([
-            'nama' => 'required',
-            'nim' => 'required|unique:pustakas,nim,' . $pustaka->id,
-            'jurusan' => 'required',
-            'tanggal_permohonan' => 'required|date',
-            'status' => 'required|in:pending,disetujui,ditolak'
-        ]);
+        LibraryFree::create($validated);
 
-        $pustaka->update($request->all());
-        return redirect()->route('pustaka.index')->with('success', 'Data berhasil diperbarui');
-    }
-
-    public function destroy(Pustaka $pustaka)
-    {
-        $pustaka->delete();
-        return redirect()->route('pustaka.index')->with('success', 'Data berhasil dihapus');
+        return redirect()->route('admin.pustaka.index')->with('success', 'Pengajuan berhasil ditambahkan.');
     }
 }

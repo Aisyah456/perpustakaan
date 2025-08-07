@@ -28,7 +28,7 @@
     <!-- PAGE TITLE
         ================================================== -->
     <section class="page-title-section bg-img cover-background top-position1"
-      style="position: relative; background-image: url('{{ asset('lib/img/banner/page-title.jpg') }}'); background-size: cover; background-position: center;">
+      style="position: relative; background-image: url('{{ asset('lib/img/banner/WhatsApp Image 2025-04-21 at 16.28.11.jpeg') }}'); background-size: cover; background-position: center;">
 
       <!-- Overlay gelap -->
       <div
@@ -43,7 +43,7 @@
       <div class="container" style="position: relative; z-index: 2;">
         <div class="row text-center">
           <div class="col-md-12">
-            <h1>Cek Turnitin</h1>
+            <h1>Layanan Cek Turnitin</h1>
           </div>
           <div class="col-md-12">
             <ul>
@@ -132,8 +132,7 @@
     </section>
 
     @include('home.libs.footer')
-  </div>
-  @include('home.libs.script')
+    @include('home.libs.script')
 
 </body>
 

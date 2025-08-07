@@ -53,83 +53,125 @@
 
     <!-- FAQ
         ================================================== -->
-    <section>
-      <div class="container py-5">
-        <h2 class="mb-4 text-center">Panduan Layanan Perpustakaan</h2>
+    <div class="container py-10 px-4 mx-auto">
+      <h1 class="text-3xl font-bold text-gray-800 mb-8 text-center">📚 Koleksi Perpustakaan</h1>
 
-        <p class="text-justify">
-          Panduan ini disusun untuk memudahkan civitas akademika Universitas Mohammad Husni Thamrin dalam memanfaatkan
-          berbagai layanan yang tersedia di perpustakaan. Setiap pengguna diharapkan membaca dan memahami panduan ini
-          sebelum menggunakan fasilitas perpustakaan.
-        </p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Katalog Online -->
+        <div class="p-6 bg-gradient-to-r from-white to-gray-50 shadow-md rounded-xl transition hover:shadow-xl">
+          <h2 class="text-xl font-semibold text-indigo-700 mb-2">📖 Katalog Online</h2>
+          <p>
+            <a href="https://perpustakaan.thamrin.ac.id/katalog" class="text-blue-600 hover:text-blue-800 underline"
+              target="_blank">
+              perpustakaan.thamrin.ac.id/katalog
+            </a>
+          </p>
+        </div>
 
-        <h4 class="mt-5">1. Jenis Layanan Perpustakaan</h4>
-        <ul class="list-group list-group-flush mb-4">
-          <li class="list-group-item">Layanan Sirkulasi (Peminjaman dan Pengembalian Buku)</li>
-          <li class="list-group-item">Layanan Referensi dan Konsultasi</li>
-          <li class="list-group-item">Layanan Bebas Pustaka</li>
-          <li class="list-group-item">Layanan Turnitin (Cek Plagiarisme)</li>
-          <li class="list-group-item">Layanan Usulan Buku</li>
-          <li class="list-group-item">Akses Koleksi Digital & E-Resources</li>
-        </ul>
+        <!-- Repository -->
+        <div class="p-6 bg-gradient-to-r from-white to-gray-50 shadow-md rounded-xl transition hover:shadow-xl">
+          <h2 class="text-xl font-semibold text-indigo-700 mb-2">📂 Repository</h2>
+          <p>
+            <a href="https://repository.thamrin.ac.id" class="text-blue-600 hover:text-blue-800 underline"
+              target="_blank">
+              repository.thamrin.ac.id
+            </a>
+          </p>
+        </div>
 
-        <h4>2. Prosedur Umum Penggunaan Layanan</h4>
-        <ol class="mb-4">
-          <li>Pengguna wajib menunjukkan Kartu Tanda Mahasiswa (KTM) atau identitas resmi saat menggunakan layanan.</li>
-          <li>Peminjaman buku dilakukan melalui sistem komputer perpustakaan atau secara online (jika tersedia).</li>
-          <li>Buku yang dipinjam harus dikembalikan tepat waktu sesuai tanggal jatuh tempo.</li>
-          <li>Pengguna dapat mengakses layanan konsultasi dan referensi dengan mengisi form online atau mengunjungi
-            petugas referensi.</li>
-          <li>Untuk layanan Turnitin dan Bebas Pustaka, pengguna harus mengajukan permintaan melalui form yang telah
-            disediakan.</li>
-        </ol>
+        <!-- Ebook Kubuku -->
+        <div class="p-6 bg-gradient-to-r from-white to-gray-50 shadow-md rounded-xl transition hover:shadow-xl">
+          <h2 class="text-xl font-semibold text-indigo-700 mb-2">📱 Ebook Kubuku</h2>
+          <ul class="list-disc pl-5 space-y-1 text-gray-700">
+            <li>
+              Playstore:
+              <a href="https://play.google.com/store/apps/details?id=id.kubuku.kbk7695ac2&pli=1"
+                class="text-blue-600 hover:text-blue-800 underline" target="_blank">
+                Thamrin Digital Library
+              </a>
+            </li>
+            <li>
+              App Store:
+              <a href="https://apps.apple.com/id/app/thamrin-digital-library/id6468453717"
+                class="text-blue-600 hover:text-blue-800 underline" target="_blank">
+                Thamrin Digital Library
+              </a>
+            </li>
+          </ul>
+        </div>
 
-        <h4>3. Etika Penggunaan Perpustakaan</h4>
-        <ul class="list-group mb-4">
-          <li class="list-group-item">Menjaga ketenangan dan tidak membuat keributan di ruang baca.</li>
-          <li class="list-group-item">Tidak diperbolehkan makan dan minum di dalam ruang koleksi dan ruang baca.</li>
-          <li class="list-group-item">Menjaga kebersihan dan keamanan fasilitas perpustakaan.</li>
-          <li class="list-group-item">Melaporkan kerusakan atau kehilangan koleksi kepada petugas.</li>
-        </ul>
+        <!-- Ebook Gramedia -->
+        <div class="p-6 bg-gradient-to-r from-white to-gray-50 shadow-md rounded-xl transition hover:shadow-xl">
+          <h2 class="text-xl font-semibold text-indigo-700 mb-2">📘 Ebook Gramedia</h2>
+          <ul class="list-disc pl-5 space-y-1 text-gray-700">
+            <li>
+              Playstore:
+              <a href="https://play.google.com/store/apps/details?id=com.appsfoundry.smartlibrary"
+                class="text-blue-600 hover:text-blue-800 underline" target="_blank">
+                Smart Library
+              </a>
+            </li>
+            <li>
+              App Store:
+              <a href="https://apps.apple.com/id/app/smart-library/id1352891664"
+                class="text-blue-600 hover:text-blue-800 underline" target="_blank">
+                Smart Library
+              </a>
+            </li>
+          </ul>
+        </div>
 
-        <h4>4. Jam Operasional Perpustakaan</h4>
-        <p>
-          Senin – Jumat: 08.00 – 16.00 WIB<br>
-          Sabtu – Minggu & Libur Nasional: Tutup
-        </p>
+        <!-- Jurnal Internasional -->
+        <div
+          class="p-6 bg-gradient-to-r from-white to-gray-50 shadow-md rounded-xl col-span-1 md:col-span-2 transition hover:shadow-xl">
+          <h2 class="text-xl font-semibold text-indigo-700 mb-3">🌍 Jurnal Internasional</h2>
+          <ul class="list-disc pl-5 space-y-1 text-gray-700">
+            <li>Kesehatan & Kedokteran:
+              <a href="https://link.gale.com/apps/PPNU?u=fjkthlt" class="text-blue-600 hover:text-blue-800 underline"
+                target="_blank">Akses</a>
+            </li>
+            <li>Teknik:
+              <a href="https://link.gale.com/apps/PPGS?u=fjktsci" class="text-blue-600 hover:text-blue-800 underline"
+                target="_blank">Akses</a>
+            </li>
+            <li>Ekonomi:
+              <a href="https://galeapps.gale.com/apps/auth?userGroupName=fjktbus&origURL=https%3A%2F%2Fgo.gale.com%2Fps%2Fstart.do%3Fp%3DPPBE%26u%3Dfjktbus%26aty%3Dsso%3A%2520password&prodId=PPBE"
+                class="text-blue-600 hover:text-blue-800 underline" target="_blank">Akses</a>
+            </li>
+            <li>Sosial:
+              <a href="https://link.gale.com/apps/SPJ.SP00?u=jkthum" class="text-blue-600 hover:text-blue-800 underline"
+                target="_blank">Akses</a>
+            </li>
+          </ul>
+        </div>
 
-        <h4>5. Informasi Tambahan</h4>
-        <p>
-          Untuk informasi lebih lanjut mengenai panduan dan prosedur layanan, silakan hubungi petugas perpustakaan atau
-          kirim email ke:<br>
-          📧 <a href="mailto:perpustakaan@thamrin.ac.id">perpustakaan@thamrin.ac.id</a>
-        </p>
+        <!-- Jurnal Nasional -->
+        <div
+          class="p-6 bg-gradient-to-r from-white to-gray-50 shadow-md rounded-xl col-span-1 md:col-span-2 transition hover:shadow-xl">
+          <h2 class="text-xl font-semibold text-indigo-700 mb-3">📗 Jurnal Nasional</h2>
+          <p class="text-gray-700 mb-2">Tersedia sesuai kebutuhan akreditasi program studi:</p>
+          <ul class="list-disc pl-5 space-y-1 text-gray-700">
+            <li>FKES</li>
+            <li>FKOM</li>
+            <li>FEB</li>
+            <li>FKIP</li>
+          </ul>
+          <p class="mt-3 italic text-sm text-gray-500">*Link daftar jurnal disesuaikan saat akreditasi prodi.</p>
+        </div>
 
-        <p class="mt-5 text-muted text-center">
-          <em>Perpustakaan Universitas Mohammad Husni Thamrin — Mendukung kegiatan akademik melalui layanan informasi
-            yang profesional.</em>
-        </p>
+        <!-- OneSearch -->
+        <div
+          class="p-6 bg-gradient-to-r from-white to-gray-50 shadow-md rounded-xl col-span-1 md:col-span-2 transition hover:shadow-xl">
+          <h2 class="text-xl font-semibold text-indigo-700 mb-2">🔎 OneSearch</h2>
+          <p>
+            <a href="https://onesearch.id/Search/Results?filter[]=repoId:IOS19533"
+              class="text-blue-600 hover:text-blue-800 underline" target="_blank">
+              Akses OneSearch Nasional
+            </a>
+          </p>
+        </div>
       </div>
-      <div class="container py-5">
-        <h2 class="mb-4 text-center">Panduan Layanan Perpustakaan</h2>
-
-        @foreach ($library_guides as $item)
-          <div class="mb-4">
-            <h4>{{ $item->judul }}</h4>
-            <p class="text-justify">{{ $item->deskripsi }}</p>
-          </div>
-        @endforeach
-
-        <hr>
-
-        <h5>Unduh Panduan Lengkap (PDF)</h5>
-        <p>
-          📥 <a href="{{ asset('storage/panduan/panduan-layanan-perpustakaan.pdf') }}" target="_blank">
-            Klik di sini untuk mengunduh panduan layanan perpustakaan (PDF)
-          </a>
-        </p>
-      </div>
-    </section>
+    </div>
 
 
 

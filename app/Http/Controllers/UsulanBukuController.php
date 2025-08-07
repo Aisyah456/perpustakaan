@@ -41,19 +41,46 @@ class UsulanBukuController extends Controller
      */
     public function store(Request $request)
     {
+        // Validasi semua input termasuk array buku
         $request->validate([
-            'nama_pengusul' => 'required',
+            'nama_pengusul' => 'required|string',
+            'nim' => 'required|string',
+            'fakultas' => 'required|string',
+            'program_studi' => 'required|string',
             'status' => 'required|in:mahasiswa,dosen',
-            'judul_buku' => 'required',
-            'pengarang' => 'required',
-            'penerbit' => 'required',
-            'alasan' => 'required',
+
+            'judul_buku' => 'required|array|max:2',
+            'judul_buku.*' => 'required|string',
+            'pengarang' => 'required|array|max:2',
+            'pengarang.*' => 'required|string',
+            'penerbit' => 'required|array|max:2',
+            'penerbit.*' => 'required|string',
+            'tahun_terbit' => 'required|array|max:2',
+            'tahun_terbit.*' => 'required|digits:4',
+            'alasan' => 'required|array|max:2',
+            'alasan.*' => 'required|string',
         ]);
 
-        UsulanBuku::create($request->all());
+        // Simpan masing-masing usulan buku
+        foreach ($request->judul_buku as $index => $judul) {
+            UsulanBuku::create([
+                'nama_pengusul' => $request->nama_pengusul,
+                'nim' => $request->nim,
+                'fakultas' => $request->fakultas,
+                'program_studi' => $request->program_studi,
+                'status' => $request->status,
+                'judul_buku' => $judul,
+                'pengarang' => $request->pengarang[$index],
+                'penerbit' => $request->penerbit[$index],
+                'tahun_terbit' => $request->tahun_terbit[$index],
+                'alasan' => $request->alasan[$index],
+                'verifikasi' => 'pending',
+            ]);
+        }
 
         return back()->with('success', 'Usulan buku berhasil dikirim!');
     }
+
 
     /**
      * Display the specified resource.

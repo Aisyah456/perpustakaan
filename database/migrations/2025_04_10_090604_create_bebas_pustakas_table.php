@@ -16,10 +16,29 @@ return new class extends Migration
             $table->string('nama');
             $table->string('nim')->unique();
             $table->string('prodi');
-            $table->string('emial');
-            $table->string('kontan');
-            $table->string('file_path')->nullablle();
+            $table->string('email');
+            $table->string('kontak');
+
+            // Pilihan tugas akhir
+            $table->enum('kategori_tugas_akhir', ['KTI', 'Skripsi', 'Tesis', 'Disertasi']);
+
+            // Keperluan Bebas Pustaka
+            $table->enum('keperluan_bebas_pustaka', [
+                'Yudisium D3-S3 & Profesi Ners',
+                'Yudisium Profesi Non Ners',
+                'Cuti Kuliah',
+                'Pindah Kuliah',
+                'Mengundurkan Diri',
+                'Penutupan Publikasi'
+            ]);
+
+            // File
+            $table->string('file_path')->nullable();              // File tugas akhir
+            $table->string('artikel_jurnal_path')->nullable();    // File artikel jurnal
+
+            // Status proses
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+
             $table->timestamps();
         });
     }

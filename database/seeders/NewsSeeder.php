@@ -42,7 +42,34 @@ class NewsSeeder extends Seeder
                 'by' => 'Humas Perpustakaan',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
-            ]
+            ],
+            [
+                'judul'   => 'Meningkatkan Literasi Digital di Era Modern',
+                'konten'  => 'Literasi digital menjadi kunci utama dalam menghadapi tantangan zaman digital...',
+                'img'     => 'literasi-digital.jpg',
+                'tanggal' => Carbon::now()->subDays(3)->toDateString(),
+                'by'      => 'Admin Perpustakaan',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'judul'   => 'Akses E-Resources Internasional Gratis',
+                'konten'  => 'Mahasiswa kini dapat mengakses berbagai sumber e-resources secara gratis melalui kampus...',
+                'img'     => 'e-resources.jpg',
+                'tanggal' => Carbon::now()->subDays(2)->toDateString(),
+                'by'      => 'Tim Pustikom',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'judul'   => 'Pelatihan Penulisan Karya Ilmiah',
+                'konten'  => 'Universitas mengadakan pelatihan intensif untuk meningkatkan kemampuan menulis karya ilmiah mahasiswa.',
+                'img'     => 'pelatihan-ilmiah.jpg',
+                'tanggal' => Carbon::now()->toDateString(),
+                'by'      => 'Humas Universitas',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 }

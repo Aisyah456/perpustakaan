@@ -26,15 +26,27 @@ class PlagiatController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'nama' => 'required',
+        $validated = $request->validate([
             'nim' => 'required',
-            'status' => 'required',
+            'nama' => 'required',
+            'id_fakultas' => 'required',
+            'id_prodi' => 'required',
+            'kat_karya' => 'required',
+            'kat_mhs' => 'required',
+            'tujuan' => 'required',
+            'jdl_karya_1' => 'required',
+            'nm_pembimbing1' => 'required',
+            'email_pembimbing1' => 'required|email',
+            'nm_pembimbing2' => 'nullable',
+            'email_pembimbing2' => 'nullable|email',
+            'upload1' => 'required',
+            'jdl_karya_ilmiah' => 'required',
+            'upload2' => 'required',
         ]);
 
-        Plagiat::create($request->all());
-
-        return redirect()->route('admin.plagiat.index')->with('success', 'Plagiat created successfully.');
+        $validated['status'] = 'pending';
+        Plagiat::create($validated);
+        return back()->with('success', 'Data berhasil ditambahkan.');
     }
 
     public function edit($id)
@@ -57,9 +69,11 @@ class PlagiatController extends Controller
         return redirect()->route('admin.plagiat.index')->with('success', 'Plagiat updated successfully.');
     }
 
+
     public function destroy($id)
     {
-        Plagiat::destroy($id);
-        return redirect()->route('admin.plagiat.index')->with('success', 'Plagiat deleted successfully.');
+        $data = Plagiat::findOrFail($id);
+        $data->delete();
+        return back()->with('success', 'Data berhasil dihapus.');
     }
 }
