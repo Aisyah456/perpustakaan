@@ -4,7 +4,7 @@
 
 @section('content')
   <!-- ABOUT US
-                                                                                      ================================================== -->
+                                                                                        ================================================== -->
 @section('content')
   <section class="about-style-02">
     <div class="container">
@@ -44,7 +44,7 @@
   </section>
 
   <!-- ADDRESS
-                                                                            ================================================== -->
+                                                                              ================================================== -->
   <section class="about-style-02" style="background: linear-gradient(135deg, #e6f2ed, #ffffff); padding: 60px 0;">
     <div class="container">
       <div class="row footer-address justify-content-center">

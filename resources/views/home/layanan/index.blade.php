@@ -67,7 +67,7 @@
                 <div class="modal-body">
                   <div class="row">
                     <div class="col-md-4 text-center mb-3">
-                      <img src="{{ asset('lib/img/icons/' . $menu->foto) }}" alt="{{ $menu->judul }}" class="img-fluid"
+                      <img src="{{ asset('lib/img/menu/' . $menu->foto) }}" alt="{{ $menu->judul }}" class="img-fluid"
                         style="max-width: 100px;">
                     </div>
                     <div class="col-md-8">

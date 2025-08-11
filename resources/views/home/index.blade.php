@@ -241,7 +241,7 @@
                   <div class="modal-body">
                     <div class="row">
                       <div class="col-md-4 text-center mb-3">
-                        <img src="{{ asset('lib/img/icons/' . $menu->foto) }}" alt="{{ $menu->judul }}"
+                        <img src="{{ asset('lib/img/menu/' . $menu->foto) }}" alt="{{ $menu->judul }}"
                           class="img-fluid" style="max-width: 100px;">
                       </div>
                       <div class="col-md-8">
@@ -280,8 +280,8 @@
 
           {{-- Tombol Lihat Semua --}}
           <div class="col-12 text-center mt-4">
-            {{-- <a href="{{ route('layanan.index') }}" class="btn btn-outline-primary px-4 py-2"> --}}
-            <i class="fas fa-layer-group me-2"></i>Lihat Semua Layanan
+            <a href="{{ route('layanan.index') }}" class="btn btn-outline-primary px-4 py-2">
+              <i class="fas fa-layer-group me-2"></i>Lihat Semua Layanan
             </a>
           </div>
         </div>
@@ -584,9 +584,8 @@
             <div class="card h-100 shadow-sm border-0 rounded-4 overflow-hidden">
               {{-- Gambar Acara --}}
               <div class="position-relative">
-                <img
-                  src="{{ asset($agenda->images ? 'lib/img/artikel/' . $agenda->images : 'lib/img/default-agenda.jpg') }}"
-                  class="w-100" alt="{{ $agenda->judul }}" style="height: 240px; object-fit: cover;">
+                <img src="{{ Storage::url('artikel/' . $agenda->images) }}" class="w-100"
+                  alt="{{ $agenda->judul }}" style="height: 240px; object-fit: cover;">
                 <span class="badge bg-success position-absolute top-0 start-0 m-3 px-3 py-2">
                   {{ \Carbon\Carbon::parse($agenda->tanggal_mulai)->format('d M') }}
                 </span>
@@ -642,6 +641,7 @@
       @endif
     </div>
   </section>
+
 
 
   <!-- Modal Detail Agenda -->

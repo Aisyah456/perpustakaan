@@ -3,122 +3,185 @@
 
 @section('content')
   <div class="container py-5">
-    <h3 class="mb-4">Form Permohonan Bebas Pustaka</h3>
-
-    @if (session('success'))
-      <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
-
-    @if ($errors->any())
-      <div class="alert alert-danger">
-        <strong>Terjadi kesalahan:</strong>
-        <ul>
-          @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
-          @endforeach
-        </ul>
+    <div class="card shadow-lg border-0 rounded-3">
+      <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">Form Permohonan Bebas Pustaka</h4>
       </div>
-    @endif
+      <div class="card-body">
 
-    <form method="POST" action="/bebas-pustaka" enctype="multipart/form-data">
-      @csrf
+        {{-- Pesan sukses --}}
+        @if (session('success'))
+          <div class="alert alert-success">{{ session('success') }}</div>
+        @endif
 
-      <div class="row mb-3">
-        <div class="col-md-6">
-          <label>Nama <span class="text-danger">*</span></label>
-          <input type="text" name="nama" class="form-control" value="{{ old('nama') }}" required>
-        </div>
-        <div class="col-md-6">
-          <label>NIM <span class="text-danger">*</span></label>
-          <input type="text" name="nim" class="form-control" value="{{ old('nim') }}" required>
-        </div>
+        {{-- Pesan error global --}}
+        @if ($errors->any())
+          <div class="alert alert-danger">
+            <strong>Terjadi kesalahan:</strong>
+            <ul class="mb-0">
+              @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+              @endforeach
+            </ul>
+          </div>
+        @endif
+
+        <form method="POST" action="{{ url('/bebas-pustaka') }}" enctype="multipart/form-data">
+          @csrf
+
+          {{-- Nama & NIM --}}
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Nama <span class="text-danger">*</span></label>
+              <input type="text" name="nama" value="{{ old('nama') }}"
+                class="form-control @error('nama') is-invalid @enderror" required>
+              @error('nama')
+                <div class="invalid-feedback">{{ $message }}</div>
+              @enderror
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">NIM <span class="text-danger">*</span></label>
+              <input type="text" name="nim" value="{{ old('nim') }}"
+                class="form-control @error('nim') is-invalid @enderror" required>
+              @error('nim')
+                <div class="invalid-feedback">{{ $message }}</div>
+              @enderror
+            </div>
+          </div>
+
+          {{-- Fakultas & Prodi --}}
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Fakultas <span class="text-danger">*</span></label>
+              <select name="faculty_id" class="form-select @error('faculty_id') is-invalid @enderror" required>
+                <option value="">-- Pilih Fakultas --</option>
+                @foreach ($faculties as $faculty)
+                  <option value="{{ $faculty->id }}" {{ old('faculty_id') == $faculty->id ? 'selected' : '' }}>
+                    {{ $faculty->nama_fakultas }}
+                  </option>
+                @endforeach
+              </select>
+              @error('faculty_id')
+                <div class="invalid-feedback">{{ $message }}</div>
+              @enderror
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Program Studi <span class="text-danger">*</span></label>
+              <select name="major_id" class="form-select @error('major_id') is-invalid @enderror" required>
+                <option value="">-- Pilih Program Studi --</option>
+                @foreach ($majors as $major)
+                  <option value="{{ $major->id }}" {{ old('major_id') == $major->id ? 'selected' : '' }}>
+                    {{ $major->nama_prodi }}
+                  </option>
+                @endforeach
+              </select>
+              @error('major_id')
+                <div class="invalid-feedback">{{ $message }}</div>
+              @enderror
+            </div>
+          </div>
+
+          {{-- Kontak & Jenjang --}}
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <label class="form-label">No. HP <span class="text-danger">*</span></label>
+              <input type="text" name="no_hp" value="{{ old('no_hp') }}"
+                class="form-control @error('no_hp') is-invalid @enderror" required>
+              @error('no_hp')
+                <div class="invalid-feedback">{{ $message }}</div>
+              @enderror
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Email <span class="text-danger">*</span></label>
+              <input type="email" name="email" value="{{ old('email') }}"
+                class="form-control @error('email') is-invalid @enderror" required>
+              @error('email')
+                <div class="invalid-feedback">{{ $message }}</div>
+              @enderror
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Jenjang Pendidikan <span class="text-danger">*</span></label>
+              <select name="jenjang" class="form-select @error('jenjang') is-invalid @enderror" required>
+                <option value="">-- Pilih --</option>
+                @foreach (['D3', 'S1', 'S2'] as $jenjang)
+                  <option value="{{ $jenjang }}" {{ old('jenjang') == $jenjang ? 'selected' : '' }}>
+                    {{ $jenjang }}</option>
+                @endforeach
+              </select>
+              @error('jenjang')
+                <div class="invalid-feedback">{{ $message }}</div>
+              @enderror
+            </div>
+          </div>
+
+          {{-- Keperluan --}}
+          <div class="mb-3">
+            <label class="form-label">Keperluan <span class="text-danger">*</span></label>
+            <select name="keperluan" class="form-select @error('keperluan') is-invalid @enderror" required>
+              <option value="">-- Pilih --</option>
+              @foreach (['Wisuda', 'Yudisium', 'Lainnya'] as $option)
+                <option value="{{ $option }}" {{ old('keperluan') == $option ? 'selected' : '' }}>
+                  {{ $option }}</option>
+              @endforeach
+            </select>
+            @error('keperluan')
+              <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+          </div>
+
+          {{-- Tahun Masuk & Lulus --}}
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Tahun Masuk <span class="text-danger">*</span></label>
+              <input type="text" name="tahun_masuk" value="{{ old('tahun_masuk') }}" placeholder="Contoh: 2020"
+                class="form-control @error('tahun_masuk') is-invalid @enderror" required>
+              @error('tahun_masuk')
+                <div class="invalid-feedback">{{ $message }}</div>
+              @enderror
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Tahun Lulus <span class="text-danger">*</span></label>
+              <input type="text" name="tahun_lulus" value="{{ old('tahun_lulus') }}" placeholder="Contoh: 2024"
+                class="form-control @error('tahun_lulus') is-invalid @enderror" required>
+              @error('tahun_lulus')
+                <div class="invalid-feedback">{{ $message }}</div>
+              @enderror
+            </div>
+          </div>
+
+          {{-- Upload File --}}
+          <div class="mb-3">
+            <label class="form-label">File Karya Ilmiah (.pdf) <span class="text-danger">*</span></label>
+            <input type="file" name="file_karya_ilmiah"
+              class="form-control @error('file_karya_ilmiah') is-invalid @enderror" accept=".pdf" required>
+            @error('file_karya_ilmiah')
+              <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Scan Kartu Tanda Mahasiswa (KTM) <span class="text-danger">*</span></label>
+            <input type="file" name="scan_ktm" class="form-control @error('scan_ktm') is-invalid @enderror"
+              accept=".pdf,.jpg,.jpeg,.png" required>
+            @error('scan_ktm')
+              <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Bukti Upload (Opsional)</label>
+            <input type="file" name="bukti_upload" class="form-control @error('bukti_upload') is-invalid @enderror"
+              accept=".pdf,.jpg,.jpeg,.png">
+            @error('bukti_upload')
+              <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+          </div>
+
+          <div class="text-end">
+            <button type="submit" class="btn btn-success">Kirim Permohonan</button>
+          </div>
+        </form>
       </div>
-
-      <div class="row mb-3">
-        <div class="col-md-6">
-          <label>Fakultas <span class="text-danger">*</span></label>
-          <select name="faculty_id" class="form-select" required>
-            <option value="">-- Pilih Fakultas --</option>
-            @foreach ($faculties as $faculty)
-              <option value="{{ $faculty->id }}" {{ old('faculty_id') == $faculty->id ? 'selected' : '' }}>
-                {{ $faculty->nama_fakultas }}
-              </option>
-            @endforeach
-          </select>
-        </div>
-        <div class="col-md-6">
-          <label>Program Studi <span class="text-danger">*</span></label>
-          <select name="major_id" class="form-select" required>
-            <option value="">-- Pilih Program Studi --</option>
-            @foreach ($majors as $major)
-              <option value="{{ $major->id }}" {{ old('major_id') == $major->id ? 'selected' : '' }}>
-                {{ $major->nama_fakultas }}
-              </option>
-            @endforeach
-          </select>
-        </div>
-      </div>
-
-
-      <div class="row mb-3">
-        <div class="col-md-4">
-          <label>No. HP <span class="text-danger">*</span></label>
-          <input type="text" name="no_hp" class="form-control" value="{{ old('no_hp') }}" required>
-        </div>
-        <div class="col-md-4">
-          <label>Email <span class="text-danger">*</span></label>
-          <input type="email" name="email" class="form-control" value="{{ old('email') }}" required>
-        </div>
-        <div class="col-md-4">
-          <label>Jenjang Pendidikan <span class="text-danger">*</span></label>
-          <select name="jenjang" class="form-select" required>
-            <option value="">-- Pilih --</option>
-            <option value="D3" {{ old('jenjang') == 'D3' ? 'selected' : '' }}>D3</option>
-            <option value="S1" {{ old('jenjang') == 'S1' ? 'selected' : '' }}>S1</option>
-            <option value="S2" {{ old('jenjang') == 'S2' ? 'selected' : '' }}>S2</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="mb-3">
-        <label>Keperluan <span class="text-danger">*</span></label>
-        <select name="keperluan" class="form-select" required>
-          <option value="">-- Pilih --</option>
-          <option value="Wisuda" {{ old('keperluan') == 'Wisuda' ? 'selected' : '' }}>Wisuda</option>
-          <option value="Yudisium" {{ old('keperluan') == 'Yudisium' ? 'selected' : '' }}>Yudisium</option>
-          <option value="Lainnya" {{ old('keperluan') == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
-        </select>
-      </div>
-
-      <div class="row mb-3">
-        <div class="col-md-6">
-          <label>Tahun Masuk <span class="text-danger">*</span></label>
-          <input type="text" name="tahun_masuk" class="form-control" value="{{ old('tahun_masuk') }}"
-            placeholder="Contoh: 2020" required>
-        </div>
-        <div class="col-md-6">
-          <label>Tahun Lulus <span class="text-danger">*</span></label>
-          <input type="text" name="tahun_lulus" class="form-control" value="{{ old('tahun_lulus') }}"
-            placeholder="Contoh: 2024" required>
-        </div>
-      </div>
-
-      <div class="mb-3">
-        <label>File Karya Ilmiah (.pdf) <span class="text-danger">*</span></label>
-        <input type="file" name="file_karya_ilmiah" class="form-control" accept=".pdf" required>
-      </div>
-
-      <div class="mb-3">
-        <label>Scan Kartu Tanda Mahasiswa (KTM) <span class="text-danger">*</span></label>
-        <input type="file" name="scan_ktm" class="form-control" accept=".pdf,.jpg,.jpeg,.png" required>
-      </div>
-
-      <div class="mb-3">
-        <label>Bukti Upload (Opsional)</label>
-        <input type="file" name="bukti_upload" class="form-control" accept=".pdf,.jpg,.jpeg,.png">
-      </div>
-
-      <button type="submit" class="btn btn-primary">Kirim Permohonan</button>
-    </form>
+    </div>
   </div>
 @endsection

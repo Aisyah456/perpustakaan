@@ -16,7 +16,7 @@ class TurnitinRequestsController extends Controller
         $faculties = Faculty::all();
         $majors = Major::all();
 
-        return view('home.turnitin.from', compact('faculties', 'programs'));
+        return view('home.turnitin.from', compact('faculties', 'majors'));
     }
 
 
@@ -33,7 +33,7 @@ class TurnitinRequestsController extends Controller
             'nim_nidn' => 'required|string',
             'email' => 'required|email',
             'faculty_id' => 'required|exists:faculties,id',
-            'program_id' => 'required|exists:programs,id',
+            'program_id' => 'required|exists:majors,id',
             'judul_naskah' => 'required|string',
             'jenis_dokumen' => 'required|in:Skripsi,Tesis,Artikel,Lainnya',
             'catatan_pengguna' => 'nullable|string',

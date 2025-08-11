@@ -30,18 +30,23 @@ class BookingFacilityController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama_pemesan' => 'required',
-            'kontak' => 'required',
-            'fasilitas' => 'required',
-            'tanggal' => 'required|date',
-            'jam_mulai' => 'required',
-            'jam_selesai' => 'required|after:jam_mulai',
-            'keperluan' => 'required',
+            'nama_pemesan' => 'required|string|max:255',
+            'nim' => 'nullable|string|max:50',
+            'status_pemesan' => 'required|in:mahasiswa,dosen,staff,umum',
+            'fakultas' => 'nullable|string|max:255',
+            'program_studi' => 'nullable|string|max:255',
+            'nama_fasilitas' => 'required|string|max:255',
+            'tanggal_pemakaian' => 'required|date',
+            'waktu_mulai' => 'required|date_format:H:i',
+            'waktu_selesai' => 'required|date_format:H:i|after:waktu_mulai',
+            'keperluan' => 'required|string',
+            'status_verifikasi' => 'nullable|in:pending,disetujui,ditolak'
         ]);
 
         BookingFacility::create($request->all());
 
-        return redirect()->back()->with('success', 'Permintaan booking berhasil dikirim.');
+        return redirect()->route('booking_facility.create')
+            ->with('success', 'Pemesanan fasilitas berhasil diajukan.');
     }
 
     /**

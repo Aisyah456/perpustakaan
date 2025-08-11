@@ -13,7 +13,7 @@ class UsulanBukuController extends Controller
     public function index()
     {
         $usulan = UsulanBuku::latest()->paginate(10);
-        return view('admin.usulan_buku.index', compact('usulan'));
+        return view('home.layanan.usulan.from', compact('usulan'));
     }
 
     public function updateStatus(Request $request, $id)

@@ -1,14 +1,20 @@
 <?php
 
+use App\Models\Loan;
 use App\Models\Menu;
 use App\Models\News;
 use App\Models\Banner;
 use App\Models\Artikel;
 use App\Models\Partner;
+use App\Models\Structure;
 use App\Models\LibraryEvent;
 use Illuminate\Support\Facades\Route;
+use Database\Seeders\LibraryFreeSeeder;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\StafController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\EbookController;
+use App\Http\Controllers\ArtikelController;
 use App\Http\Controllers\LayananController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SejarahController;
@@ -20,13 +26,16 @@ use App\Http\Controllers\StructureController;
 use App\Http\Controllers\UsulanBukuController;
 use App\Http\Controllers\CekPinjamanController;
 use App\Http\Controllers\KoleksiBukuController;
+use App\Http\Controllers\LibraryFreeController;
 use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\AskLibrarianController;
 use App\Http\Controllers\BebasPustakaController;
 use App\Http\Controllers\LibraryGuideController;
 use App\Http\Controllers\ResearchToolController;
 use App\Http\Controllers\Admin\PlagiatController;
 use App\Http\Controllers\admin\PustakaController;
 use App\Http\Controllers\PublicRequestController;
+use App\Http\Controllers\BookingFacilityController;
 use App\Http\Controllers\LiterasiRequestController;
 use App\Http\Controllers\ExternalDocumentController;
 use App\Http\Controllers\TurnitinRequestsController;
@@ -35,7 +44,6 @@ use App\Http\Controllers\Admin\LibraryEventController;
 use App\Http\Controllers\Admin\equestsTurnitinController;
 use App\Http\Controllers\Admin\InternalDocumentController;
 use App\Http\Controllers\Admin\RequestsTurnitinController;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -55,6 +63,15 @@ Route::get('/Home', function () {
 
     return view('home.index', compact('banners', 'menus', 'events', 'news', 'partners', 'library_events', 'artikels'));
 })->name('Home');
+
+// Profil
+Route::get('/profil-perpustakaan', function () {
+    $structures = Structure::whereNull('parent_id')->get();
+
+    return view('home.profil.index', compact('structures'));
+})->name('profil-perpustakaan');
+
+
 
 // Profil Anggota
 // Route::get('/Profil', [StafController::class, 'index']);
@@ -81,8 +98,24 @@ Route::get('/news/detailnews/{id}', [NewsController::class, 'show']);
 
 // Layanan Perpustakaan
 Route::view('/layanan/layanan-cek-turnitin-perpustakaan-umht', 'home.turnitin.index');
-Route::view('/la   yanan/layanan-bebas-pustaka-perpustakaan-umht', 'home.layanan.pustaka.index')->name('layanan.pustaka');
-Route::view('/pelatihan-literasi-informasi-perpustakaan', 'home.layanan.literasi.index');
+Route::prefix('literasi')->group(function () {
+    Route::get('/create', [LiterasiRequestController::class, 'create'])->name('create');
+    Route::post('/store', [LiterasiRequestController::class, 'store'])->name('store');
+});
+Route::group(['prefix' => 'literasi', 'as' => 'literasi.'], function () {
+    Route::resource('/layanan-perpustakaan', LiterasiRequestController::class);
+});
+Route::get('/get-majors/{faculty}', function ($facultyId) {
+    return \App\Models\Major::where('faculty_id', $facultyId)->get();
+});
+
+Route::get('/ask-librarian', [AskLibrarianController::class, 'create'])->name('ask-librarian.create');
+Route::post('/ask-librarian', [AskLibrarianController::class, 'store'])->name('ask-librarian.store');
+
+Route::get('/booking-fasilitas/create', [BookingFacilityController::class, 'create'])->name('booking_facility.create');
+Route::post('/booking-fasilitas/store', [BookingFacilityController::class, 'store'])->name('booking_facility.store');
+
+
 Route::view('/layanan/referensi', 'home.layanan.referensi.index')->name('layanan.referensi');
 Route::view('/layanan/sirkulasi', 'home.layanan.sirkulasi.app')->name('layanan.sirkulasi');
 Route::get('/layanan/turnitin', [TurnitinController::class, 'index'])->name('turnitin.form');
@@ -98,23 +131,23 @@ Route::get('/turnitin', [TurnitinRequestsController::class, 'create'])->name('tu
 Route::post('/turnitin', [TurnitinRequestsController::class, 'store'])->name('turnitin.store');
 
 // Form Literasi (dengan auth)
-Route::middleware(['auth'])->group(function () {
-    Route::get('/literasi', [LiterasiRequestController::class, 'create'])->name('literasi.form');
-    Route::post('/literasi', [LiterasiRequestController::class, 'store'])->name('literasi.store');
-});
+// Route::middleware(['auth'])->group(function () {
+//     Route::get('/literasi', [LiterasiRequestController::class, 'create'])->name('literasi.form');
+//     Route::post('/literasi', [LiterasiRequestController::class, 'store'])->name('literasi.store');
+// });
 
 // Form Bebas Pustaka
-Route::get('/formulir-bebas-pustaka', [BebasPustakaController::class, 'create']);
-Route::post('/formulir-bebas-pustaka', [BebasPustakaController::class, 'store']);
-Route::get('/bebas-pustaka', [BebasPustakaController::class, 'index']);
-Route::post('/bebas-pustaka', [BebasPustakaController::class, 'store']);
+// Route::get('/formulir-bebas-pustaka', [BebasPustakaController::class, 'create']);
+// Route::post('/formulir-bebas-pustaka', [BebasPustakaController::class, 'store']);
+Route::get('/bebas-pustaka', [LibraryFreeController::class, 'index']);
+Route::post('/bebas-pustaka', [LibraryFreeController::class, 'store']);
 
 // Admin Bebas Pustaka
 Route::get('/admin/bebas-pustaka', [BebasPustakaController::class, 'index']);
 Route::post('/admin/bebas-pustaka/{id}/update', [BebasPustakaController::class, 'updateStatus']);
 
 // Usulan Buku
-Route::view('/info-usulan-buku', 'home.layanan.usulan.index')->name('usulan-buku.info');
+// Route::view('/info-usulan-buku', 'home.layanan.usulan.index')->name('usulan-buku.info');
 Route::get('/usulan-buku', [UsulanBukuController::class, 'create'])->name('usulan-buku.create');
 Route::post('/usulan-buku', [UsulanBukuController::class, 'store'])->name('usulan-buku.store');
 
@@ -136,6 +169,21 @@ Route::get('/koleksi-buku/{id}', [KoleksiBukuController::class, 'show'])->name('
 Route::get('/update', [\App\Http\Controllers\ArtikelController::class, 'index'])->name('artikel.index');
 Route::get('/layanan-perpustakaan-umht', [\App\Http\Controllers\LayananController::class, 'index'])->name('layanan.index');
 
+
+Route::controller(TurnitinRequestsController::class)->prefix('turnitin')->name('turnitin.')->group(function () {
+    Route::get('/create', 'create')->name('create');
+    Route::get('/get-majors/{faculty_id}', 'getMajors')->name('getMajors');
+    Route::post('/store', 'store')->name('store');
+});
+
+
+// Route::prefix('bebas-pustaka')->name('bebas-pustaka.')->group(function () {
+//     Route::get('/', [LibraryFreeController::class, 'index'])->name('index');
+//     Route::get('/create', [LibraryFreeController::class, 'create'])->name('create');
+//     Route::post('/store', [LibraryFreeController::class, 'store'])->name('store');
+//     Route::delete('/{libraryFree}', [LibraryFreeController::class, 'destroy'])->name('destroy');
+//     Route::patch('/{libraryFree}/status/{status}', [LibraryFreeController::class, 'updateStatus'])->name('updateStatus');
+// });
 
 /*
 |--------------------------------------------------------------------------
@@ -161,3 +209,27 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
 // Admin Banner Resource
 Route::resource('/banners', \App\Http\Controllers\Admin\BannerController::class);
+
+
+// Admin Routes
+Route::prefix('admin')->name('admin.')->group(function () {
+
+    // Guest routes (tidak perlu login)
+    Route::middleware('guest:admin')->group(function () {
+        Route::get('login', [AdminController::class, 'showLoginForm'])->name('login');
+        Route::post('login', [AdminController::class, 'login']);
+    });
+
+    // Authenticated routes (perlu login)
+    Route::middleware('auth:admin')->group(function () {
+        Route::get('dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+        Route::post('logout', [AdminController::class, 'logout'])->name('logout');
+
+        // Tambahkan route admin lainnya di sini
+        // Route::resource('users', UserController::class);
+        // Route::resource('products', ProductController::class);
+    });
+});
+
+// Redirect /admin ke /admin/login
+Route::redirect('/Admin', '/admin/login');
