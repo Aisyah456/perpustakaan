@@ -155,8 +155,8 @@
 
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
-      <a class="navbar-brand" href="{{ route('admin.external-documents.index') }}">
-        <i class="fas fa-link"></i> Admin Dokumen Eksternal
+      <a class="navbar-brand" href="{{ route('admin.pustaka.index') }}">
+        <i class="fas fa-link"></i> Admin Dokumen Bebas Pustaka
       </a>
 
     </div>
@@ -197,6 +197,7 @@
                   <th>Lulus</th>
                   <th>Status</th>
                   <th>Berkas</th>
+                  <th>Aksi</th>
                 </tr>
               </thead>
               <tbody class="text-center">
@@ -237,6 +238,20 @@
                         </a>
                       @endif
                     </td>
+                    <td class="text-nowrap">
+                      <a href="{{ route('admin.pustaka.show', $item->id) }}" class="btn btn-sm btn-outline-info">
+                        <i class="fas fa-eye"></i>
+                      </a>
+                      <a href="{{ route('admin.pustaka.edit', $item->id) }}" class="btn btn-sm btn-outline-warning">
+                        <i class="fas fa-edit"></i>
+                      </a>
+                      <form action="{{ route('admin.pustaka.destroy', $item->id) }}" method="POST" class="d-inline"
+                        onsubmit="return confirm('Yakin ingin menghapus?')">
+                        @csrf
+                        @method('DELETE')
+                        <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                      </form>
+                    </td>
                   </tr>
                 @empty
                   <tr>
@@ -254,7 +269,7 @@
         {{-- MODAL TAMBAH --}}
         <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
           <div class="modal-dialog modal-lg">
-            <form action="{{ route('pustaka.store') }}" method="POST" enctype="multipart/form-data"
+            <form action="{{ route('admin.pustaka.store') }}" method="POST" enctype="multipart/form-data"
               class="modal-content">
               @csrf
               <div class="modal-header">

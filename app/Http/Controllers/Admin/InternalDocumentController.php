@@ -17,7 +17,7 @@ class InternalDocumentController extends Controller
     public function index()
     {
         $documents = InternalDocument::orderBy('created_at', 'desc')->get();
-        return view('admin.dokumen.internal', compact('documents'));
+        return view('home.dokumen.internal.index', compact('documents'));
     }
 
     /**

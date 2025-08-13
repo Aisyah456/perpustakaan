@@ -243,7 +243,7 @@
 
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
           <div class="container">
-            <a class="navbar-brand" href="{{ route('admin.benner.index') }}">
+            <a class="navbar-brand" href="{{ route('admin.benners.index') }}">
               <i class="fas fa-images"></i> Admin Banner UMHT
             </a>
             {{-- <div class="navbar-nav ms-auto">
@@ -390,7 +390,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form id="createForm" action="{{ route('admin.banners.store') }}" method="POST"
+          <form id="createForm" action="{{ route('admin.benners.store') }}" method="POST"
             enctype="multipart/form-data">
             @csrf
 

@@ -71,7 +71,7 @@ class AdminController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('admin.login')
+        return redirect()->route('admin.auth.login')
             ->with('success', 'Anda telah berhasil logout.');
     }
 

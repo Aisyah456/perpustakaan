@@ -5,24 +5,30 @@ namespace App\Http\Controllers;
 use App\Models\PanduanPerpustakaan;
 use Illuminate\Http\Request;
 
-
 class PanduanController extends Controller
 {
+    /**
+     * Tampilkan daftar panduan (halaman publik)
+     */
     public function index()
     {
-        $panduan = PanduanPerpustakaan::orderBy('created_at', 'desc')->get();
-
+        $panduan = PanduanPerpustakaan::latest()->get();
         return view('home.dokumen.panduan.index', compact('panduan'));
     }
 
-
+    /**
+     * Tampilkan detail panduan (langsung redirect ke link panduan)
+     */
     public function show($id)
     {
         $panduan = PanduanPerpustakaan::findOrFail($id);
 
-        // Optional: Log access or track clicks
-        // You can add analytics here if needed
+        // Jika link tersedia, redirect ke halaman/link tersebut
+        if (!empty($panduan->link)) {
+            return redirect()->away($panduan->link);
+        }
 
-        return redirect($panduan->link);
+        // Jika tidak ada link, kembalikan ke daftar panduan dengan pesan error
+        return redirect()->route('panduan.index')->with('error', 'Link panduan tidak tersedia.');
     }
 }

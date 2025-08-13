@@ -9,7 +9,7 @@
                 <div class="footer-top">
                   <!-- Logo Perpustakaan -->
                   <div class="mb-3">
-                    <img src="{{ asset('lib/img/logos/umht.png') }}" alt="Logo Perpustakaan" style="max-width: 180px;">
+                    <img src="{{ asset('lib/img/logos/umht.png') }}" alt="Logo Perpustakaan" style="max-width:190px;">
                   </div>
 
                   <h3 class="mb-1-9 h5">Tentang Kami</h3>

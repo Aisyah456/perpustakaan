@@ -16,10 +16,10 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\EbookController;
 use App\Http\Controllers\ArtikelController;
 use App\Http\Controllers\LayananController;
+use App\Http\Controllers\PanduanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SejarahController;
 use App\Http\Controllers\StandarsController;
-use App\Http\Controllers\TurnitinController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\ReferensiController;
 use App\Http\Controllers\StructureController;
@@ -37,13 +37,15 @@ use App\Http\Controllers\admin\PustakaController;
 use App\Http\Controllers\PublicRequestController;
 use App\Http\Controllers\BookingFacilityController;
 use App\Http\Controllers\LiterasiRequestController;
+
 use App\Http\Controllers\ExternalDocumentController;
 use App\Http\Controllers\TurnitinRequestsController;
 use App\Http\Controllers\Admin\AdminRequestController;
 use App\Http\Controllers\Admin\LibraryEventController;
-use App\Http\Controllers\Admin\equestsTurnitinController;
 use App\Http\Controllers\Admin\InternalDocumentController;
 use App\Http\Controllers\Admin\RequestsTurnitinController;
+use App\Http\Controllers\Admin\PanduanPerpustakaanController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -115,11 +117,15 @@ Route::post('/ask-librarian', [AskLibrarianController::class, 'store'])->name('a
 Route::get('/booking-fasilitas/create', [BookingFacilityController::class, 'create'])->name('booking_facility.create');
 Route::post('/booking-fasilitas/store', [BookingFacilityController::class, 'store'])->name('booking_facility.store');
 
+// Route publik untuk melihat panduan perpustakaan
+Route::get('/panduan-perpustakaan', [PanduanController::class, 'index'])->name('panduan.index');
+Route::get('/panduan-perpustakaan/{id}', [PanduanController::class, 'show'])->name('panduan.show');
+
 
 Route::view('/layanan/referensi', 'home.layanan.referensi.index')->name('layanan.referensi');
 Route::view('/layanan/sirkulasi', 'home.layanan.sirkulasi.app')->name('layanan.sirkulasi');
-Route::get('/layanan/turnitin', [TurnitinController::class, 'index'])->name('turnitin.form');
-Route::post('/layanan/turnitin', [TurnitinController::class, 'store'])->name('turnitin.store');
+// Route::get('/layanan/turnitin', [TurnitinController::class, 'index'])->name('turnitin.form');
+// Route::post('/layanan/turnitin', [TurnitinController::class, 'store'])->name('turnitin.store');
 
 // Form Referensi
 Route::post('/referensi/kirim', [ReferensiController::class, 'kirim'])->name('referensi.kirim');
@@ -185,6 +191,27 @@ Route::controller(TurnitinRequestsController::class)->prefix('turnitin')->name('
 //     Route::patch('/{libraryFree}/status/{status}', [LibraryFreeController::class, 'updateStatus'])->name('updateStatus');
 // });
 
+// External Documents
+Route::prefix('dokumen-eksternal')->name('dokumen-eksternal.')->group(function () {
+    Route::get('/', [ExternalDocumentController::class, 'index'])->name('index');
+    Route::post('/', [ExternalDocumentController::class, 'store'])->name('store');
+    Route::get('/{id}', [ExternalDocumentController::class, 'show'])->name('show');
+    Route::put('/{id}', [ExternalDocumentController::class, 'update'])->name('update');
+    Route::delete('/{id}', [ExternalDocumentController::class, 'destroy'])->name('destroy');
+});
+
+// Internal Documents
+Route::prefix('dokumen-internal')->name('dokumen-internal.')->group(function () {
+    Route::get('/', [InternalDocumentController::class, 'index'])->name('index');
+    Route::post('/', [InternalDocumentController::class, 'store'])->name('store');
+    Route::get('/{id}', [InternalDocumentController::class, 'show'])->name('show');
+    Route::put('/{id}', [InternalDocumentController::class, 'update'])->name('update');
+    Route::delete('/{id}', [InternalDocumentController::class, 'destroy'])->name('destroy');
+});
+
+Route::get('/research-tools', [ResearchToolController::class, 'index'])
+    ->name('research-tools.index');
+
 /*
 |--------------------------------------------------------------------------
 | Admin Routes
@@ -201,11 +228,46 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('news', \App\Http\Controllers\Admin\NewsController::class);
     Route::resource('artikel', \App\Http\Controllers\Admin\ArtikelController::class);
     Route::resource('banner', \App\Http\Controllers\Admin\BannerController::class);
-    Route::resource('plagiat', \App\Http\Controllers\Admin\PlagiatController::class);
+
     Route::resource('pustaka', \App\Http\Controllers\Admin\PustakaController::class);
-    Route::get('/turnitin', [TurnitinController::class, 'adminIndex'])->name('turnitin.index');
-    Route::post('/turnitin/{id}/status', [TurnitinController::class, 'updateStatus'])->name('turnitin.status');
+    // Route::get('/turnitin', [TurnitinController::class, 'adminIndex'])->name('turnitin.index');
+    // Route::post('/turnitin/{id}/status', [TurnitinController::class, 'updateStatus'])->name('turnitin.status');
 });
+
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('turnitin', RequestsTurnitinController::class)->names([
+        'index'   => 'turnitin.index',
+        'create'  => 'turnitin.create',
+        'store'   => 'turnitin.store',
+        'show'    => 'turnitin.show',
+        'edit'    => 'turnitin.edit',
+        'update'  => 'turnitin.update',
+        'destroy' => 'turnitin.destroy',
+    ]);
+
+    Route::resource('plagiat', PlagiatController::class)->names([
+        'index'   => 'plagiat.index',
+        'create'  => 'plagiat.create',
+        'store'   => 'plagiat.store',
+        'show'    => 'plagiat.show',
+        'edit'    => 'plagiat.edit',
+        'update'  => 'plagiat.update',
+        'destroy' => 'plagiat.destroy',
+    ]);
+
+    Route::resource('benners', BannerController::class)->names([
+        'index'   => 'benners.index',
+        'create'  => 'benners.create',
+        'store'   => 'benners.store',
+        'show'    => 'benners.show',
+        'edit'    => 'benners.edit',
+        'update'  => 'benners.update',
+        'destroy' => 'benners.destroy',
+    ]);
+});
+
+
 
 // Admin Banner Resource
 Route::resource('/banners', \App\Http\Controllers\Admin\BannerController::class);
@@ -233,3 +295,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
 // Redirect /admin ke /admin/login
 Route::redirect('/Admin', '/admin/login');
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('pustaka', PustakaController::class)->names([
+        'index'   => 'pustaka.index',
+        'create'  => 'pustaka.create',
+        'store'   => 'pustaka.store',
+        'show'    => 'pustaka.show',
+        'edit'    => 'pustaka.edit',
+        'update'  => 'pustaka.update',
+        'destroy' => 'pustaka.destroy',
+    ]);
+});

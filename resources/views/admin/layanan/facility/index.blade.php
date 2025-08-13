@@ -230,126 +230,134 @@
 </style>
 
 @section('content')
-  <div class="container py-5">
-    <h3 class="mb-4">Form Permohonan Bebas Pustaka</h3>
-
-    @if (session('success'))
-      <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
-
-    @if ($errors->any())
-      <div class="alert alert-danger">
-        <strong>Terjadi kesalahan:</strong>
-        <ul>
-          @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
-          @endforeach
-        </ul>
+  <div class="row">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-images"></i> Kelola Data Plagiat</h2>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">
+          <i class="fas fa-plus"></i> Tambah Data Plagiat
+        </button>
       </div>
-    @endif
+      <div class="header-admin"></div>
 
-    <form method="POST" action="{{ route('bebas-pustaka.store') }}" enctype="multipart/form-data">
-      @csrf
+      <div class="container mt-4">
+        <h2>📄 Manajemen Permintaan Turnitin</h2>
 
-      {{-- NAMA & NIM --}}
-      <div class="row mb-3">
-        <div class="col-md-6">
-          <label>Nama <span class="text-danger">*</span></label>
-          <input type="text" name="nama" class="form-control" value="{{ old('nama') }}" required>
-        </div>
-        <div class="col-md-6">
-          <label>NIM <span class="text-danger">*</span></label>
-          <input type="text" name="nim" class="form-control" value="{{ old('nim') }}" required>
-        </div>
-      </div>
+        @if (session('success'))
+          <div class="alert alert-success mt-3">{{ session('success') }}</div>
+        @endif
 
-      {{-- FAKULTAS & PRODI --}}
-      <div class="row mb-3">
-        <div class="col-md-6">
-          <label>Fakultas <span class="text-danger">*</span></label>
-          <select name="faculty_id" class="form-select" required>
-            <option value="">-- Pilih Fakultas --</option>
-            @foreach ($faculties as $faculty)
-              <option value="{{ $faculty->id }}" {{ old('faculty_id') == $faculty->id ? 'selected' : '' }}>
-                {{ $faculty->nama_fakultas }}
-              </option>
-            @endforeach
-          </select>
-        </div>
-        <div class="col-md-6">
-          <label>Program Studi <span class="text-danger">*</span></label>
-          <select name="major_id" class="form-select" required>
-            <option value="">-- Pilih Program Studi --</option>
-            @foreach ($majors as $major)
-              <option value="{{ $major->id }}" {{ old('major_id') == $major->id ? 'selected' : '' }}>
-                {{ $major->nama_prodi }}
-              </option>
-            @endforeach
-          </select>
-        </div>
-      </div>
+        <!-- Tombol Tambah -->
+        <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#createModal">+ Tambah
+          Permintaan</button>
 
-      {{-- NO HP, EMAIL, JENJANG --}}
-      <div class="row mb-3">
-        <div class="col-md-4">
-          <label>No. HP <span class="text-danger">*</span></label>
-          <input type="text" name="no_hp" class="form-control" value="{{ old('no_hp') }}" required>
-        </div>
-        <div class="col-md-4">
-          <label>Email <span class="text-danger">*</span></label>
-          <input type="email" name="email" class="form-control" value="{{ old('email') }}" required>
-        </div>
-        <div class="col-md-4">
-          <label>Jenjang <span class="text-danger">*</span></label>
-          <select name="jenjang" class="form-select" required>
-            <option value="">-- Pilih --</option>
-            <option value="D3" {{ old('jenjang') == 'D3' ? 'selected' : '' }}>D3</option>
-            <option value="S1" {{ old('jenjang') == 'S1' ? 'selected' : '' }}>S1</option>
-            <option value="S2" {{ old('jenjang') == 'S2' ? 'selected' : '' }}>S2</option>
-          </select>
-        </div>
-      </div>
+        <!-- Tabel Data -->
+        <table class="table table-bordered table-striped mt-3">
+          <thead>
+            <tr>
+              <th>Nama</th>
+              <th>Judul Naskah</th>
+              <th>Jenis</th>
+              <th>Status</th>
+              <th>File</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            @forelse($data as $req)
+              <tr>
+                <td>{{ $req->nama }}</td>
+                <td>{{ $req->judul_naskah }}</td>
+                <td>{{ $req->jenis_dokumen }}</td>
+                <td>
+                  <span
+                    class="badge bg-{{ $req->status == 'pending' ? 'warning' : ($req->status == 'selesai' ? 'success' : ($req->status == 'ditolak' ? 'danger' : 'info')) }}">
+                    {{ ucfirst($req->status) }}
+                  </span>
+                </td>
+                <td>
+                  <a href="{{ asset('storage/' . $req->file) }}" target="_blank"
+                    class="btn btn-sm btn-secondary">Lihat</a>
+                </td>
+                <td>
+                  <button class="btn btn-sm btn-info" data-bs-toggle="modal"
+                    data-bs-target="#editModal{{ $req->id }}">Edit</button>
+                  <form action="{{ route('admin.turnitin.destroy', $req->id) }}" method="POST" style="display:inline;">
+                    @csrf @method('DELETE')
+                    <button class="btn btn-sm btn-danger" onclick="return confirm('Yakin hapus?')">Hapus</button>
+                  </form>
+                </td>
+              </tr>
 
-      {{-- KEPERLUAN --}}
-      <div class="mb-3">
-        <label>Keperluan <span class="text-danger">*</span></label>
-        <select name="keperluan" class="form-select" required>
-          <option value="">-- Pilih --</option>
-          <option value="Wisuda" {{ old('keperluan') == 'Wisuda' ? 'selected' : '' }}>Wisuda</option>
-          <option value="Yudisium" {{ old('keperluan') == 'Yudisium' ? 'selected' : '' }}>Yudisium</option>
-          <option value="Lainnya" {{ old('keperluan') == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
-        </select>
-      </div>
+              <!-- Modal Edit -->
+              <div class="modal fade" id="editModal{{ $req->id }}" tabindex="-1">
+                <div class="modal-dialog">
+                  <form action="{{ route('admin.turnitin.update', $req->id) }}" method="POST" class="modal-content">
+                    @csrf @method('PUT')
+                    <div class="modal-header">
+                      <h5 class="modal-title">Edit Status Permintaan</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                      <select name="status" class="form-control">
+                        <option value="pending" {{ $req->status == 'pending' ? 'selected' : '' }}>Pending</option>
+                        <option value="diproses" {{ $req->status == 'diproses' ? 'selected' : '' }}>Diproses</option>
+                        <option value="selesai" {{ $req->status == 'selesai' ? 'selected' : '' }}>Selesai</option>
+                        <option value="ditolak" {{ $req->status == 'ditolak' ? 'selected' : '' }}>Ditolak</option>
+                      </select>
+                      <input type="text" name="hasil_turnitin" value="{{ $req->hasil_turnitin }}"
+                        class="form-control mt-2" placeholder="Hasil Turnitin">
+                      <textarea name="catatan_admin" class="form-control mt-2" placeholder="Catatan Admin">{{ $req->catatan_admin }}</textarea>
+                    </div>
+                    <div class="modal-footer">
+                      <button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                      <button class="btn btn-primary">Simpan</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            @empty
+              <tr>
+                <td colspan="6" class="text-center">Tidak ada data</td>
+              </tr>
+            @endforelse
+          </tbody>
+        </table>
 
-      {{-- TAHUN MASUK & LULUS --}}
-      <div class="row mb-3">
-        <div class="col-md-6">
-          <label>Tahun Masuk <span class="text-danger">*</span></label>
-          <input type="text" name="tahun_masuk" class="form-control" value="{{ old('tahun_masuk') }}" required>
-        </div>
-        <div class="col-md-6">
-          <label>Tahun Lulus <span class="text-danger">*</span></label>
-          <input type="text" name="tahun_lulus" class="form-control" value="{{ old('tahun_lulus') }}" required>
-        </div>
+        {{ $data->links() }}
       </div>
 
-      {{-- FILES --}}
-      <div class="mb-3">
-        <label>File Karya Ilmiah (.pdf) <span class="text-danger">*</span></label>
-        <input type="file" name="file_karya_ilmiah" class="form-control" accept=".pdf" required>
+      <!-- Modal Create -->
+      <div class="modal fade" id="createModal" tabindex="-1">
+        <div class="modal-dialog">
+          <form action="{{ route('admin.turnitin.store') }}" method="POST" enctype="multipart/form-data"
+            class="modal-content">
+            @csrf
+            <div class="modal-header">
+              <h5 class="modal-title">Tambah Permintaan Turnitin</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+              <input type="text" name="nama" class="form-control mb-2" placeholder="Nama" required>
+              <input type="text" name="nim_nidn" class="form-control mb-2" placeholder="NIM/NIDN" required>
+              <input type="email" name="email" class="form-control mb-2" placeholder="Email" required>
+              <input type="text" name="fakultas_prodi" class="form-control mb-2" placeholder="Fakultas/Prodi" required>
+              <input type="text" name="judul_naskah" class="form-control mb-2" placeholder="Judul Naskah" required>
+              <select name="jenis_dokumen" class="form-control mb-2" required>
+                <option value="">-- Pilih Jenis Dokumen --</option>
+                <option value="Skripsi">Skripsi</option>
+                <option value="Tesis">Tesis</option>
+                <option value="Artikel">Artikel</option>
+                <option value="Lainnya">Lainnya</option>
+              </select>
+              <input type="file" name="file" class="form-control mb-2" required>
+              <textarea name="catatan_pengguna" class="form-control" placeholder="Catatan Pengguna"></textarea>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+              <button class="btn btn-primary">Simpan</button>
+            </div>
+          </form>
+        </div>
       </div>
-
-      <div class="mb-3">
-        <label>Scan KTM <span class="text-danger">*</span></label>
-        <input type="file" name="scan_ktm" class="form-control" accept=".pdf,.jpg,.jpeg,.png" required>
-      </div>
-
-      <div class="mb-3">
-        <label>Bukti Upload (opsional)</label>
-        <input type="file" name="bukti_upload" class="form-control" accept=".pdf,.jpg,.jpeg,.png">
-      </div>
-
-      <button type="submit" class="btn btn-primary">Kirim</button>
-    </form>
-  </div>
-@endsection
+    @endsection
