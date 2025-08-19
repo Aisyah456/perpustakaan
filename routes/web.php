@@ -27,23 +27,29 @@ use App\Http\Controllers\UsulanBukuController;
 use App\Http\Controllers\CekPinjamanController;
 use App\Http\Controllers\KoleksiBukuController;
 use App\Http\Controllers\LibraryFreeController;
+use App\Http\Controllers\NewsLibraryController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\AskLibrarianController;
 use App\Http\Controllers\BebasPustakaController;
+use App\Http\Controllers\EventLibraryController;
 use App\Http\Controllers\LibraryGuideController;
 use App\Http\Controllers\ResearchToolController;
 use App\Http\Controllers\Admin\PlagiatController;
 use App\Http\Controllers\admin\PustakaController;
 use App\Http\Controllers\PublicRequestController;
+
+use App\Http\Controllers\ArticleLibraryController;
 use App\Http\Controllers\BookingFacilityController;
 use App\Http\Controllers\LiterasiRequestController;
-
 use App\Http\Controllers\ExternalDocumentController;
+use App\Http\Controllers\LatestCollectionController;
+use App\Http\Controllers\RequestsTurnitinController;
 use App\Http\Controllers\TurnitinRequestsController;
 use App\Http\Controllers\Admin\AdminRequestController;
 use App\Http\Controllers\Admin\LibraryEventController;
+use App\Http\Controllers\Admin\InternalArchivesController;
+
 use App\Http\Controllers\Admin\InternalDocumentController;
-use App\Http\Controllers\Admin\RequestsTurnitinController;
 use App\Http\Controllers\Admin\PanduanPerpustakaanController;
 
 
@@ -212,66 +218,31 @@ Route::prefix('dokumen-internal')->name('dokumen-internal.')->group(function () 
 Route::get('/research-tools', [ResearchToolController::class, 'index'])
     ->name('research-tools.index');
 
+// Update
+Route::prefix('berita-perpus')->name('berita-perpus.')->group(function () {
+    Route::get('/', [NewsLibraryController::class, 'index'])->name('index');
+    Route::get('/{id}', [NewsLibraryController::class, 'show'])->name('show');
+});
+
+Route::prefix('agenda-perpus')->name('agenda-perpus.')->group(function () {
+    Route::get('/', [EventLibraryController::class, 'index'])->name('index');
+    Route::get('/{id}', [EventLibraryController::class, 'show'])->name('show');
+});
+
+Route::prefix('artikel-perpus')->name('artikel-perpus.')->group(function () {
+    Route::get('/', [ArticleLibraryController::class, 'index'])->name('index');
+    Route::get('/{id}', [ArticleLibraryController::class, 'show'])->name('show');
+});
+
+
+Route::get('/koleksi-terbaru', [LatestCollectionController::class, 'index'])->name('latest_collections.index');
+
+
 /*
 |--------------------------------------------------------------------------
 | Admin Routes
 |--------------------------------------------------------------------------
 */
-
-// Admin Dashboard
-Route::get('/Admin', fn() => view('admin.index'));
-Route::middleware('auth')->get('/admin/pinjaman', fn() => view('admin.pinjaman.index', ['loans' => \App\Models\Loan::latest()->paginate(10)]))->name('admin.pinjaman');
-
-// Admin Referensi
-Route::prefix('admin')->name('admin.')->group(function () {
-    Route::resource('referensi', \App\Http\Controllers\Admin\ReferensiController::class)->except(['show']);
-    Route::resource('news', \App\Http\Controllers\Admin\NewsController::class);
-    Route::resource('artikel', \App\Http\Controllers\Admin\ArtikelController::class);
-    Route::resource('banner', \App\Http\Controllers\Admin\BannerController::class);
-
-    Route::resource('pustaka', \App\Http\Controllers\Admin\PustakaController::class);
-    // Route::get('/turnitin', [TurnitinController::class, 'adminIndex'])->name('turnitin.index');
-    // Route::post('/turnitin/{id}/status', [TurnitinController::class, 'updateStatus'])->name('turnitin.status');
-});
-
-
-Route::prefix('admin')->name('admin.')->group(function () {
-    Route::resource('turnitin', RequestsTurnitinController::class)->names([
-        'index'   => 'turnitin.index',
-        'create'  => 'turnitin.create',
-        'store'   => 'turnitin.store',
-        'show'    => 'turnitin.show',
-        'edit'    => 'turnitin.edit',
-        'update'  => 'turnitin.update',
-        'destroy' => 'turnitin.destroy',
-    ]);
-
-    Route::resource('plagiat', PlagiatController::class)->names([
-        'index'   => 'plagiat.index',
-        'create'  => 'plagiat.create',
-        'store'   => 'plagiat.store',
-        'show'    => 'plagiat.show',
-        'edit'    => 'plagiat.edit',
-        'update'  => 'plagiat.update',
-        'destroy' => 'plagiat.destroy',
-    ]);
-
-    Route::resource('benners', BannerController::class)->names([
-        'index'   => 'benners.index',
-        'create'  => 'benners.create',
-        'store'   => 'benners.store',
-        'show'    => 'benners.show',
-        'edit'    => 'benners.edit',
-        'update'  => 'benners.update',
-        'destroy' => 'benners.destroy',
-    ]);
-});
-
-
-
-// Admin Banner Resource
-Route::resource('/banners', \App\Http\Controllers\Admin\BannerController::class);
-
 
 // Admin Routes
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -295,6 +266,84 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
 // Redirect /admin ke /admin/login
 Route::redirect('/Admin', '/admin/login');
+Route::redirect('/admin', '/admin/login');
+
+
+// Admin Dashboard
+Route::get('/Admin', fn() => view('admin.index'));
+Route::middleware('auth')->get('/admin/pinjaman', fn() => view('admin.pinjaman.index', ['loans' => \App\Models\Loan::latest()->paginate(10)]))->name('admin.pinjaman');
+
+// Admin Referensi
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('referensi', \App\Http\Controllers\Admin\ReferensiController::class)->except(['show']);
+    Route::resource('berita', \App\Http\Controllers\Admin\NewsController::class);
+    Route::resource('artikel', \App\Http\Controllers\Admin\ArtikelController::class);
+    Route::resource('banner', \App\Http\Controllers\Admin\BannerController::class);
+
+    Route::resource('pustaka', \App\Http\Controllers\Admin\PustakaController::class);
+    // Route::get('/turnitin', [TurnitinController::class, 'adminIndex'])->name('turnitin.index');
+    // Route::post('/turnitin/{id}/status', [TurnitinController::class, 'updateStatus'])->name('turnitin.status');
+});
+
+
+Route::prefix('admin')->name('admin.')->group(function () {
+
+    // Route::resource('turnitin', RequestsTurnitinController::class)->names([
+    //     'index'   => 'turnitin.index',
+    //     'create'  => 'turnitin.create',
+    //     'store'   => 'turnitin.store',
+    //     'show'    => 'turnitin.show',
+    //     'edit'    => 'turnitin.edit',
+    //     'update'  => 'turnitin.update',
+    //     'destroy' => 'turnitin.destroy',
+    // ]);
+
+    // // Route tambahan untuk download file turnitin
+    // Route::get('turnitin/{turnitinRequest}/download', [RequestsTurnitinController::class, 'downloadFile'])
+    //     ->name('turnitin.download');
+
+
+    Route::resource('plagiat', PlagiatController::class)->names([
+        'index'   => 'plagiat.index',
+        'create'  => 'plagiat.create',
+        'store'   => 'plagiat.store',
+        'show'    => 'plagiat.show',
+        'edit'    => 'plagiat.edit',
+        'update'  => 'plagiat.update',
+        'destroy' => 'plagiat.destroy',
+    ]);
+
+    Route::resource('benners', BannerController::class)->names([
+        'index'   => 'benners.index',
+        'create'  => 'benners.create',
+        'store'   => 'benners.store',
+        'show'    => 'benners.show',
+        'edit'    => 'benners.edit',
+        'update'  => 'benners.update',
+        'destroy' => 'benners.destroy',
+    ]);
+
+
+    Route::resource('internal-documents', InternalArchivesController::class)->names([
+        'index'   => 'internal-documents.index',
+        'create'  => 'internal-documents.create',
+        'store'   => 'internal-documents.store',
+        'show'    => 'internal-documents.show',
+        'edit'    => 'internal-documents.edit',
+        'update'  => 'internal-documents.update',
+        'destroy' => 'internal-documents.destroy',
+    ]);
+});
+
+
+
+
+
+
+// Admin Banner Resource
+Route::resource('/banners', \App\Http\Controllers\Admin\BannerController::class);
+
+
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('pustaka', PustakaController::class)->names([
@@ -306,4 +355,26 @@ Route::prefix('admin')->name('admin.')->group(function () {
         'update'  => 'pustaka.update',
         'destroy' => 'pustaka.destroy',
     ]);
+});
+
+// Route::prefix('admin')->name('admin.')->group(function () {
+//     Route::resource('pustaka', PustakaController::class);
+// });
+
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    // Resource routes (index, create, store, show, edit, update, destroy)
+    Route::resource('turnitin', RequestsTurnitinController::class)->names([
+        'index'   => 'turnitin.index',
+        'create'  => 'turnitin.create',
+        'store'   => 'turnitin.store',
+        'show'    => 'turnitin.show',
+        'edit'    => 'turnitin.edit',
+        'update'  => 'turnitin.update',
+        'destroy' => 'turnitin.destroy',
+    ]);
+
+    // Tambahan route untuk download file
+    Route::get('turnitin/{id}/download', [RequestsTurnitinController::class, 'download'])
+        ->name('turnitin.download');
 });

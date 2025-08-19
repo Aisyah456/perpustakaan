@@ -201,9 +201,11 @@
                 </tr>
               </thead>
               <tbody class="text-center">
-                @forelse($documents as $index => $item)
+                @forelse($document as $index => $item)
                   <tr>
-                    <td class="fw-semibold text-muted">{{ $index + 1 }}</td>
+                    <td class="fw-semibold text-muted">
+                      {{ $documents->firstItem() + $index }}
+                    </td>
                     <td class="text-start">{{ $item->nama }}</td>
                     <td>{{ $item->nim }}</td>
                     <td>{{ $item->faculty->nama_fakultas ?? '-' }}</td>
@@ -215,22 +217,26 @@
                     <td>
                       <span
                         class="badge rounded-pill
-              @if ($item->status == 'pending') bg-warning text-dark
-              @elseif($item->status == 'disetujui') bg-success
-              @elseif($item->status == 'ditolak') bg-danger
-              @else bg-secondary @endif">
+                    @if ($item->status == 'pending') bg-warning text-dark
+                    @elseif($item->status == 'disetujui') bg-success
+                    @elseif($item->status == 'ditolak') bg-danger
+                    @else bg-secondary @endif">
                         {{ ucfirst($item->status) }}
                       </span>
                     </td>
                     <td class="text-nowrap">
-                      <a href="{{ asset('storage/' . $item->file_karya_ilmiah) }}"
-                        class="btn btn-sm btn-outline-primary mb-1" target="_blank">
-                        <i class="fas fa-file-alt"></i> Ilmiah
-                      </a>
-                      <a href="{{ asset('storage/' . $item->scan_ktm) }}" class="btn btn-sm btn-outline-secondary mb-1"
-                        target="_blank">
-                        <i class="fas fa-id-card"></i> KTM
-                      </a>
+                      @if ($item->file_karya_ilmiah)
+                        <a href="{{ asset('storage/' . $item->file_karya_ilmiah) }}"
+                          class="btn btn-sm btn-outline-primary mb-1" target="_blank">
+                          <i class="fas fa-file-alt"></i> Ilmiah
+                        </a>
+                      @endif
+                      @if ($item->scan_ktm)
+                        <a href="{{ asset('storage/' . $item->scan_ktm) }}" class="btn btn-sm btn-outline-secondary mb-1"
+                          target="_blank">
+                          <i class="fas fa-id-card"></i> KTM
+                        </a>
+                      @endif
                       @if ($item->bukti_upload)
                         <a href="{{ asset('storage/' . $item->bukti_upload) }}"
                           class="btn btn-sm btn-outline-success mb-1" target="_blank">
@@ -255,100 +261,228 @@
                   </tr>
                 @empty
                   <tr>
-                    <td colspan="11" class="text-center text-muted py-4">
+                    <td colspan="12" class="text-center text-muted py-4">
                       <i class="fas fa-folder-open me-2"></i>Belum ada data pengajuan.
                     </td>
                   </tr>
                 @endforelse
               </tbody>
-            </table>
-          </div>
 
-        </div>
 
-        {{-- MODAL TAMBAH --}}
-        <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-lg">
-            <form action="{{ route('admin.pustaka.store') }}" method="POST" enctype="multipart/form-data"
-              class="modal-content">
-              @csrf
-              <div class="modal-header">
-                <h5 class="modal-title" id="createModalLabel">Tambah Pengajuan</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              {{-- MODAL TAMBAH --}}
+              <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                  <form action="{{ route('admin.pustaka.store') }}" method="POST" enctype="multipart/form-data"
+                    class="modal-content">
+                    @csrf
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="createModalLabel">Tambah Pengajuan</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body row g-3">
+                      <div class="col-md-6">
+                        <label for="nama" class="form-label">Nama</label>
+                        <input type="text" name="nama" class="form-control" required>
+                      </div>
+                      <div class="col-md-6">
+                        <label for="nim" class="form-label">NIM</label>
+                        <input type="text" name="nim" class="form-control" required>
+                      </div>
+                      <div class="col-md-6">
+                        <label for="faculty_id" class="form-label">Fakultas</label>
+                        <select name="faculty_id" class="form-select" required>
+                          <option value="">-- Pilih Fakultas --</option>
+                          @foreach ($faculties as $faculty)
+                            <option value="{{ $faculty->id }}">{{ $faculty->nama_fakultas }}</option>
+                          @endforeach
+                        </select>
+                      </div>
+                      <div class="col-md-6">
+                        <label for="major_id" class="form-label">Program Studi</label>
+                        <select name="major_id" class="form-select" required>
+                          <option value="">-- Pilih Prodi --</option>
+                          @foreach ($majors as $major)
+                            <option value="{{ $major->id }}">{{ $major->nama_prodi }}</option>
+                          @endforeach
+                        </select>
+                      </div>
+                      <div class="col-md-6">
+                        <label for="no_hp" class="form-label">No. HP</label>
+                        <input type="text" name="no_hp" class="form-control" required>
+                      </div>
+                      <div class="col-md-6">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" name="email" class="form-control" required>
+                      </div>
+                      <div class="col-md-6">
+                        <label for="jenjang" class="form-label">Jenjang</label>
+                        <select name="jenjang" class="form-select" required>
+                          <option value="D3">D3</option>
+                          <option value="S1">S1</option>
+                          <option value="S2">S2</option>
+                        </select>
+                      </div>
+                      <div class="col-md-6">
+                        <label for="keperluan" class="form-label">Keperluan</label>
+                        <input type="text" name="keperluan" class="form-control" required>
+                      </div>
+                      <div class="col-md-6">
+                        <label for="tahun_masuk" class="form-label">Tahun Masuk</label>
+                        <input type="number" name="tahun_masuk" class="form-control" required>
+                      </div>
+                      <div class="col-md-6">
+                        <label for="tahun_lulus" class="form-label">Tahun Lulus</label>
+                        <input type="number" name="tahun_lulus" class="form-control" required>
+                      </div>
+                      <div class="col-md-6">
+                        <label for="file_karya_ilmiah" class="form-label">File Karya Ilmiah</label>
+                        <input type="file" name="file_karya_ilmiah" class="form-control" accept=".pdf" required>
+                      </div>
+                      <div class="col-md-6">
+                        <label for="scan_ktm" class="form-label">Scan KTM</label>
+                        <input type="file" name="scan_ktm" class="form-control" accept=".pdf,.jpg,.jpeg,.png"
+                          required>
+                      </div>
+                      <div class="col-md-6">
+                        <label for="bukti_upload" class="form-label">Bukti Upload (Opsional)</label>
+                        <input type="file" name="bukti_upload" class="form-control" accept=".pdf,.jpg,.jpeg,.png">
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="submit" class="btn btn-success">Simpan</button>
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    </div>
+                  </form>
+                </div>
               </div>
-              <div class="modal-body row g-3">
-                <div class="col-md-6">
-                  <label for="nama" class="form-label">Nama</label>
-                  <input type="text" name="nama" class="form-control" required>
+
+              {{-- MODAL EDIT --}}
+              @foreach ($documents as $item)
+                <div class="modal fade" id="editModal{{ $item->id }}" tabindex="-1"
+                  aria-labelledby="editModalLabel{{ $item->id }}" aria-hidden="true">
+                  <div class="modal-dialog modal-lg">
+                    <form action="{{ route('admin.pustaka.update', $item->id) }}" method="POST"
+                      enctype="multipart/form-data" class="modal-content">
+                      @csrf
+                      @method('PUT')
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel{{ $item->id }}">Edit Pengajuan -
+                          {{ $item->nama }}
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                      </div>
+                      <div class="modal-body row g-3">
+                        <div class="col-md-6">
+                          <label class="form-label">Nama</label>
+                          <input type="text" name="nama" value="{{ $item->nama }}" class="form-control"
+                            required>
+                        </div>
+                        <div class="col-md-6">
+                          <label class="form-label">NIM</label>
+                          <input type="text" name="nim" value="{{ $item->nim }}" class="form-control"
+                            required>
+                        </div>
+                        <div class="col-md-6">
+                          <label class="form-label">Fakultas</label>
+                          <select name="faculty_id" class="form-select" required>
+                            <option value="">-- Pilih Fakultas --</option>
+                            @foreach ($faculties as $faculty)
+                              <option value="{{ $faculty->id }}"
+                                {{ $item->faculty_id == $faculty->id ? 'selected' : '' }}>
+                                {{ $faculty->nama_fakultas }}
+                              </option>
+                            @endforeach
+                          </select>
+                        </div>
+                        <div class="col-md-6">
+                          <label class="form-label">Program Studi</label>
+                          <select name="major_id" class="form-select" required>
+                            <option value="">-- Pilih Prodi --</option>
+                            @foreach ($majors as $major)
+                              <option value="{{ $major->id }}"
+                                {{ $item->major_id == $major->id ? 'selected' : '' }}>
+                                {{ $major->nama_prodi }}
+                              </option>
+                            @endforeach
+                          </select>
+                        </div>
+                        <div class="col-md-6">
+                          <label class="form-label">No. HP</label>
+                          <input type="text" name="no_hp" value="{{ $item->no_hp }}" class="form-control"
+                            required>
+                        </div>
+                        <div class="col-md-6">
+                          <label class="form-label">Email</label>
+                          <input type="email" name="email" value="{{ $item->email }}" class="form-control"
+                            required>
+                        </div>
+                        <div class="col-md-6">
+                          <label class="form-label">Jenjang</label>
+                          <select name="jenjang" class="form-select" required>
+                            <option value="D3" {{ $item->jenjang == 'D3' ? 'selected' : '' }}>D3</option>
+                            <option value="S1" {{ $item->jenjang == 'S1' ? 'selected' : '' }}>S1</option>
+                            <option value="S2" {{ $item->jenjang == 'S2' ? 'selected' : '' }}>S2</option>
+                          </select>
+                        </div>
+                        <div class="col-md-6">
+                          <label class="form-label">Keperluan</label>
+                          <input type="text" name="keperluan" value="{{ $item->keperluan }}" class="form-control"
+                            required>
+                        </div>
+                        <div class="col-md-6">
+                          <label class="form-label">Tahun Masuk</label>
+                          <input type="number" name="tahun_masuk" value="{{ $item->tahun_masuk }}"
+                            class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                          <label class="form-label">Tahun Lulus</label>
+                          <input type="number" name="tahun_lulus" value="{{ $item->tahun_lulus }}"
+                            class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                          <label class="form-label">File Karya Ilmiah</label>
+                          <input type="file" name="file_karya_ilmiah" class="form-control" accept=".pdf">
+                          @if ($item->file_karya_ilmiah)
+                            <small class="text-muted">File saat ini: <a
+                                href="{{ asset('storage/' . $item->file_karya_ilmiah) }}"
+                                target="_blank">Lihat</a></small>
+                          @endif
+                        </div>
+                        <div class="col-md-6">
+                          <label class="form-label">Scan KTM</label>
+                          <input type="file" name="scan_ktm" class="form-control" accept=".pdf,.jpg,.jpeg,.png">
+                          @if ($item->scan_ktm)
+                            <small class="text-muted">File saat ini: <a
+                                href="{{ asset('storage/' . $item->scan_ktm) }}" target="_blank">Lihat</a></small>
+                          @endif
+                        </div>
+                        <div class="col-md-6">
+                          <label class="form-label">Bukti Upload (Opsional)</label>
+                          <input type="file" name="bukti_upload" class="form-control"
+                            accept=".pdf,.jpg,.jpeg,.png">
+                          @if ($item->bukti_upload)
+                            <small class="text-muted">File saat ini: <a
+                                href="{{ asset('storage/' . $item->bukti_upload) }}" target="_blank">Lihat</a></small>
+                          @endif
+                        </div>
+                        <div class="col-md-6">
+                          <label class="form-label">Status</label>
+                          <select name="status" class="form-select" required>
+                            <option value="pending" {{ $item->status == 'pending' ? 'selected' : '' }}>Pending</option>
+                            <option value="disetujui" {{ $item->status == 'disetujui' ? 'selected' : '' }}>Disetujui
+                            </option>
+                            <option value="ditolak" {{ $item->status == 'ditolak' ? 'selected' : '' }}>Ditolak</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Simpan Perubahan</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                      </div>
+                    </form>
+                  </div>
                 </div>
-                <div class="col-md-6">
-                  <label for="nim" class="form-label">NIM</label>
-                  <input type="text" name="nim" class="form-control" required>
-                </div>
-                <div class="col-md-6">
-                  <label for="faculty_id" class="form-label">Fakultas</label>
-                  <select name="faculty_id" class="form-select" required>
-                    <option value="">-- Pilih Fakultas --</option>
-                    @foreach ($faculties as $faculty)
-                      <option value="{{ $faculty->id }}">{{ $faculty->nama_fakultas }}</option>
-                    @endforeach
-                  </select>
-                </div>
-                <div class="col-md-6">
-                  <label for="major_id" class="form-label">Program Studi</label>
-                  <select name="major_id" class="form-select" required>
-                    <option value="">-- Pilih Prodi --</option>
-                    @foreach ($majors as $major)
-                      <option value="{{ $major->id }}">{{ $major->nama_prodi }}</option>
-                    @endforeach
-                  </select>
-                </div>
-                <div class="col-md-6">
-                  <label for="no_hp" class="form-label">No. HP</label>
-                  <input type="text" name="no_hp" class="form-control" required>
-                </div>
-                <div class="col-md-6">
-                  <label for="email" class="form-label">Email</label>
-                  <input type="email" name="email" class="form-control" required>
-                </div>
-                <div class="col-md-6">
-                  <label for="jenjang" class="form-label">Jenjang</label>
-                  <select name="jenjang" class="form-select" required>
-                    <option value="D3">D3</option>
-                    <option value="S1">S1</option>
-                    <option value="S2">S2</option>
-                  </select>
-                </div>
-                <div class="col-md-6">
-                  <label for="keperluan" class="form-label">Keperluan</label>
-                  <input type="text" name="keperluan" class="form-control" required>
-                </div>
-                <div class="col-md-6">
-                  <label for="tahun_masuk" class="form-label">Tahun Masuk</label>
-                  <input type="number" name="tahun_masuk" class="form-control" required>
-                </div>
-                <div class="col-md-6">
-                  <label for="tahun_lulus" class="form-label">Tahun Lulus</label>
-                  <input type="number" name="tahun_lulus" class="form-control" required>
-                </div>
-                <div class="col-md-6">
-                  <label for="file_karya_ilmiah" class="form-label">File Karya Ilmiah</label>
-                  <input type="file" name="file_karya_ilmiah" class="form-control" accept=".pdf" required>
-                </div>
-                <div class="col-md-6">
-                  <label for="scan_ktm" class="form-label">Scan KTM</label>
-                  <input type="file" name="scan_ktm" class="form-control" accept=".pdf,.jpg,.jpeg,.png" required>
-                </div>
-                <div class="col-md-6">
-                  <label for="bukti_upload" class="form-label">Bukti Upload (Opsional)</label>
-                  <input type="file" name="bukti_upload" class="form-control" accept=".pdf,.jpg,.jpeg,.png">
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button type="submit" class="btn btn-success">Simpan</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      @endsection
+              @endforeach
+
+            @endsection

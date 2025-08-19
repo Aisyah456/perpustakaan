@@ -4,8 +4,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Admin Perpustakaan UMHT</title>
-  <title>@yield('conten')</title>
+  <title>@yield('title', 'Dashboard') | Perpustakaan UMHT </title>
+
   <!-- Meta -->
   @include('admin.libs.meta')
   @include('admin.libs.link')
@@ -38,8 +38,8 @@
           <div class="app-brand-sm d-lg-none d-flex">
 
             <!-- Logo sm starts -->
-            <a href="index.html">
-              <img src="{{ asset('lib/images/logo-sm.svg') }}" class="logo" alt="Bootstrap Gallery">
+            <a href="admin/dasboard">
+              <img src="{{ asset('lib/img/logoumht.png') }}" class="logo" alt="Bootstrap Gallery">
             </a>
             <!-- Logo sm end -->
 
@@ -47,7 +47,7 @@
           <!-- App brand sm ends -->
 
           <!-- Page title starts -->
-          <h5 class="m-0 ms-2 fw-semibold">Accordions</h5>
+          <h5 class="m-0 ms-2 fw-semibold">@yield('title', 'Dashboard')</h5>
           <!-- Page title ends -->
 
           <!-- App header actions starts -->

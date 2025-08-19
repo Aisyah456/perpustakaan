@@ -1,0 +1,136 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+
+class LatestCollectionsSeeder extends Seeder
+{
+    public function run(): void
+    {
+        DB::table('latest_collections')->insert([
+            [
+                'judul' => 'Manajemen Sumber Daya Manusia',
+                'penulis' => 'Prof. Dr. Bambang Wahyudi',
+                'penerbit' => 'Prenada Media',
+                'tahun_terbit' => 2023,
+                'kategori' => 'Buku',
+                'deskripsi' => 'Buku ini membahas konsep dan praktik manajemen SDM di organisasi modern.',
+                'cover' => 'covers/msdm.jpg',
+                'file' => null,
+                'link' => 'https://perpustakaan.univ.ac.id/koleksi/msdm',
+                'tanggal_masuk' => '2025-08-01',
+            ],
+            [
+                'judul' => 'Pengantar Teknologi Informasi',
+                'penulis' => 'Andi Setiawan',
+                'penerbit' => 'Erlangga',
+                'tahun_terbit' => 2024,
+                'kategori' => 'Buku',
+                'deskripsi' => 'Dasar-dasar teknologi informasi dan perannya di berbagai bidang.',
+                'cover' => 'covers/pti.jpg',
+                'file' => null,
+                'link' => 'https://perpustakaan.univ.ac.id/koleksi/pti',
+                'tanggal_masuk' => '2025-08-01',
+            ],
+            [
+                'judul' => 'Metodologi Penelitian Kesehatan',
+                'penulis' => 'Dr. Siti Nurjanah',
+                'penerbit' => 'Salemba Medika',
+                'tahun_terbit' => 2022,
+                'kategori' => 'Buku',
+                'deskripsi' => 'Panduan lengkap penelitian di bidang kesehatan.',
+                'cover' => 'covers/metpenkes.jpg',
+                'file' => null,
+                'link' => 'https://perpustakaan.univ.ac.id/koleksi/metpenkes',
+                'tanggal_masuk' => '2025-08-02',
+            ],
+            [
+                'judul' => 'Akuntansi Keuangan Menengah',
+                'penulis' => 'Kieso, Weygandt, Warfield',
+                'penerbit' => 'Salemba Empat',
+                'tahun_terbit' => 2023,
+                'kategori' => 'Buku',
+                'deskripsi' => 'Pembahasan lengkap akuntansi keuangan tingkat menengah.',
+                'cover' => 'covers/akmen.jpg',
+                'file' => null,
+                'link' => 'https://perpustakaan.univ.ac.id/koleksi/akmen',
+                'tanggal_masuk' => '2025-08-02',
+            ],
+            [
+                'judul' => 'Hukum Bisnis',
+                'penulis' => 'Dr. Gunawan Widjaja',
+                'penerbit' => 'Kencana',
+                'tahun_terbit' => 2021,
+                'kategori' => 'Buku',
+                'deskripsi' => 'Dasar-dasar hukum bisnis di Indonesia.',
+                'cover' => 'covers/hukbis.jpg',
+                'file' => null,
+                'link' => 'https://perpustakaan.univ.ac.id/koleksi/hukbis',
+                'tanggal_masuk' => '2025-08-03',
+            ],
+            [
+                'judul' => 'Kepemimpinan dan Perilaku Organisasi',
+                'penulis' => 'Robbins & Judge',
+                'penerbit' => 'Salemba Empat',
+                'tahun_terbit' => 2023,
+                'kategori' => 'Buku',
+                'deskripsi' => 'Studi kepemimpinan dan perilaku organisasi.',
+                'cover' => 'covers/kpo.jpg',
+                'file' => null,
+                'link' => 'https://perpustakaan.univ.ac.id/koleksi/kpo',
+                'tanggal_masuk' => '2025-08-03',
+            ],
+            [
+                'judul' => 'Analisis Data Penelitian',
+                'penulis' => 'Sugiyono',
+                'penerbit' => 'Alfabeta',
+                'tahun_terbit' => 2022,
+                'kategori' => 'Buku',
+                'deskripsi' => 'Teknik analisis data untuk penelitian kuantitatif dan kualitatif.',
+                'cover' => 'covers/adp.jpg',
+                'file' => null,
+                'link' => 'https://perpustakaan.univ.ac.id/koleksi/adp',
+                'tanggal_masuk' => '2025-08-04',
+            ],
+            [
+                'judul' => 'Farmakologi Dasar untuk Mahasiswa Kesehatan',
+                'penulis' => 'Katzung',
+                'penerbit' => 'EGC',
+                'tahun_terbit' => 2023,
+                'kategori' => 'Buku',
+                'deskripsi' => 'Ilmu dasar farmakologi untuk mahasiswa kesehatan.',
+                'cover' => 'covers/farmako.jpg',
+                'file' => null,
+                'link' => 'https://perpustakaan.univ.ac.id/koleksi/farmako',
+                'tanggal_masuk' => '2025-08-04',
+            ],
+            [
+                'judul' => 'Pengantar Ekonomi Mikro',
+                'penulis' => 'N. Gregory Mankiw',
+                'penerbit' => 'Salemba Empat',
+                'tahun_terbit' => 2023,
+                'kategori' => 'Buku',
+                'deskripsi' => 'Teori dan konsep ekonomi mikro untuk mahasiswa.',
+                'cover' => 'covers/mikro.jpg',
+                'file' => null,
+                'link' => 'https://perpustakaan.univ.ac.id/koleksi/mikro',
+                'tanggal_masuk' => '2025-08-05',
+            ],
+            [
+                'judul' => 'Keperawatan Medikal Bedah',
+                'penulis' => 'Brunner & Suddarth',
+                'penerbit' => 'EGC',
+                'tahun_terbit' => 2022,
+                'kategori' => 'Buku',
+                'deskripsi' => 'Panduan lengkap keperawatan medikal bedah.',
+                'cover' => 'covers/medbed.jpg',
+                'file' => null,
+                'link' => 'https://perpustakaan.univ.ac.id/koleksi/medbed',
+                'tanggal_masuk' => '2025-08-05',
+            ],
+        ]);
+    }
+}

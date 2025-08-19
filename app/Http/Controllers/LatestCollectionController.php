@@ -2,26 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\LibraryEvent;
+use App\Models\LatestCollection;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Http\Resources\LibraryEventResource;
 
-class EventLibraryController extends Controller
+class LatestCollectionController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
-    // {
-    //     $library_events = LibraryEvent::latest()->get();
-    //     return view('home.index', compact('library_events'));
-    // }
     {
-        $library_events = LibraryEvent::all();
-        return view('home.update.agenda', [
-            'library_events' => LibraryEventResource::collection($library_events)
-        ]);
+        $collections = LatestCollection::latest()->paginate(10);
+        return view('home.update.collection', compact('collections'));
     }
 
     /**
@@ -43,7 +35,7 @@ class EventLibraryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(LatestCollection $latestCollection)
     {
         //
     }
@@ -51,7 +43,7 @@ class EventLibraryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(LatestCollection $latestCollection)
     {
         //
     }
@@ -59,7 +51,7 @@ class EventLibraryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, LatestCollection $latestCollection)
     {
         //
     }
@@ -67,7 +59,7 @@ class EventLibraryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(LatestCollection $latestCollection)
     {
         //
     }

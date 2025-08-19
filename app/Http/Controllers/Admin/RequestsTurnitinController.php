@@ -1,126 +1,165 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-// use App\Models\Faculty;
-// use App\Models\Major;
 use App\Models\turnitin_requests;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use App\Mail\TurnitinStatusNotification;
 
 class RequestsTurnitinController extends Controller
 {
-
-    // public function create()
-    // {
-    //     $faculties = Faculty::all();
-    //     $majors = Major::all();
-
-    //     return view('admin.layanan.facility.index', compact('faculties', 'majors'));
-    // }
-
     public function index()
     {
-        $data = turnitin_requests::latest()->paginate(10);
-        return view('admin.layanan.facility.index', compact('data'));
+        $turnitinRequests = turnitin_requests::latest()->paginate(10);
+        return view('admin.layanan.turnitin.index', compact('turnitinRequests'));
     }
 
     public function create()
     {
-        return view('admin.layanan.turnitin.create');
+        return view('turnitin.create');
     }
-
 
     public function store(Request $request)
     {
         $validated = $request->validate([
             'nama' => 'required|string|max:255',
-            'nim' => 'required|string|max:50',
-            'faculty_id' => 'required|exists:faculties,id',
-            'major_id' => 'required|exists:majors,id',
-            'no_hp' => 'required|string|max:20',
-            'email' => 'required|email',
-            'jenjang' => 'required|in:D3,S1,S2',
-            'keperluan' => 'required|in:Wisuda,Yudisium,Lainnya',
-            'tahun_masuk' => 'required|numeric',
-            'tahun_lulus' => 'required|numeric',
-            'file_karya_ilmiah' => 'required|file|mimes:pdf|max:5120',
-            'scan_ktm' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
-            'bukti_upload' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'nim_nidn' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'fakultas_prodi' => 'required|string|max:255',
+            'judul_naskah' => 'required|string|max:255',
+            'jenis_dokumen' => 'required|in:Skripsi,Tesis,Artikel,Lainnya',
+            'file' => 'required|file|mimes:pdf,doc,docx|max:10240',
+            'catatan_pengguna' => 'nullable|string',
         ]);
 
-        // Simpan file
-        $file_karya_ilmiah = $request->file('file_karya_ilmiah')->store('bebas_pustaka/karya_ilmiah', 'public');
-        $scan_ktm = $request->file('scan_ktm')->store('bebas_pustaka/scan_ktm', 'public');
-        $bukti_upload = $request->hasFile('bukti_upload')
-            ? $request->file('bukti_upload')->store('bebas_pustaka/bukti_upload', 'public')
-            : null;
+        if ($request->hasFile('file')) {
+            $fileName = time() . '_' . $request->file('file')->getClientOriginalName();
+            $filePath = $request->file('file')->storeAs('turnitin_files', $fileName, 'public');
+            $validated['file'] = $filePath;
+        }
 
-        // Simpan data
-        turnitin_requests::create([
-            'nama' => $validated['nama'],
-            'nim' => $validated['nim'],
-            'faculty_id' => $validated['faculty_id'],
-            'major_id' => $validated['major_id'],
-            'no_hp' => $validated['no_hp'],
-            'email' => $validated['email'],
-            'jenjang' => $validated['jenjang'],
-            'keperluan' => $validated['keperluan'],
-            'tahun_masuk' => $validated['tahun_masuk'],
-            'tahun_lulus' => $validated['tahun_lulus'],
-            'file_karya_ilmiah' => $file_karya_ilmiah,
-            'scan_ktm' => $scan_ktm,
-            'bukti_upload' => $bukti_upload,
-        ]);
+        $turnitinRequest = turnitin_requests::create($validated);
 
-        return redirect()->route('admin.turnitin.index')->with('success', 'Permohonan berhasil dikirim.');
+        // Send email notification to admin
+        $this->sendEmailNotification($turnitinRequest, 'new_request');
+
+        if ($request->ajax()) {
+            return response()->json(['success' => true, 'message' => 'Permintaan berhasil dibuat']);
+        }
+
+        return redirect()->route('turnitin.index')
+            ->with('success', 'Permintaan Turnitin berhasil dibuat.');
     }
 
-    public function edit($id)
+    public function show(turnitin_requests $turnitinRequest)
     {
-        $turnitin = turnitin_requests::findOrFail($id);
-        return view('admin.layanan.turnitin.edit', compact('turnitin'));
+        if (request()->ajax()) {
+            return response()->json($turnitinRequest);
+        }
+        return view('turnitin.show', compact('turnitinRequest'));
     }
 
-    public function update(Request $request, $id)
+    public function edit(turnitin_requests $turnitinRequest)
     {
-        $turnitin = turnitin_requests::findOrFail($id);
+        if (request()->ajax()) {
+            return response()->json($turnitinRequest);
+        }
+        return view('turnitin.edit', compact('turnitinRequest'));
+    }
 
+    public function update(Request $request, turnitin_requests $turnitinRequest)
+    {
         $validated = $request->validate([
             'nama' => 'required|string|max:255',
-            'nim' => 'required|string|max:50',
-            'faculty_id' => 'required|exists:faculties,id',
-            'major_id' => 'required|exists:majors,id',
-            'no_hp' => 'required|string|max:20',
-            'email' => 'required|email',
-            'jenjang' => 'required|in:D3,S1,S2',
-            'keperluan' => 'required|in:Wisuda,Yudisium,Lainnya',
-            'tahun_masuk' => 'required|numeric',
-            'tahun_lulus' => 'required|numeric',
+            'nim_nidn' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'fakultas_prodi' => 'required|string|max:255',
+            'judul_naskah' => 'required|string|max:255',
+            'jenis_dokumen' => 'required|in:Skripsi,Tesis,Artikel,Lainnya',
+            'file' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
+            'catatan_pengguna' => 'nullable|string',
+            'status' => 'required|in:pending,diproses,selesai,ditolak',
+            'hasil_turnitin' => 'nullable|string',
+            'catatan_admin' => 'nullable|string',
         ]);
 
-        $turnitin->update($validated);
+        $oldStatus = $turnitinRequest->status;
 
-        return redirect()->route('admin.turnitin.index')->with('success', 'Data berhasil diperbarui.');
+        if ($request->hasFile('file')) {
+            // Delete old file
+            if ($turnitinRequest->file) {
+                Storage::disk('public')->delete($turnitinRequest->file);
+            }
+
+            $fileName = time() . '_' . $request->file('file')->getClientOriginalName();
+            $filePath = $request->file('file')->storeAs('turnitin_files', $fileName, 'public');
+            $validated['file'] = $filePath;
+        }
+
+        $turnitinRequest->update($validated);
+
+        // Send email if status changed
+        if ($oldStatus !== $turnitinRequest->status) {
+            $this->sendEmailNotification($turnitinRequest, 'status_update');
+        }
+
+        return redirect()->route('turnitin.index')
+            ->with('success', 'Permintaan Turnitin berhasil diperbarui.');
     }
 
-    public function destroy($id)
+    public function destroy(turnitin_requests $turnitinRequest)
     {
-        $turnitin = turnitin_requests::findOrFail($id);
-
-        if ($turnitin->file_karya_ilmiah) {
-            Storage::disk('public')->delete($turnitin->file_karya_ilmiah);
-        }
-        if ($turnitin->scan_ktm) {
-            Storage::disk('public')->delete($turnitin->scan_ktm);
-        }
-        if ($turnitin->bukti_upload) {
-            Storage::disk('public')->delete($turnitin->bukti_upload);
+        // Delete file
+        if ($turnitinRequest->file) {
+            Storage::disk('public')->delete($turnitinRequest->file);
         }
 
-        $turnitin->delete();
+        $turnitinRequest->delete();
 
-        return redirect()->route('admin.turnitin.index')->with('success', 'Data berhasil dihapus.');
+        return redirect()->route('turnitin.index')
+            ->with('success', 'Permintaan Turnitin berhasil dihapus.');
+    }
+
+    private function sendEmailNotification(turnitin_requests $turnitinRequest, $type)
+    {
+        try {
+            if ($type === 'new_request') {
+                // Kirim email ke admin
+                Mail::to(config('mail.admin_email', 'admin@university.ac.id'))
+                    ->send(new TurnitinStatusNotification($turnitinRequest, $type));
+            } else {
+                // Kirim email ke user
+                Mail::to($turnitinRequest->email)
+                    ->send(new TurnitinStatusNotification($turnitinRequest, $type));
+            }
+        } catch (\Exception $e) {
+            Log::error('Failed to send email: ' . $e->getMessage());
+        }
+    }
+
+
+    // public function downloadFile(turnitin_requests $turnitinRequest)
+    // {
+    //     if ($turnitinRequest->file && Storage::disk('public')->exists($turnitinRequest->file)) {
+    //         return Storage::disk('public')->download($turnitinRequest->file);
+    //     }
+
+    //     return redirect()->back()->with('error', 'File tidak ditemukan.');
+    // }
+
+    public function download($id)
+    {
+        $file = turnitin_requests::findOrFail($id);
+
+        $path = storage_path('app/public/' . $file->document);
+
+        if (!file_exists($path)) {
+            abort(404, 'File tidak ditemukan.');
+        }
+
+        return response()->download($path, $file->document);
     }
 }

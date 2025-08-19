@@ -4,7 +4,7 @@
 
 @section('content')
   <!-- ABOUT US
-                                                                                        ================================================== -->
+                                                                                          ================================================== -->
 @section('content')
   <section class="about-style-02">
     <div class="container">
@@ -44,7 +44,7 @@
   </section>
 
   <!-- ADDRESS
-                                                                              ================================================== -->
+                                                                                ================================================== -->
   <section class="about-style-02" style="background: linear-gradient(135deg, #e6f2ed, #ffffff); padding: 60px 0;">
     <div class="container">
       <div class="row footer-address justify-content-center">
@@ -129,7 +129,7 @@
         <div class="row justify-content-center mb-4">
           <div class="col-md-4 text-center">
             <div class="p-3 bg-white rounded shadow-sm">
-              <img src="{{ asset('storage/' . $kepala->photo) }}" class="img-fluid rounded-circle mb-3"
+              <img src="{{ asset('storage/photo/' . $kepala->photo) }}" class="img-fluid rounded-circle mb-3"
                 alt="{{ $kepala->name }}" width="120" height="120">
               <h5 class="fw-bold">{{ $kepala->name }}</h5>
               <p class="text-muted">{{ $kepala->position }}</p>

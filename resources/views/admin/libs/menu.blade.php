@@ -20,34 +20,32 @@
 
       {{-- Konten --}}
       <li
-        class="treeview {{ request()->is('about', 'banners', 'sejarah', 'organisasi') ? 'active current-page' : '' }}">
+        class="treeview {{ request()->is('admin/banners', 'admin/sejarah', 'admin/organisasi', 'admin/menus') ? 'active current-page' : '' }}">
         <a href="#">
           <i class="bi bi-box"></i>
           <span class="menu-text">Konten</span>
         </a>
         <ul class="treeview-menu">
-          {{-- <li><a href="{{ url('/about') }}">About Me</a></li> --}}
-          <li><a href="{{ url('/banners') }}">Banner</a></li>
-          <li><a href="{{ url('/sejarah') }}">Sejarah</a></li>
-          <li><a href="{{ url('/organisasi') }}">Organisasi</a></li>
+          <li><a href="{{ url('/admin/banners') }}">Banner</a></li>
+          <li><a href="{{ url('/admin/sejarah') }}">Sejarah</a></li>
+          <li><a href="{{ url('/admin/organisasi') }}">Organisasi</a></li>
           <li><a href="{{ url('/admin/menus') }}">Menu Layanan</a></li>
         </ul>
       </li>
 
       {{-- Informasi --}}
       <li
-        class="treeview {{ request()->is('admin/news', 'admin/artikel', 'admin/partners', 'admin/menus') ? 'active current-page' : '' }}">
+        class="treeview {{ request()->is('admin/news', 'admin/agenda', 'admin/artikel', 'admin/partners', 'admin/koleksi-terbaru') ? 'active current-page' : '' }}">
         <a href="#">
           <i class="bi bi-info-circle"></i>
           <span class="menu-text">Informasi</span>
         </a>
         <ul class="treeview-menu">
-          <li><a href="{{ url('/admin/news') }}">Berita</a></li>
-          <li><a href="{{ url('/admin/news') }}">Agenda</a></li> {{-- Ganti jika punya endpoint khusus --}}
-          <li><a href="{{ url('/admin/artikel') }}">Artikel</a></li>
           <li><a href="{{ url('/admin/partners') }}">Partner</a></li>
-          <li><a href="{{ url('/admin/news') }}">Koleksi Terbaru</a></li> {{-- Ganti jika ada route khusus --}}
-
+          <li><a href="{{ url('/admin/berita') }}">Berita</a></li>
+          <li><a href="{{ url('/admin/agenda') }}">Agenda</a></li>
+          <li><a href="{{ url('/admin/artikel') }}">Artikel</a></li>
+          <li><a href="{{ url('/admin/koleksi-terbaru') }}">Koleksi Terbaru</a></li>
         </ul>
       </li>
 
@@ -95,17 +93,17 @@
         </ul>
       </li>
 
-      {{-- Notifications --}}
-      <li class="{{ request()->is('notifications') ? 'active current-page' : '' }}">
-        <a href="{{ url('/notifications') }}">
+      {{-- Notifikasi --}}
+      <li class="{{ request()->is('admin/notifications') ? 'active current-page' : '' }}">
+        <a href="{{ url('/admin/notifications') }}">
           <i class="bi bi-bell"></i>
           <span class="menu-text">Notifikasi</span>
         </a>
       </li>
 
-      {{-- Calendar --}}
-      <li class="{{ request()->is('calendar') ? 'active current-page' : '' }}">
-        <a href="{{ url('/calendar') }}">
+      {{-- Kalender --}}
+      <li class="{{ request()->is('admin/calendar') ? 'active current-page' : '' }}">
+        <a href="{{ url('/admin/calendar') }}">
           <i class="bi bi-calendar2"></i>
           <span class="menu-text">Kalender</span>
         </a>

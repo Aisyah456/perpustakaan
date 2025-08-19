@@ -1,7 +1,6 @@
 @extends('home.layouts.add') {{-- Ganti dengan layout frontend kamu --}}
 
 @section('title', 'Agenda Perpustakaan')
-
 @section('page', 'Agenda Perpustakaan')
 
 @section('content')
