@@ -230,36 +230,48 @@
 </style>
 
 @section('content')
-  <div class="container mt-4">
+  <div class="container-fluid">
+    <!-- Header Section -->
     <div class="row">
       <div class="col-12">
         <div class="d-flex justify-content-between align-items-center mb-4">
-          <h2><i class="fas fa-envelope-open-text"></i> Kelola Permintaan Referensi</h2>
+          <h1 class="main-title mb-0">Admin - Kelola Permintaan Referensi</h1>
+          <div>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">
+              <i class="fas fa-plus"></i> Tambah Pengajuan
+            </button>
+          </div>
         </div>
+      </div>
+    </div>
 
-        <!-- Alert Messages -->
-        @if (session('success'))
-          <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="fas fa-check-circle"></i> {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-          </div>
-        @endif
+    <!-- Alert Container -->
+    <div id="alert-container">
+      @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <i class="fas fa-check-circle"></i> {{ session('success') }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      @endif
 
-        @if (session('error'))
-          <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="fas fa-exclamation-circle"></i> {{ session('error') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-          </div>
-        @endif
+      @if (session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <i class="fas fa-exclamation-circle"></i> {{ session('error') }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      @endif
+    </div>
 
-        <div class="card">
+    <div class="row">
+      <div class="col-12">
+        <div class="card shadow-lg border-0 rounded-3">
           <div class="card-body">
             @if ($data->count() > 0)
               <div class="table-responsive">
-                <table class="table table-striped table-hover">
-                  <thead>
+                <table class="table table-hover align-middle mb-0" id="documentsTable">
+                  <thead class="table-success text-center">
                     <tr>
-                      <th>#</th>
+                      <th class="text-center">#</th>
                       <th>Nama</th>
                       <th>Email</th>
                       <th>Topik</th>
@@ -272,12 +284,12 @@
                   <tbody>
                     @foreach ($data as $index => $req)
                       <tr>
-                        <td>{{ $index + 1 }}</td>
-                        <td>{{ $req->nama }}</td>
-                        <td>{{ $req->email }}</td>
-                        <td>{{ $req->topik }}</td>
-                        <td>{{ Str::limit(strip_tags($req->pesan), 40) }}</td>
-                        <td>
+                        <td class="text-center fw-bold">{{ $index + 1 }}</td>
+                        <td class="text-center">{{ $req->nama }}</td>
+                        <td class="text-center">{{ $req->email }}</td>
+                        <td class="text-center">{{ $req->topik }}</td>
+                        <td class="text-center">{{ Str::limit(strip_tags($req->pesan), 40) }}</td>
+                        <td class="text-center">
                           <span
                             class="badge 
                           @if ($req->status == 'pending') bg-warning text-dark
@@ -293,26 +305,28 @@
                         </td>
                         <td>
                           <div class="btn-group" role="group">
-                            <a href="{{ route('referensi.show', $req->id) }}" class="btn btn-sm btn-info" title="Lihat">
+                            <!-- Tombol Lihat -->
+                            <button class="btn btn-sm btn-info view-btn" data-id="{{ $req->id }}"
+                              data-nama="{{ $req->nama }}" data-email="{{ $req->email }}"
+                              data-topik="{{ $req->topik }}" data-pesan="{{ $req->pesan }}"
+                              data-status="{{ $req->status }}"
+                              data-created="{{ $req->created_at->format('d/m/Y H:i') }}">
                               <i class="fas fa-eye"></i>
-                            </a>
-                            <form method="POST" action="{{ route('referensi.update.status', $req->id) }}">
-                              @csrf
-                              @method('PATCH')
-                              <input type="hidden" name="status"
-                                value="{{ $req->status == 'pending' ? 'diproses' : ($req->status == 'diproses' ? 'selesai' : 'pending') }}">
-                              <button type="submit" class="btn btn-sm btn-warning" title="Ubah Status">
-                                <i class="fas fa-sync"></i>
-                              </button>
-                            </form>
-                            <form method="POST" action="{{ route('referensi.destroy', $req->id) }}">
-                              @csrf
-                              @method('DELETE')
-                              <button type="submit" class="btn btn-sm btn-danger"
-                                onclick="return confirm('Hapus data ini?')" title="Hapus">
-                                <i class="fas fa-trash"></i>
-                              </button>
-                            </form>
+                            </button>
+
+                            <!-- Tombol Edit -->
+                            <button class="btn btn-sm btn-warning edit-btn" data-id="{{ $req->id }}"
+                              data-nama="{{ $req->nama }}" data-email="{{ $req->email }}"
+                              data-topik="{{ $req->topik }}" data-pesan="{{ $req->pesan }}"
+                              data-status="{{ $req->status }}">
+                              <i class="fas fa-edit"></i>
+                            </button>
+
+                            <!-- Tombol Hapus -->
+                            <button class="btn btn-sm btn-danger delete-btn" data-id="{{ $req->id }}"
+                              data-nama="{{ $req->nama }}">
+                              <i class="fas fa-trash"></i>
+                            </button>
                           </div>
                         </td>
                       </tr>
@@ -335,120 +349,64 @@
 
   <!-- Create Modal -->
   <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="createModalLabel">
-            <i class="fas fa-plus"></i> Tambah Banner Baru
+            <i class="fas fa-plus"></i> Tambah Permintaan Referensi
           </h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form id="createForm" action="{{ route('admin.banners.store') }}" method="POST" enctype="multipart/form-data">
+          <form id="createForm" action="{{ route('admin.referensi.store') }}" method="POST">
             @csrf
-
             <div class="row">
               <div class="col-md-6">
                 <div class="mb-3">
-                  <label for="create_title" class="form-label">
-                    <i class="fas fa-heading"></i> Judul Banner <span class="text-danger">*</span>
+                  <label for="create_nama" class="form-label">
+                    <i class="fas fa-user"></i> Nama <span class="text-danger">*</span>
                   </label>
-                  <input type="text" class="form-control" id="create_title" name="title"
-                    placeholder="Contoh: Selamat Datang di Perpustakaan UMHT" required>
-                  <div class="invalid-feedback" id="create_title_error"></div>
-                  <div class="form-text">
-                    Judul utama yang akan ditampilkan pada banner.
-                  </div>
-                </div>
-
-                <div class="mb-3">
-                  <label for="create_subtitle" class="form-label">
-                    <i class="fas fa-text-height"></i> Subtitle
-                  </label>
-                  <input type="text" class="form-control" id="create_subtitle" name="subtitle"
-                    placeholder="Contoh: Pusat Informasi & Pengetahuan">
-                  <div class="invalid-feedback" id="create_subtitle_error"></div>
-                  <div class="form-text">
-                    Subtitle yang muncul di atas judul utama (opsional).
-                  </div>
-                </div>
-
-                <div class="mb-3">
-                  <label for="create_description" class="form-label">
-                    <i class="fas fa-align-left"></i> Deskripsi
-                  </label>
-                  <textarea class="form-control" id="create_description" name="description" rows="3"
-                    placeholder="Deskripsi singkat tentang banner ini..."></textarea>
-                  <div class="invalid-feedback" id="create_description_error"></div>
-                  <div class="form-text">
-                    Deskripsi yang akan muncul di bawah judul (opsional).
-                  </div>
-                </div>
-
-                <div class="mb-3">
-                  <label for="create_button_text" class="form-label">
-                    <i class="fas fa-mouse-pointer"></i> Teks Button
-                  </label>
-                  <input type="text" class="form-control" id="create_button_text" name="button_text"
-                    placeholder="Contoh: Jelajahi Sekarang, Pelajari Lebih Lanjut">
-                  <div class="invalid-feedback" id="create_button_text_error"></div>
-                  <div class="form-text">
-                    Teks yang akan muncul pada button (opsional).
-                  </div>
-                </div>
-
-                <div class="mb-3">
-                  <label for="create_button_link" class="form-label">
-                    <i class="fas fa-link"></i> Link Button
-                  </label>
-                  <input type="url" class="form-control" id="create_button_link" name="button_link"
-                    placeholder="https://example.com">
-                  <div class="invalid-feedback" id="create_button_link_error"></div>
-                  <div class="form-text">
-                    URL tujuan ketika button diklik (opsional).
-                  </div>
-                </div>
-
-                <div class="mb-3">
-                  <label for="create_image" class="form-label">
-                    <i class="fas fa-image"></i> Gambar Banner <span class="text-danger">*</span>
-                  </label>
-                  <div class="file-input-wrapper">
-                    <input type="file" id="create_image" name="image" accept="image/*" required>
-                    <label for="create_image" class="file-input-label">
-                      <i class="fas fa-cloud-upload-alt fa-2x text-muted mb-2"></i>
-                      <div>Klik untuk upload gambar banner</div>
-                      <small class="text-muted">Format: JPG, PNG, SVG (Max: 5MB)<br>Rekomendasi: 1920x600px</small>
-                    </label>
-                  </div>
-                  <div class="invalid-feedback" id="create_image_error"></div>
-                  <div id="create_image_preview" class="mt-2"></div>
+                  <input type="text" class="form-control" id="create_nama" name="nama" required>
+                  <div class="invalid-feedback" id="create_nama_error"></div>
                 </div>
               </div>
-
               <div class="col-md-6">
-                <!-- Preview -->
-                <div class="preview-box">
-                  <p class="mb-2"><strong>Preview Banner:</strong></p>
-                  <div class="banner-preview" id="create_banner_preview">
-                    <img id="create_preview_bg" src="/placeholder.svg?height=300&width=600" alt="Banner Background"
-                      class="banner-preview-bg">
-                    <div class="banner-content">
-                      <div class="banner-subtitle" id="create_preview_subtitle">Subtitle Banner</div>
-                      <h1 class="banner-title" id="create_preview_title">Judul Banner</h1>
-                      <p class="banner-description" id="create_preview_description">Deskripsi banner akan muncul di
-                        sini...</p>
-                      <a href="#" class="banner-button" id="create_preview_button">Button Text</a>
-                    </div>
-                  </div>
-                  <div class="mt-3">
-                    <small class="text-muted">
-                      <i class="fas fa-info-circle"></i>
-                      Preview menunjukkan tampilan banner di halaman utama
-                    </small>
-                  </div>
+                <div class="mb-3">
+                  <label for="create_email" class="form-label">
+                    <i class="fas fa-envelope"></i> Email <span class="text-danger">*</span>
+                  </label>
+                  <input type="email" class="form-control" id="create_email" name="email" required>
+                  <div class="invalid-feedback" id="create_email_error"></div>
                 </div>
               </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="create_topik" class="form-label">
+                <i class="fas fa-tag"></i> Topik <span class="text-danger">*</span>
+              </label>
+              <input type="text" class="form-control" id="create_topik" name="topik" required>
+              <div class="invalid-feedback" id="create_topik_error"></div>
+            </div>
+
+            <div class="mb-3">
+              <label for="create_pesan" class="form-label">
+                <i class="fas fa-comment"></i> Pesan <span class="text-danger">*</span>
+              </label>
+              <textarea class="form-control" id="create_pesan" name="pesan" rows="4" required></textarea>
+              <div class="invalid-feedback" id="create_pesan_error"></div>
+            </div>
+
+            <div class="mb-3">
+              <label for="create_status" class="form-label">
+                <i class="fas fa-info-circle"></i> Status <span class="text-danger">*</span>
+              </label>
+              <select class="form-select" id="create_status" name="status" required>
+                <option value="pending">Pending</option>
+                <option value="diproses">Diproses</option>
+                <option value="selesai">Selesai</option>
+              </select>
+              <div class="invalid-feedback" id="create_status_error"></div>
             </div>
           </form>
         </div>
@@ -457,7 +415,7 @@
             <i class="fas fa-times"></i> Batal
           </button>
           <button type="button" class="btn btn-primary" id="createSubmitBtn">
-            <i class="fas fa-save"></i> Simpan Banner
+            <i class="fas fa-save"></i> Simpan
           </button>
         </div>
       </div>
@@ -465,96 +423,166 @@
   </div>
 
   <!-- Edit Modal -->
-  <div class="modal fade" id="editModal{{ $request->id }}" tabindex="-1"
-    aria-labelledby="editModalLabel{{ $request->id }}" aria-hidden="true">
-    <div class="modal-dialog">
+  <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
       <div class="modal-content">
-        <form action="{{ route('referensi.update', $request->id) }}" method="POST">
+        <form id="editForm" method="POST">
           @csrf
           @method('PUT')
           <div class="modal-header bg-warning text-dark">
-            <h5 class="modal-title" id="editModalLabel{{ $request->id }}">Edit Permintaan</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+            <h5 class="modal-title">
+              <i class="fas fa-edit"></i> Edit Permintaan Referensi
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
           </div>
           <div class="modal-body">
-            <div class="mb-2">
-              <label>Nama</label>
-              <input type="text" name="nama" class="form-control" value="{{ $request->nama }}" required>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="edit_nama" class="form-label">
+                    <i class="fas fa-user"></i> Nama <span class="text-danger">*</span>
+                  </label>
+                  <input type="text" id="edit_nama" name="nama" class="form-control" required>
+                  <div class="invalid-feedback" id="edit_nama_error"></div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="edit_email" class="form-label">
+                    <i class="fas fa-envelope"></i> Email <span class="text-danger">*</span>
+                  </label>
+                  <input type="email" id="edit_email" name="email" class="form-control" required>
+                  <div class="invalid-feedback" id="edit_email_error"></div>
+                </div>
+              </div>
             </div>
-            <div class="mb-2">
-              <label>Email</label>
-              <input type="email" name="email" class="form-control" value="{{ $request->email }}" required>
+
+            <div class="mb-3">
+              <label for="edit_topik" class="form-label">
+                <i class="fas fa-tag"></i> Topik <span class="text-danger">*</span>
+              </label>
+              <input type="text" id="edit_topik" name="topik" class="form-control" required>
+              <div class="invalid-feedback" id="edit_topik_error"></div>
             </div>
-            <div class="mb-2">
-              <label>Topik</label>
-              <input type="text" name="topik" class="form-control" value="{{ $request->topik }}" required>
+
+            <div class="mb-3">
+              <label for="edit_pesan" class="form-label">
+                <i class="fas fa-comment"></i> Pesan <span class="text-danger">*</span>
+              </label>
+              <textarea id="edit_pesan" name="pesan" class="form-control" rows="4" required></textarea>
+              <div class="invalid-feedback" id="edit_pesan_error"></div>
             </div>
-            <div class="mb-2">
-              <label>Pesan</label>
-              <textarea name="pesan" class="form-control" rows="3" required>{{ $request->pesan }}</textarea>
-            </div>
-            <div class="mb-2">
-              <label>Status</label>
-              <select name="status" class="form-select" required>
-                <option value="pending" {{ $request->status == 'pending' ? 'selected' : '' }}>Pending</option>
-                <option value="diproses" {{ $request->status == 'diproses' ? 'selected' : '' }}>Diproses</option>
-                <option value="selesai" {{ $request->status == 'selesai' ? 'selected' : '' }}>Selesai</option>
+
+            <div class="mb-3">
+              <label for="edit_status" class="form-label">
+                <i class="fas fa-info-circle"></i> Status <span class="text-danger">*</span>
+              </label>
+              <select id="edit_status" name="status" class="form-select" required>
+                <option value="pending">Pending</option>
+                <option value="diproses">Diproses</option>
+                <option value="selesai">Selesai</option>
               </select>
+              <div class="invalid-feedback" id="edit_status_error"></div>
             </div>
           </div>
           <div class="modal-footer">
-            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              <i class="fas fa-times"></i> Batal
+            </button>
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-save"></i> Simpan Perubahan
+            </button>
           </div>
         </form>
       </div>
     </div>
   </div>
 
-
   <!-- View Modal -->
-  <div class="modal fade" id="showModal{{ $request->id }}" tabindex="-1"
-    aria-labelledby="showModalLabel{{ $request->id }}" aria-hidden="true">
+  <div class="modal fade" id="viewModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header bg-info text-white">
-          <h5 class="modal-title" id="showModalLabel{{ $request->id }}">Detail Permintaan</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+          <h5 class="modal-title">
+            <i class="fas fa-eye"></i> Detail Permintaan Referensi
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
-          <p><strong>Nama:</strong> {{ $request->nama }}</p>
-          <p><strong>Email:</strong> {{ $request->email }}</p>
-          <p><strong>Topik:</strong> {{ $request->topik }}</p>
-          <p><strong>Pesan:</strong><br>{{ $request->pesan }}</p>
-          <p><strong>Status:</strong> {{ ucfirst($request->status) }}</p>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label"><strong>Nama:</strong></label>
+                <p id="view_nama" class="form-control-plaintext border rounded p-2 bg-light"></p>
+              </div>
+              <div class="mb-3">
+                <label class="form-label"><strong>Email:</strong></label>
+                <p id="view_email" class="form-control-plaintext border rounded p-2 bg-light"></p>
+              </div>
+              <div class="mb-3">
+                <label class="form-label"><strong>Topik:</strong></label>
+                <p id="view_topik" class="form-control-plaintext border rounded p-2 bg-light"></p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label"><strong>Status:</strong></label>
+                <p id="view_status" class="form-control-plaintext"></p>
+              </div>
+              <div class="mb-3">
+                <label class="form-label"><strong>Tanggal Dibuat:</strong></label>
+                <p id="view_created" class="form-control-plaintext border rounded p-2 bg-light"></p>
+              </div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label"><strong>Pesan:</strong></label>
+            <div id="view_pesan" class="border rounded p-3 bg-light" style="min-height: 100px; white-space: pre-wrap;">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            <i class="fas fa-times"></i> Tutup
+          </button>
         </div>
       </div>
     </div>
   </div>
 
-
   <!-- Delete Modal -->
-  <div class="modal fade" id="deleteModal{{ $request->id }}" tabindex="-1"
-    aria-labelledby="deleteModalLabel{{ $request->id }}" aria-hidden="true">
+  <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
-        <form action="{{ route('referensi.destroy', $request->id) }}" method="POST">
+        <form id="deleteForm" method="POST">
           @csrf
           @method('DELETE')
           <div class="modal-header bg-danger text-white">
-            <h5 class="modal-title" id="deleteModalLabel{{ $request->id }}">Konfirmasi Hapus</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+            <h5 class="modal-title">
+              <i class="fas fa-exclamation-triangle"></i> Konfirmasi Hapus
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
           </div>
           <div class="modal-body">
-            Yakin ingin menghapus permintaan dari <strong>{{ $request->nama }}</strong>?
+            <div class="text-center">
+              <i class="fas fa-exclamation-triangle fa-3x text-danger mb-3"></i>
+              <h6>Yakin ingin menghapus permintaan referensi dari:</h6>
+              <p class="fw-bold text-danger" id="delete_nama"></p>
+              <p class="text-muted">Data yang dihapus tidak dapat dikembalikan!</p>
+            </div>
           </div>
           <div class="modal-footer">
-            <button type="submit" class="btn btn-danger">Ya, Hapus</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              <i class="fas fa-times"></i> Batal
+            </button>
+            <button type="submit" class="btn btn-danger">
+              <i class="fas fa-trash"></i> Ya, Hapus
+            </button>
           </div>
         </form>
       </div>
     </div>
   </div>
-
 
   <!-- Loading Overlay -->
   <div class="loading-overlay" id="loadingOverlay">
@@ -565,7 +593,9 @@
       <p class="mt-2 mb-0">Memproses...</p>
     </div>
   </div>
+
 @endsection
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>

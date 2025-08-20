@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Models\turnitin_requests;
@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use App\Mail\TurnitinStatusNotification;
+use App\Http\Controllers\Controller;
+
 
 class RequestsTurnitinController extends Controller
 {
@@ -50,23 +52,19 @@ class RequestsTurnitinController extends Controller
             return response()->json(['success' => true, 'message' => 'Permintaan berhasil dibuat']);
         }
 
-        return redirect()->route('turnitin.index')
+        return redirect()->route('admin.turnitin.index')
             ->with('success', 'Permintaan Turnitin berhasil dibuat.');
     }
 
     public function show(turnitin_requests $turnitinRequest)
     {
-        if (request()->ajax()) {
-            return response()->json($turnitinRequest);
-        }
+
         return view('turnitin.show', compact('turnitinRequest'));
     }
 
     public function edit(turnitin_requests $turnitinRequest)
     {
-        if (request()->ajax()) {
-            return response()->json($turnitinRequest);
-        }
+
         return view('turnitin.edit', compact('turnitinRequest'));
     }
 
@@ -106,7 +104,7 @@ class RequestsTurnitinController extends Controller
             $this->sendEmailNotification($turnitinRequest, 'status_update');
         }
 
-        return redirect()->route('turnitin.index')
+        return redirect()->route('admin.turnitin.index')
             ->with('success', 'Permintaan Turnitin berhasil diperbarui.');
     }
 
@@ -119,8 +117,21 @@ class RequestsTurnitinController extends Controller
 
         $turnitinRequest->delete();
 
-        return redirect()->route('turnitin.index')
+        return redirect()->route('admin.turnitin.index')
             ->with('success', 'Permintaan Turnitin berhasil dihapus.');
+    }
+
+    public function download($id)
+    {
+        $file = turnitin_requests::findOrFail($id);
+
+        $path = storage_path('app/public/' . $file->document);
+
+        if (!file_exists($path)) {
+            abort(404, 'File tidak ditemukan.');
+        }
+
+        return response()->download($path, $file->document);
     }
 
     private function sendEmailNotification(turnitin_requests $turnitinRequest, $type)
@@ -150,16 +161,5 @@ class RequestsTurnitinController extends Controller
     //     return redirect()->back()->with('error', 'File tidak ditemukan.');
     // }
 
-    public function download($id)
-    {
-        $file = turnitin_requests::findOrFail($id);
 
-        $path = storage_path('app/public/' . $file->document);
-
-        if (!file_exists($path)) {
-            abort(404, 'File tidak ditemukan.');
-        }
-
-        return response()->download($path, $file->document);
-    }
 }

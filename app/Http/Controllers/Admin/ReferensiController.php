@@ -25,16 +25,22 @@ class ReferensiController extends Controller
     }
 
     public function store(Request $request)
+    // {
+    //     $request->validate([
+    //         'nama' => 'required',
+    //         'email' => 'required|email',
+    //         'topik' => 'required',
+    //         'pesan' => 'required',
+    //     ]);
+
+    //     ReferensiRequest::create($request->all());
+    //     return redirect()->route('referensi.index')->with('success', 'Permintaan referensi berhasil dikirim.');
+    // }
+
     {
         $request->validate([
             'nama' => 'required',
-            'email' => 'required|email',
-            'topik' => 'required',
-            'pesan' => 'required',
         ]);
-
-        ReferensiRequest::create($request->all());
-        return redirect()->route('referensi.index')->with('success', 'Permintaan referensi berhasil dikirim.');
     }
 
     public function edit(ReferensiRequest $referensi)
@@ -49,7 +55,7 @@ class ReferensiController extends Controller
         ]);
 
         $referensi->update($request->all());
-        return redirect()->route('referensi.index')->with('success', 'Status referensi diperbarui.');
+        return redirect()->route('admin.referensi.index')->with('success', 'Status referensi diperbarui.');
     }
 
     public function destroy(ReferensiRequest $referensi)

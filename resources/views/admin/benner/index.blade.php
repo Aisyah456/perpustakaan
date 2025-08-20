@@ -230,7 +230,7 @@
 </style>
 
 @section('content')
-  <div class="container mt-4">
+  <div class="container-fluid">
     <div class="row">
       <div class="col-12">
         <div class="d-flex justify-content-between align-items-center mb-4">
@@ -241,18 +241,18 @@
         </div>
         <div class="header-admin"></div>
 
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        {{-- <nav class="navbar navbar-expand-lg navbar-light bg-light">
           <div class="container">
             <a class="navbar-brand" href="{{ route('admin.benners.index') }}">
               <i class="fas fa-images"></i> Admin Banner UMHT
             </a>
-            {{-- <div class="navbar-nav ms-auto">
+            <div class="navbar-nav ms-auto">
               <a class="nav-link" href="{{ route('home') }}" target="_blank">
                 <i class="fas fa-external-link-alt"></i> Lihat Halaman Publik
               </a>
-            </div> --}}
+            </div>
           </div>
-        </nav>
+        </nav> --}}
 
         <!-- Alert Messages -->
         <div id="alert-container">
@@ -275,8 +275,8 @@
           <div class="card-body">
             @if ($banners->count() > 0)
               <div class="table-responsive">
-                <table class="table table-striped table-hover">
-                  <thead>
+                <table class="table table-hover align-middle mb-0" id="documentsTable">
+                  <thead class="table-success text-center">
                     <tr>
                       <th width="5%">#</th>
                       <th width="15%">Gambar</th>

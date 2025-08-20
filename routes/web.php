@@ -43,13 +43,13 @@ use App\Http\Controllers\BookingFacilityController;
 use App\Http\Controllers\LiterasiRequestController;
 use App\Http\Controllers\ExternalDocumentController;
 use App\Http\Controllers\LatestCollectionController;
-use App\Http\Controllers\RequestsTurnitinController;
 use App\Http\Controllers\TurnitinRequestsController;
 use App\Http\Controllers\Admin\AdminRequestController;
 use App\Http\Controllers\Admin\LibraryEventController;
 use App\Http\Controllers\Admin\InternalArchivesController;
-
 use App\Http\Controllers\Admin\InternalDocumentController;
+use App\Http\Controllers\Admin\MenusController;
+use App\Http\Controllers\Admin\RequestsTurnitinController;
 use App\Http\Controllers\Admin\PanduanPerpustakaanController;
 
 
@@ -275,7 +275,7 @@ Route::middleware('auth')->get('/admin/pinjaman', fn() => view('admin.pinjaman.i
 
 // Admin Referensi
 Route::prefix('admin')->name('admin.')->group(function () {
-    Route::resource('referensi', \App\Http\Controllers\Admin\ReferensiController::class)->except(['show']);
+    // Route::resource('referensi', \App\Http\Controllers\Admin\ReferensiController::class)->except(['show']);
     Route::resource('berita', \App\Http\Controllers\Admin\NewsController::class);
     Route::resource('artikel', \App\Http\Controllers\Admin\ArtikelController::class);
     Route::resource('banner', \App\Http\Controllers\Admin\BannerController::class);
@@ -333,6 +333,26 @@ Route::prefix('admin')->name('admin.')->group(function () {
         'update'  => 'internal-documents.update',
         'destroy' => 'internal-documents.destroy',
     ]);
+
+    Route::resource('referensi', \App\Http\Controllers\Admin\ReferensiController::class)->names([
+        'index'   => 'referensi.index',
+        'create'  => 'referensi.create',
+        'store'   => 'referensi.store',
+        'show'    => 'referensi.show',
+        'edit'    => 'referensi.edit',
+        'update'  => 'referensi.update',
+        'destroy' => 'referensi.destroy',
+    ]);
+
+    Route::resource('menus', MenusController::class)->names([
+        'index'   => 'menus.index',
+        'create'  => 'menus.create',
+        'store'   => 'menus.store',
+        'show'    => 'menus.show',
+        'edit'    => 'menus.edit',
+        'update'  => 'menus.update',
+        'destroy' => 'menus.destroy',
+    ]);
 });
 
 
@@ -341,9 +361,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
 
 // Admin Banner Resource
-Route::resource('/banners', \App\Http\Controllers\Admin\BannerController::class);
-
-
+// Route::resource('/banners', \App\Http\Controllers\Admin\BannerController::class);
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('pustaka', PustakaController::class)->names([
@@ -357,13 +375,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
     ]);
 });
 
-// Route::prefix('admin')->name('admin.')->group(function () {
-//     Route::resource('pustaka', PustakaController::class);
-// });
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('pustaka', PustakaController::class);
+});
+
 
 
 Route::prefix('admin')->name('admin.')->group(function () {
-    // Resource routes (index, create, store, show, edit, update, destroy)
     Route::resource('turnitin', RequestsTurnitinController::class)->names([
         'index'   => 'turnitin.index',
         'create'  => 'turnitin.create',
@@ -374,7 +392,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         'destroy' => 'turnitin.destroy',
     ]);
 
-    // Tambahan route untuk download file
     Route::get('turnitin/{id}/download', [RequestsTurnitinController::class, 'download'])
         ->name('turnitin.download');
 });

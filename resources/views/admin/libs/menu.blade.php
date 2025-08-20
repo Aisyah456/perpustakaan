@@ -20,13 +20,13 @@
 
       {{-- Konten --}}
       <li
-        class="treeview {{ request()->is('admin/banners', 'admin/sejarah', 'admin/organisasi', 'admin/menus') ? 'active current-page' : '' }}">
+        class="treeview {{ request()->is('admin/benners', 'admin/sejarah', 'admin/organisasi', 'admin/menus') ? 'active current-page' : '' }}">
         <a href="#">
           <i class="bi bi-box"></i>
           <span class="menu-text">Konten</span>
         </a>
         <ul class="treeview-menu">
-          <li><a href="{{ url('/admin/banners') }}">Banner</a></li>
+          <li><a href="{{ url('/admin/benners') }}">Banner</a></li>
           <li><a href="{{ url('/admin/sejarah') }}">Sejarah</a></li>
           <li><a href="{{ url('/admin/organisasi') }}">Organisasi</a></li>
           <li><a href="{{ url('/admin/menus') }}">Menu Layanan</a></li>
@@ -57,9 +57,9 @@
           <span class="menu-text">Layanan</span>
         </a>
         <ul class="treeview-menu">
-          <li><a href="{{ url('/admin/plagiat') }}">Cek Plagiarisme</a></li>
+          {{-- <li><a href="{{ url('/admin/plagiat') }}">Cek Plagiarisme</a></li> --}}
           <li><a href="{{ url('/admin/pustaka') }}">Bebas Pustaka</a></li>
-          <li><a href="{{ url('/admin/turnitin') }}">Uji Turnitin</a></li>
+          <li><a href="{{ url('/admin/turnitin') }}">Turnitin</a></li>
           <li><a href="{{ url('/admin/referensi') }}">Referensi</a></li>
         </ul>
       </li>

@@ -13,7 +13,7 @@
                 <h3 class="card-title mb-0">Daftar Permintaan Turnitin</h3>
               </div>
               <div class="col-auto">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createModal">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">
                   <i class="fas fa-plus mr-1"></i> Tambah Permintaan
                 </button>
               </div>
@@ -24,7 +24,7 @@
             @if (session('success'))
               <div class="alert alert-success alert-dismissible fade show" role="alert">
                 {{ session('success') }}
-                <button type="button" class="close" data-dismiss="alert">
+                <button type="button" class="close" data-bs-dismiss="alert">
                   <span>&times;</span>
                 </button>
               </div>
@@ -56,9 +56,7 @@
                       <td>{{ $request->fakultas_prodi }}</td>
                       <td>{{ Str::limit($request->judul_naskah, 50) }}</td>
                       <td>
-                        <span class="badge {{ $request->jenis_document_badge }}">
-                          {{ $request->jenis_dokumen }}
-                        </span>
+                        <span class="badge {{ $request->jenis_document_badge }}"> {{ $request->jenis_dokumen }} </span>
                       </td>
                       <td>
                         <span class="badge {{ $request->status_badge }}">
@@ -110,7 +108,7 @@
           @csrf
           <div class="modal-header">
             <h5 class="modal-title">Tambah Permintaan Turnitin</h5>
-            <button type="button" class="close" data-dismiss="modal">
+            <button type="button" class="close" data-bs-dismiss="modal">
               <span>&times;</span>
             </button>
           </div>
@@ -177,9 +175,9 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-            <button type="submit" class="btn btn-primary">
-              <i class="fas fa-save mr-1"></i> Simpan
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">
+              <i class="fas fa-plus me-1"></i> Tambah Permintaan
             </button>
           </div>
         </form>
@@ -193,7 +191,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Detail Permintaan Turnitin</h5>
-          <button type="button" class="close" data-dismiss="modal">
+          <button type="button" class="close" data-bs-dismiss="modal">
             <span>&times;</span>
           </button>
         </div>
@@ -201,7 +199,7 @@
           <!-- Content will be loaded here -->
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
         </div>
       </div>
     </div>
@@ -217,7 +215,7 @@
           <input type="hidden" id="edit_request_id" name="request_id">
           <div class="modal-header">
             <h5 class="modal-title">Edit Permintaan Turnitin</h5>
-            <button type="button" class="close" data-dismiss="modal">
+            <button type="button" class="close" data-bs-dismiss="modal">
               <span>&times;</span>
             </button>
           </div>
@@ -310,7 +308,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
             <button type="submit" class="btn btn-primary">
               <i class="fas fa-save mr-1"></i> Update
             </button>
@@ -326,7 +324,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Konfirmasi Hapus</h5>
-          <button type="button" class="close" data-dismiss="modal">
+          <button type="button" class="close" data-bs-dismiss="modal">
             <span>&times;</span>
           </button>
         </div>
@@ -335,7 +333,7 @@
           <p class="text-danger"><strong>Tindakan ini tidak dapat dibatalkan!</strong></p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
           <form id="deleteForm" method="POST" style="display: inline;">
             @csrf
             @method('DELETE')
@@ -433,18 +431,18 @@
                 </div>
                 
                 ${data.catatan_pengguna ? `
-                  <div class="mt-3">
-                      <h6><strong>Catatan Pengguna:</strong></h6>
-                      <p class="text-muted">${data.catatan_pengguna}</p>
-                  </div>
-                  ` : ''}
+                                  <div class="mt-3">
+                                      <h6><strong>Catatan Pengguna:</strong></h6>
+                                      <p class="text-muted">${data.catatan_pengguna}</p>
+                                  </div>
+                                  ` : ''}
                 
                 ${data.catatan_admin ? `
-                  <div class="mt-3">
-                      <h6><strong>Catatan Admin:</strong></h6>
-                      <p class="text-muted">${data.catatan_admin}</p>
-                  </div>
-                  ` : ''}
+                                  <div class="mt-3">
+                                      <h6><strong>Catatan Admin:</strong></h6>
+                                      <p class="text-muted">${data.catatan_admin}</p>
+                                  </div>
+                                  ` : ''}
             `;
 
           $('#showModalBody').html(content);

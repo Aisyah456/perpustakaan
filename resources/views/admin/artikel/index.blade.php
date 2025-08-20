@@ -144,7 +144,7 @@
   </div>
 
   <div class="header-admin"></div>
-
+  {{-- 
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
       <a class="navbar-brand" href="{{ route('admin.artikel.index') }}">
@@ -156,7 +156,7 @@
         </a>
       </div>
     </div>
-  </nav>
+  </nav> --}}
 
   <div class="row">
     <div class="col-12">
@@ -211,16 +211,16 @@
           </div>
 
           <div class="table-responsive">
-            <table class="table table-hover">
-              <thead class="table-dark">
+            <table class="table table-hover align-middle mb-0" id="documentsTable">
+              <thead class="table-success text-center">
                 <tr>
-                  <th>No</th>
-                  <th>Judul</th>
-                  <th>Tanggal</th>
-                  <th>Admin</th>
-                  <th>Kategori</th>
-                  <th>Status</th>
-                  <th>Aksi</th>
+                  <th class="text-center">#</th>
+                  <th class="text-center">Judul</th>
+                  <th class="text-center">Tanggal</th>
+                  <th class="text-center">Admin</th>
+                  <th class="text-center">Kategori</th>
+                  <th class="text-center">Status</th>
+                  <th class="text-center">Aksi</th>
                 </tr>
               </thead>
               <tbody>

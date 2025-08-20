@@ -180,7 +180,7 @@
 
   {{-- <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
-      <a class="navbar-brand" href="{{ route('admin.banners.index') }}">
+      <a class="navbar-brand" href="{{ route('admin.menus.index') }}">
         <i class="fas fa-images"></i> Admin Menu Layanan
       </a>
       <div class="navbar-nav ms-auto">
@@ -625,7 +625,7 @@
 
         const formData = new FormData(this);
 
-        fetch('{{ route('admin.banners.store') }}', {
+        fetch('{{ route('admin.menus.store') }}', {
             method: 'POST',
             body: formData,
             headers: {
@@ -656,7 +656,7 @@
           const bannerId = this.getAttribute('data-id');
           showLoading(true);
 
-          fetch(`{{ route('admin.banners.index') }}/${bannerId}`)
+          fetch(`{{ route('admin.menus.index') }}/${bannerId}`)
             .then(response => response.json())
             .then(data => {
               showLoading(false);
@@ -687,7 +687,7 @@
           const bannerId = this.getAttribute('data-id');
           showLoading(true);
 
-          fetch(`{{ route('admin.banners.index') }}/${bannerId}/edit`)
+          fetch(`{{ route('admin.menus.index') }}/${bannerId}/edit`)
             .then(response => response.json())
             .then(data => {
               showLoading(false);
@@ -721,7 +721,7 @@
         const bannerId = document.getElementById('edit_banner_id').value;
         const formData = new FormData(this);
 
-        fetch(`{{ route('admin.banners.index') }}/${bannerId}`, {
+        fetch(`{{ route('admin.menus.index') }}/${bannerId}`, {
             method: 'POST',
             body: formData,
             headers: {
@@ -753,7 +753,7 @@
           const currentStatus = this.getAttribute('data-status');
           showLoading(true);
 
-          fetch(`{{ route('admin.banners.index') }}/${bannerId}/toggle-status`, {
+          fetch(`{{ route('admin.menus.index') }}/${bannerId}/toggle-status`, {
               method: 'POST',
               headers: {
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
@@ -794,7 +794,7 @@
         const bannerId = this.getAttribute('data-id');
         showLoading(true);
 
-        fetch(`{{ route('admin.banners.index') }}/${bannerId}`, {
+        fetch(`{{ route('admin.menus.index') }}/${bannerId}`, {
             method: 'DELETE',
             headers: {
               'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
