@@ -4,7 +4,7 @@
 
 @section('content')
   <!-- ABOUT US
-                                                                                          ================================================== -->
+                                                                                              ================================================== -->
 @section('content')
   <section class="about-style-02">
     <div class="container">
@@ -44,7 +44,7 @@
   </section>
 
   <!-- ADDRESS
-                                                                                ================================================== -->
+                                                                                    ================================================== -->
   <section class="about-style-02" style="background: linear-gradient(135deg, #e6f2ed, #ffffff); padding: 60px 0;">
     <div class="container">
       <div class="row footer-address justify-content-center">
@@ -143,7 +143,7 @@
         @foreach ($structures->where('parent_id', optional($kepala)->id) as $subbagian)
           <div class="col-md-4 text-center mb-3">
             <div class="p-3 bg-white rounded shadow-sm">
-              <img src="{{ asset('storage/' . $subbagian->photo) }}" class="img-fluid rounded-circle mb-3"
+              <img src="{{ asset('storage/photo/' . $subbagian->photo) }}" class="img-fluid rounded-circle mb-3"
                 alt="{{ $subbagian->name }}" width="100" height="100">
               <h6 class="fw-bold">{{ $subbagian->name }}</h6>
               <p class="text-muted">{{ $subbagian->position }}</p>
@@ -159,7 +159,7 @@
       }) as $staff)
           <div class="col-md-3 text-center mb-4">
             <div class="p-3 bg-white rounded shadow-sm">
-              <img src="{{ asset('storage/' . $staff->photo) }}" class="img-fluid rounded-circle mb-3"
+              <img src="{{ asset('storage/photo/' . $staff->photo) }}" class="img-fluid rounded-circle mb-3"
                 alt="{{ $staff->name }}" width="100" height="100">
               <h6 class="fw-bold">{{ $staff->name }}</h6>
               <p class="text-muted">{{ $staff->position }}</p>

@@ -112,7 +112,7 @@
       <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="main-title mb-0">Admin - Database Journal</h1>
         <div>
-          <a href="{{ route('journals.index') }}" class="btn btn-outline-secondary me-2">
+          <a href="{{ route('admin.journals.index') }}" class="btn btn-outline-secondary me-2">
             <i class="fas fa-eye"></i> Lihat Halaman Publik
           </a>
           <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">
@@ -125,94 +125,89 @@
 
   <div class="header-admin"></div>
 
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container">
-      <a class="navbar-brand" href="{{ route('eresources.admin.index') }}">
-        <i class="fas fa-book"></i> Admin Database Journal
-      </a>
-      <div class="navbar-nav ms-auto">
-        <a class="nav-link" href="{{ route('eresources.index') }}" target="_blank">
-          <i class="fas fa-external-link-alt"></i> Lihat Halaman Publik
-        </a>
-      </div>
-    </div>
-  </nav>
-
   <div class="row">
     <div class="col-12">
-      <div class="card">
+      <div class="card shadow-lg border-0 rounded-3">
         <div class="card-body">
-          <div class="table-responsive">
-            <table class="table table-hover">
-              <thead class="table-dark">
-                <tr>
-                  <th>No</th>
-                  <th>Nama</th>
-                  <th>Deskripsi</th>
-                  <th>Warna</th>
-                  <th>URL Akses</th>
-                  <th>Status</th>
-                  <th>Urutan</th>
-                  <th>Aksi</th>
-                </tr>
-              </thead>
-              <tbody>
-                @forelse($journals as $index => $journal)
+          @if ($journals->count() > 0)
+            <div class="table-responsive">
+              <table class="table table-hover align-middle mb-0" id="documentsTable">
+                <thead class="table-success text-center">
                   <tr>
-                    <td>{{ $index + 1 }}</td>
-                    <td>
-                      <div class="d-flex align-items-center">
-                        <div class="journal-preview me-2"
-                          style="background-color: {{ $journal->background_color }}; width: 30px; height: 30px; border-radius: 4px;">
+                    <th>No</th>
+                    <th>Nama</th>
+                    <th>Deskripsi</th>
+                    <th>Warna</th>
+                    <th>URL Akses</th>
+                    <th>Status</th>
+                    <th>Urutan</th>
+                    <th>Aksi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @forelse($journals as $index => $journal)
+                    <tr>
+                      <td>{{ $index + 1 }}</td>
+                      <td>
+                        <div class="d-flex align-items-center">
+                          <div class="journal-preview me-2"
+                            style="background-color: {{ $journal->background_color }}; width: 30px; height: 30px; border-radius: 4px;">
+                          </div>
+                          <strong>{{ $journal->name }}</strong>
                         </div>
-                        <strong>{{ $journal->name }}</strong>
-                      </div>
-                    </td>
-                    <td>{{ $journal->description }}</td>
-                    <td>
-                      <span class="badge" style="background-color: {{ $journal->background_color }}; color: white;">
-                        {{ $journal->background_color }}
-                      </span>
-                    </td>
-                    <td>
-                      @if ($journal->access_url)
-                        <a href="{{ $journal->access_url }}" target="_blank" class="text-decoration-none">
-                          {{ Str::limit($journal->access_url, 30) }}
-                        </a>
-                      @else
-                        <span class="text-muted">-</span>
-                      @endif
-                    </td>
-                    <td>
-                      <span class="badge {{ $journal->is_active ? 'bg-success' : 'bg-danger' }}">
-                        {{ $journal->is_active ? 'Aktif' : 'Nonaktif' }}
-                      </span>
-                    </td>
-                    <td>{{ $journal->sort_order }}</td>
-                    <td>
-                      <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-sm btn-outline-primary edit-btn"
-                          data-id="{{ $journal->id }}" data-bs-toggle="modal" data-bs-target="#editModal">
-                          <i class="fas fa-edit"></i>
-                        </button>
-                        <button type="button" class="btn btn-sm btn-outline-danger delete-btn"
-                          data-id="{{ $journal->id }}" data-name="{{ $journal->name }}" data-bs-toggle="modal"
-                          data-bs-target="#deleteModal">
-                          <i class="fas fa-trash"></i>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                @empty
-                  <tr>
-                    <td colspan="8" class="text-center text-muted py-4">
-                      Belum ada data journal
-                    </td>
-                  </tr>
-                @endforelse
-              </tbody>
-            </table>
-          </div>
+                      </td>
+                      <td>{{ $journal->description }}</td>
+                      <td>
+                        <span class="badge" style="background-color: {{ $journal->background_color }}; color: white;">
+                          {{ $journal->background_color }}
+                        </span>
+                      </td>
+                      <td>
+                        @if ($journal->access_url)
+                          <a href="{{ $journal->access_url }}" target="_blank" class="text-decoration-none">
+                            {{ Str::limit($journal->access_url, 30) }}
+                          </a>
+                        @else
+                          <span class="text-muted">-</span>
+                        @endif
+                      </td>
+                      <td>
+                        <span class="badge {{ $journal->is_active ? 'bg-success' : 'bg-danger' }}">
+                          {{ $journal->is_active ? 'Aktif' : 'Nonaktif' }}
+                        </span>
+                      </td>
+                      <td>{{ $journal->sort_order }}</td>
+                      <td>
+                        <div class="btn-group" role="group">
+                          <button type="button" class="btn btn-sm btn-outline-primary edit-btn"
+                            data-id="{{ $journal->id }}" data-bs-toggle="modal" data-bs-target="#editModal">
+                            <i class="fas fa-edit"></i>
+                          </button>
+                          <button type="button" class="btn btn-sm btn-outline-danger delete-btn"
+                            data-id="{{ $journal->id }}" data-name="{{ $journal->name }}" data-bs-toggle="modal"
+                            data-bs-target="#deleteModal">
+                            <i class="fas fa-trash"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  @empty
+                    <tr>
+                      <td colspan="8" class="text-center text-muted py-4">
+                        Belum ada data journal
+                      </td>
+                    </tr>
+                  @endforelse
+                </tbody>
+              </table>
+            </div>
+          @else
+            <div class="text-center py-5">
+              <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+              <h5 class="text-muted">Belum ada permintaan referensi</h5>
+              <p class="text-muted">Permintaan yang dikirim pengguna akan muncul di sini.</p>
+            </div>
+          @endif
         </div>
       </div>
     </div>
@@ -384,7 +379,7 @@
 
         const formData = new FormData(this);
 
-        fetch('{{ route('journals.store') }}', {
+        fetch('{{ route('admin.journals.store') }}', {
             method: 'POST',
             body: formData,
             headers: {

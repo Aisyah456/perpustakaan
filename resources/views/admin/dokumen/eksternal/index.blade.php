@@ -195,8 +195,8 @@
           @endif
 
           <div class="table-responsive">
-            <table class="table table-hover">
-              <thead class="table-dark">
+            <table class="table table-hover align-middle mb-0" id="documentsTable">
+              <thead class="table-success text-center">
                 <tr>
                   <th>No</th>
                   <th>Judul</th>

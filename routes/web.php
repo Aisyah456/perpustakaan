@@ -24,6 +24,7 @@ use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\ReferensiController;
 use App\Http\Controllers\StructureController;
 use App\Http\Controllers\UsulanBukuController;
+use App\Http\Controllers\Admin\MenusController;
 use App\Http\Controllers\CekPinjamanController;
 use App\Http\Controllers\KoleksiBukuController;
 use App\Http\Controllers\LibraryFreeController;
@@ -34,10 +35,12 @@ use App\Http\Controllers\BebasPustakaController;
 use App\Http\Controllers\EventLibraryController;
 use App\Http\Controllers\LibraryGuideController;
 use App\Http\Controllers\ResearchToolController;
+use App\Http\Controllers\Admin\PartnerController;
 use App\Http\Controllers\Admin\PlagiatController;
+
 use App\Http\Controllers\admin\PustakaController;
 use App\Http\Controllers\PublicRequestController;
-
+use App\Http\Controllers\Admin\JournallController;
 use App\Http\Controllers\ArticleLibraryController;
 use App\Http\Controllers\BookingFacilityController;
 use App\Http\Controllers\LiterasiRequestController;
@@ -46,9 +49,11 @@ use App\Http\Controllers\LatestCollectionController;
 use App\Http\Controllers\TurnitinRequestsController;
 use App\Http\Controllers\Admin\AdminRequestController;
 use App\Http\Controllers\Admin\LibraryEventController;
+use App\Http\Controllers\Admin\ToolsResearchController;
+use App\Http\Controllers\Admin\ExternalArchiveController;
+use App\Http\Controllers\Admin\CollectionLatestController;
 use App\Http\Controllers\Admin\InternalArchivesController;
 use App\Http\Controllers\Admin\InternalDocumentController;
-use App\Http\Controllers\Admin\MenusController;
 use App\Http\Controllers\Admin\RequestsTurnitinController;
 use App\Http\Controllers\Admin\PanduanPerpustakaanController;
 
@@ -323,7 +328,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         'destroy' => 'benners.destroy',
     ]);
 
-
     Route::resource('internal-documents', InternalArchivesController::class)->names([
         'index'   => 'internal-documents.index',
         'create'  => 'internal-documents.create',
@@ -352,6 +356,56 @@ Route::prefix('admin')->name('admin.')->group(function () {
         'edit'    => 'menus.edit',
         'update'  => 'menus.update',
         'destroy' => 'menus.destroy',
+    ]);
+
+    Route::resource('research-tools', ToolsResearchController::class)->names([
+        'index'   => 'research-tools.index',
+        'create'  => 'research-tools.create',
+        'store'   => 'research-tools.store',
+        'show'    => 'research-tools.show',
+        'edit'    => 'research-tools.edit',
+        'update'  => 'research-tools.update',
+        'destroy' => 'research-tools.destroy',
+    ]);
+
+    Route::resource('external-documents', ExternalArchiveController::class)->names([
+        'index'   => 'external-documents.index',
+        'create'  => 'external-documents.create',
+        'store'   => 'external-documents.store',
+        'show'    => 'external-documents.show',
+        'edit'    => 'external-documents.edit',
+        'update'  => 'external-documents.update',
+        'destroy' => 'external-documents.destroy',
+    ]);
+
+    Route::resource('partners', PartnerController::class)->names([
+        'index'   => 'partners.index',
+        'create'  => 'partners.create',
+        'store'   => 'partners.store',
+        'show'    => 'partners.show',
+        'edit'    => 'partners.edit',
+        'update'  => 'partners.update',
+        'destroy' => 'partners.destroy',
+    ]);
+
+    Route::resource('agenda', JournallController::class)->names([
+        'index'   => 'journals.index',
+        'create'  => 'journals.create',
+        'store'   => 'journals.store',
+        'show'    => 'journals.show',
+        'edit'    => 'journals.edit',
+        'update'  => 'journals.update',
+        'destroy' => 'journals.destroy',
+    ]);
+
+    Route::resource('koleksi-terbaru', CollectionLatestController::class)->names([
+        'index'   => 'referensi.index',
+        'create'  => 'referensi.create',
+        'store'   => 'referensi.store',
+        'show'    => 'referensi.show',
+        'edit'    => 'referensi.edit',
+        'update'  => 'referensi.update',
+        'destroy' => 'referensi.destroy',
     ]);
 });
 
