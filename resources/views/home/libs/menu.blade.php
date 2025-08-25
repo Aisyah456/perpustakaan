@@ -118,9 +118,10 @@
                         <!-- Dokumen -->
                         <li>
                           <a href="#"
-                            class="{{ request()->is('panduan', 'dokumen-internal', 'dokumen-eksternal', 'research-tools') ? 'active' : '' }}">Dokumen</a>
+                            class="{{ request()->is('panduan-perpustakaan', 'dokumen-internal', 'dokumen-eksternal', 'research-tools') ? 'active' : '' }}">Dokumen</a>
                           <ul>
-                            <li><a href="/panduan" class="{{ request()->is('panduan') ? 'active' : '' }}">Panduan</a>
+                            <li><a href="/panduan-perpustakaan"
+                                class="{{ request()->is('panduan-perpustakaan') ? 'active' : '' }}">Panduan</a>
                             </li>
                             <li><a href="/dokumen-internal"
                                 class="{{ request()->is('dokumen-internal') ? 'active' : '' }}">Dokumen Internal</a>

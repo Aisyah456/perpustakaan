@@ -505,7 +505,7 @@
   <!-- EXTRA
         ================================================== -->
   {{-- Section Utama Perpustakaan --}}
-  {{-- <section class="bg-img cover-background pb-19 pb-lg-24 secondary-overlay" data-overlay-dark="8"
+  <section class="bg-img cover-background pb-19 pb-lg-24 secondary-overlay" data-overlay-dark="8"
     data-background="{{ asset('lib/img/bg/bg-02.jpg') }}">
     <div class="container">
       <div class="row align-items-center">
@@ -525,7 +525,41 @@
         </div>
       </div>
     </div>
-  </section> --}}
+  </section>
+
+  <section class="about-style-02" style="background: linear-gradient(135deg, #e6f2ed, #ffffff); padding: 60px 0;">
+    <div class="container">
+      <div class="row footer-address justify-content-center">
+        <div class="col-lg-10">
+          <div class="bg-white p-4 shadow border-radius-10 text-center position-relative"
+            style="border-radius: 15px;">
+            <div class="row align-items-center">
+              <!-- Gambar ilustrasi penelitian -->
+              <div class="col-md-4 mb-3 mb-md-0">
+                <img src="{{ asset('lib/img/icons/research-support-icon.jpg') }}" alt="Ilustrasi Penelitian"
+                  class="img-fluid rounded">
+              </div>
+              <!-- Konten teks -->
+              <div class="col-md-8 text-md-start text-center">
+                <h4 class="fw-bold text-success">
+                  <i class="bi bi-journal-text me-2"></i>INFORMASI PENDUKUNG PENELITIAN
+                </h4>
+                <p class="mb-3 text-muted">
+                  Perpustakaan Universitas Mohammad Husni Thamrin menyediakan berbagai sumber daya digital, jurnal
+                  ilmiah,
+                  repository, serta layanan data yang dapat menunjang kebutuhan penelitian dosen maupun mahasiswa.
+                </p>
+                <a href="{{ url('perpustakaan.visi-misi') }}" class="btn btn-success shadow-sm">
+                  Jelajahi Sumber Daya
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
 
   {{-- Statistik Perpustakaan --}}
   {{-- <section class="pt-0 pb-0 overflow-visible bg-transparent">
@@ -584,7 +618,7 @@
             <div class="card h-100 shadow-sm border-0 rounded-4 overflow-hidden">
               {{-- Gambar Acara --}}
               <div class="position-relative">
-                <img src="{{ Storage::url('artikel/' . $agenda->images) }}" class="w-100"
+                <img src="{{ asset('storage/lib/img/artikel/' . $agenda->images) }}" class="w-100"
                   alt="{{ $agenda->judul }}" style="height: 240px; object-fit: cover;">
                 <span class="badge bg-success position-absolute top-0 start-0 m-3 px-3 py-2">
                   {{ \Carbon\Carbon::parse($agenda->tanggal_mulai)->format('d M') }}

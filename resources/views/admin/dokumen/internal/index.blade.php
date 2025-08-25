@@ -260,6 +260,7 @@
                         {{ $documents->appends(request()->query())->links() }}
                       </div>
                     @endif
+                  @endif
                 </div>
               </div>
             </div>

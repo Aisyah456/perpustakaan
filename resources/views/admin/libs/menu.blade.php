@@ -116,7 +116,7 @@
       {{-- Download --}}
       @php
         $downloadActive =
-            request()->is('admin/guides*') ||
+            request()->is('admin/panduan*') ||
             request()->is('admin/internal-documents*') ||
             request()->is('admin/external-documents*') ||
             request()->is('admin/research-tools*');
@@ -127,8 +127,8 @@
           <span class="menu-text">Download</span>
         </a>
         <ul class="treeview-menu" style="{{ $downloadActive ? 'display:block;' : '' }}">
-          <li class="{{ request()->is('admin/guides*') ? 'active' : '' }}"><a
-              href="{{ url('/admin/guides') }}">Panduan</a></li>
+          <li class="{{ request()->is('admin/panduan*') ? 'active' : '' }}"><a
+              href="{{ url('/admin/panduan') }}">Panduan</a></li>
           <li class="{{ request()->is('admin/internal-documents*') ? 'active' : '' }}"><a
               href="{{ url('/admin/internal-documents') }}">Dokumen Internal</a></li>
           <li class="{{ request()->is('admin/external-documents*') ? 'active' : '' }}"><a
@@ -155,7 +155,7 @@
       </li>
 
       {{-- Login & Signup --}}
-      @php
+      {{-- @php
         $authActive =
             request()->is('login') ||
             request()->is('signup') ||
@@ -178,7 +178,7 @@
           <li class="{{ request()->is('lock-screen') ? 'active' : '' }}"><a href="{{ url('/lock-screen') }}">Lock
               Screen</a></li>
         </ul>
-      </li>
+      </li> --}}
 
     </ul>
   </div>

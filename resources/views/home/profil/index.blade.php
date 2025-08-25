@@ -4,7 +4,7 @@
 
 @section('content')
   <!-- ABOUT US
-                                                                                              ================================================== -->
+                                                                                                          ================================================== -->
 @section('content')
   <section class="about-style-02">
     <div class="container">
@@ -43,36 +43,6 @@
     </div>
   </section>
 
-  <!-- ADDRESS
-                                                                                    ================================================== -->
-  <section class="about-style-02" style="background: linear-gradient(135deg, #e6f2ed, #ffffff); padding: 60px 0;">
-    <div class="container">
-      <div class="row footer-address justify-content-center">
-        <div class="col-lg-10">
-          <div class="bg-white p-4 shadow border-radius-10 text-center position-relative" style="border-radius: 15px;">
-            <div class="row align-items-center">
-              <!-- Gambar ilustrasi prestasi -->
-              <div class="col-md-4 mb-3 mb-md-0">
-                <img src="{{ asset('lib/img/icons/business-success-goal-and-leadership-outline-icon-vector.jpg') }}"
-                  alt="Ilustrasi Prestasi" class="img-fluid rounded">
-              </div>
-              <!-- Konten teks -->
-              <div class="col-md-8 text-md-start text-center">
-                <h4 class="fw-bold text-success">
-                  <i class="bi bi-award-fill me-2"></i>PRESTASI PERPUSTAKAAN
-                </h4>
-                <p class="mb-3 text-muted">
-                  Universitas Mohammad Husni Thamrin terus meraih berbagai penghargaan di bidang literasi, inovasi
-                  digital, dan pelayanan perpustakaan.
-                </p>
-                <a href="#" class="btn btn-success shadow-sm">Read More</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
 
   <section class="about-style-02" style="background: linear-gradient(135deg, #e6f2ed, #ffffff); padding: 60px 0;">
     <div class="container">
@@ -126,11 +96,12 @@
         $kepala = $structures->where('position', 'Kepala Biro Umum')->first();
       @endphp
       @if ($kepala)
-        <div class="row justify-content-center mb-4">
+        <div class="row justify-content-center mb-5">
           <div class="col-md-4 text-center">
-            <div class="p-3 bg-white rounded shadow-sm">
-              <img src="{{ asset('storage/photo/' . $kepala->photo) }}" class="img-fluid rounded-circle mb-3"
-                alt="{{ $kepala->name }}" width="120" height="120">
+            <div class="p-4 bg-white rounded shadow-sm">
+              <img src="{{ asset('storage/photo/' . $kepala->photo) }}"
+                class="img-fluid rounded-circle mb-3 border border-3 border-success" alt="{{ $kepala->name }}"
+                width="140" height="140">
               <h5 class="fw-bold">{{ $kepala->name }}</h5>
               <p class="text-muted">{{ $kepala->position }}</p>
             </div>
@@ -139,12 +110,13 @@
       @endif
 
       {{-- Level 2: Subbagian langsung di bawah Kepala --}}
-      <div class="row justify-content-center mb-4">
+      <div class="row justify-content-center mb-5">
         @foreach ($structures->where('parent_id', optional($kepala)->id) as $subbagian)
-          <div class="col-md-4 text-center mb-3">
-            <div class="p-3 bg-white rounded shadow-sm">
-              <img src="{{ asset('storage/photo/' . $subbagian->photo) }}" class="img-fluid rounded-circle mb-3"
-                alt="{{ $subbagian->name }}" width="100" height="100">
+          <div class="col-md-3 text-center mb-4">
+            <div class="p-3 bg-white rounded shadow-sm h-100">
+              <img src="{{ asset('storage/photo/' . $subbagian->photo) }}"
+                class="img-fluid rounded-circle mb-3 border border-2 border-primary" alt="{{ $subbagian->name }}"
+                width="110" height="110">
               <h6 class="fw-bold">{{ $subbagian->name }}</h6>
               <p class="text-muted">{{ $subbagian->position }}</p>
             </div>
@@ -158,9 +130,10 @@
           return $item->parent_id !== null && $item->parent_id !== optional($kepala)->id;
       }) as $staff)
           <div class="col-md-3 text-center mb-4">
-            <div class="p-3 bg-white rounded shadow-sm">
-              <img src="{{ asset('storage/photo/' . $staff->photo) }}" class="img-fluid rounded-circle mb-3"
-                alt="{{ $staff->name }}" width="100" height="100">
+            <div class="p-3 bg-white rounded shadow-sm h-100">
+              <img src="{{ asset('storage/photo/' . $staff->photo) }}"
+                class="img-fluid rounded-circle mb-3 border border-2 border-secondary" alt="{{ $staff->name }}"
+                width="100" height="100">
               <h6 class="fw-bold">{{ $staff->name }}</h6>
               <p class="text-muted">{{ $staff->position }}</p>
             </div>
@@ -170,4 +143,5 @@
 
     </div>
   </section>
+
 @endsection

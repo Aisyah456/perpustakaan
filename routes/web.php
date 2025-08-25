@@ -270,7 +270,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 });
 
 // Redirect /admin ke /admin/login
-Route::redirect('/Admin', '/admin/login');
+Route::redirect('/admin', '/admin/login');
 Route::redirect('/admin', '/admin/login');
 
 
@@ -406,6 +406,16 @@ Route::prefix('admin')->name('admin.')->group(function () {
         'edit'    => 'referensi.edit',
         'update'  => 'referensi.update',
         'destroy' => 'referensi.destroy',
+    ]);
+
+    Route::resource('panduan', PanduanPerpustakaanController::class)->names([
+        'index'   => 'panduan.index',
+        'create'  => 'panduan.create',
+        'store'   => 'panduan.store',
+        'show'    => 'panduan.show',
+        'edit'    => 'panduan.edit',
+        'update'  => 'panduan.update',
+        'destroy' => 'panduan.destroy',
     ]);
 });
 

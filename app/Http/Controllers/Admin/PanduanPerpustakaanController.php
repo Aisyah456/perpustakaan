@@ -14,7 +14,7 @@ class PanduanPerpustakaanController extends Controller
      */
     public function index()
     {
-        $panduans = PanduanPerpustakaan::latest()->paginate(10);
+        $panduans = PanduanPerpustakaan::latest()->paginate(5);
 
         return view('admin.dok.panduan.index', compact('panduans'));
     }

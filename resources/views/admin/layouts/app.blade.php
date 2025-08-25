@@ -4,26 +4,29 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>@yield('title', 'Dashboard') | Perpustakaan UMHT </title>
+  <title>@yield('title', 'Dashboard') | Perpustakaan UMHT</title>
 
-  <!-- Meta -->
+  {{-- Meta & Links --}}
   @include('admin.libs.meta')
   @include('admin.libs.link')
 
+  {{-- Tailwind CSS --}}
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 
 <body>
   <div class="page-wrapper">
     <div class="main-container">
+
+      {{-- Sidebar Menu --}}
       @include('admin.libs.menu')
 
       <div class="app-container">
 
-        <!-- App header starts -->
+        {{-- Header --}}
         <div class="app-header d-flex align-items-center">
 
-          <!-- Toggle buttons starts -->
+          {{-- Toggle Buttons --}}
           <div class="d-flex align-items-center">
             <button class="toggle-sidebar">
               <i class="bi bi-list lh-1"></i>
@@ -32,51 +35,40 @@
               <i class="bi bi-list lh-1"></i>
             </button>
           </div>
-          <!-- Toggle buttons ends -->
 
-          <!-- App brand sm starts -->
+          {{-- Brand Small (Mobile) --}}
           <div class="app-brand-sm d-lg-none d-flex">
-
-            <!-- Logo sm starts -->
-            <a href="admin/dasboard">
-              <img src="{{ asset('lib/img/logoumht.png') }}" class="logo" alt="Bootstrap Gallery">
+            <a href="{{ url('admin/dashboard') }}">
+              <img src="{{ asset('lib/img/logoumht.png') }}" class="logo" alt="Logo UMHT">
             </a>
-            <!-- Logo sm end -->
-
           </div>
-          <!-- App brand sm ends -->
 
-          <!-- Page title starts -->
+          {{-- Page Title --}}
           <h5 class="m-0 ms-2 fw-semibold">@yield('title', 'Dashboard')</h5>
-          <!-- Page title ends -->
 
-          <!-- App header actions starts -->
+          {{-- Header Actions --}}
           @include('admin.libs.header')
-          <!-- App header actions ends -->
 
         </div>
-        <!-- App header ends -->
+        {{-- End Header --}}
 
-        <!-- App body starts -->
+        {{-- Body --}}
         <div class="app-body">
-
-          <!-- Row starts -->
           <div class="row gx-4">
-
-
-
             @yield('content')
           </div>
         </div>
+        {{-- End Body --}}
 
-
-
+        {{-- Footer --}}
         @include('admin.libs.footer')
-      </div>
-      @include('admin.libs.script')
+
+      </div> {{-- End app-container --}}
+    </div> {{-- End main-container --}}
+  </div> {{-- End page-wrapper --}}
+
+  {{-- Scripts --}}
+  @include('admin.libs.script')
 </body>
-
-
-<!-- Mirrored from bootstrapget.com/demos/cube-admin-template/accordions.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 16 Jan 2025 02:51:17 GMT -->
 
 </html>
