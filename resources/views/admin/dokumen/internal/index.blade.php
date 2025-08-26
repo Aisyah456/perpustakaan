@@ -195,226 +195,218 @@
             </div>
           @endif
 
-          <div class="row">
-            <div class="col-12">
-              <div class="card shadow-lg border-0 rounded-3">
-                <div class="card-body">
-                  @if ($documents->count() > 0)
-                    <div class="table-responsive">
-                      <table class="table table-hover align-middle mb-0" id="documentsTable">
-                        <thead class="table-success text-center">
-                          <tr>
-                            <th>No</th>
-                            <th>Judul</th>
-                            <th>Kategori</th>
-                            <th>Deskripsi</th>
-                            <th>File</th>
-                            <th>Aksi</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          @forelse($documents as $index => $doc)
-                            <tr>
-                              <td>{{ $documents->firstItem() + $index }}</td>
-                              <td><strong>{{ Str::limit($doc->judul, 40) }}</strong></td>
-                              <td>{{ $doc->kategori }}</td>
-                              <td>{{ Str::limit($doc->deskripsi, 50) }}</td>
-                              <td>
-                                <a href="{{ asset('storage/docs/' . $doc->file) }}" target="_blank"
-                                  class="btn btn-sm btn-outline-secondary">
-                                  <i class="fas fa-file-download"></i> Unduh
-                                </a>
-                              </td>
-                              <td>
-                                <div class="btn-group">
-                                  <button type="button" class="btn btn-sm btn-outline-info view-btn"
-                                    data-id="{{ $doc->id }}" data-bs-toggle="modal" data-bs-target="#viewModal">
-                                    <i class="fas fa-eye"></i>
-                                  </button>
-                                  <button type="button" class="btn btn-sm btn-outline-primary edit-btn"
-                                    data-id="{{ $doc->id }}" data-bs-toggle="modal" data-bs-target="#editModal">
-                                    <i class="fas fa-edit"></i>
-                                  </button>
-                                  <button type="button" class="btn btn-sm btn-outline-danger delete-btn"
-                                    data-id="{{ $doc->id }}" data-title="{{ $doc->judul }}"
-                                    data-bs-toggle="modal" data-bs-target="#deleteModal">
-                                    <i class="fas fa-trash"></i>
-                                  </button>
-                                </div>
-                              </td>
-                            </tr>
-                          @empty
-                            <tr>
-                              <td colspan="6" class="text-center text-muted py-4">
-                                <i class="fas fa-folder-open fa-3x mb-3 text-muted"></i>
-                                <p>Tidak ada dokumen ditemukan</p>
-                              </td>
-                            </tr>
-                          @endforelse
-                        </tbody>
-                      </table>
-                    </div>
 
-                    @if ($documents->hasPages())
-                      <div class="d-flex justify-content-center mt-4">
-                        {{ $documents->appends(request()->query())->links() }}
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead class="table-success ">
+                <tr>
+                  <th>No</th>
+                  <th>Judul</th>
+                  <th>Kategori</th>
+                  <th>Deskripsi</th>
+                  <th>File</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                @forelse($documents as $index => $doc)
+                  <tr>
+                    <td>{{ $documents->firstItem() + $index }}</td>
+                    <td><strong>{{ Str::limit($doc->judul, 40) }}</strong></td>
+                    <td>{{ $doc->kategori }}</td>
+                    <td>{{ Str::limit($doc->deskripsi, 50) }}</td>
+                    <td>
+                      <a href="{{ asset('storage/docs/' . $doc->file) }}" target="_blank"
+                        class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-file-download"></i> Unduh
+                      </a>
+                    </td>
+                    <td>
+                      <div class="btn-group">
+                        <button type="button" class="btn btn-sm btn-outline-info view-btn" data-id="{{ $doc->id }}"
+                          data-bs-toggle="modal" data-bs-target="#viewModal">
+                          <i class="fas fa-eye"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-primary edit-btn"
+                          data-id="{{ $doc->id }}" data-bs-toggle="modal" data-bs-target="#editModal">
+                          <i class="fas fa-edit"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-danger delete-btn"
+                          data-id="{{ $doc->id }}" data-title="{{ $doc->judul }}" data-bs-toggle="modal"
+                          data-bs-target="#deleteModal">
+                          <i class="fas fa-trash"></i>
+                        </button>
                       </div>
-                    @endif
-                  @endif
-                </div>
-              </div>
-            </div>
+                    </td>
+                  </tr>
+                @empty
+                  <tr>
+                    <td colspan="6" class="text-center text-muted py-4">
+                      <i class="fas fa-folder-open fa-3x mb-3 text-muted"></i>
+                      <p>Tidak ada dokumen ditemukan</p>
+                    </td>
+                  </tr>
+                @endforelse
+              </tbody>
+            </table>
           </div>
 
-          <div class="modal fade" id="createModal" tabindex="-1">
-            <div class="modal-dialog">
-              <form method="POST" action="{{ route('admin.internal-documents.store') }}" enctype="multipart/form-data"
-                class="modal-content">
-                @csrf
-                <div class="modal-header">
-                  <h5 class="modal-title">Tambah Dokumen</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                  <div class="mb-3">
-                    <label>Judul</label>
-                    <input type="text" name="judul" class="form-control" required>
-                  </div>
-                  <div class="mb-3">
-                    <label>Kategori</label>
-                    <input type="text" name="kategori" class="form-control" required>
-                  </div>
-                  <div class="mb-3">
-                    <label>Deskripsi</label>
-                    <textarea name="deskripsi" class="form-control"></textarea>
-                  </div>
-                  <div class="mb-3">
-                    <label>Upload File</label>
-                    <input type="file" name="file" class="form-control" required>
-                  </div>
-                </div>
-                <div class="modal-footer">
-                  <button type="submit" class="btn btn-primary">Simpan</button>
-                </div>
-              </form>
+          @if ($documents->hasPages())
+            <div class="d-flex justify-content-center mt-4">
+              {{ $documents->appends(request()->query())->links() }}
             </div>
+          @endif
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="createModal" tabindex="-1">
+    <div class="modal-dialog">
+      <form method="POST" action="{{ route('admin.internal-documents.store') }}" enctype="multipart/form-data"
+        class="modal-content">
+        @csrf
+        <div class="modal-header">
+          <h5 class="modal-title">Tambah Dokumen</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label>Judul</label>
+            <input type="text" name="judul" class="form-control" required>
           </div>
-
-          <div class="modal fade" id="editModal" tabindex="-1">
-            <div class="modal-dialog">
-              <form method="POST" enctype="multipart/form-data" id="editForm" class="modal-content">
-                @csrf
-                @method('PUT')
-                <div class="modal-header">
-                  <h5 class="modal-title">Edit Dokumen</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                  <input type="hidden" name="id" id="edit-id">
-                  <div class="mb-3">
-                    <label>Judul</label>
-                    <input type="text" name="judul" id="edit-judul" class="form-control" required>
-                  </div>
-                  <div class="mb-3">
-                    <label>Kategori</label>
-                    <input type="text" name="kategori" id="edit-kategori" class="form-control" required>
-                  </div>
-                  <div class="mb-3">
-                    <label>Deskripsi</label>
-                    <textarea name="deskripsi" id="edit-deskripsi" class="form-control"></textarea>
-                  </div>
-                  <div class="mb-3">
-                    <label>Upload Ulang (Opsional)</label>
-                    <input type="file" name="file" class="form-control">
-                  </div>
-                </div>
-                <div class="modal-footer">
-                  <button type="submit" class="btn btn-primary">Perbarui</button>
-                </div>
-              </form>
-            </div>
+          <div class="mb-3">
+            <label>Kategori</label>
+            <input type="text" name="kategori" class="form-control" required>
           </div>
-
-          <div class="modal fade" id="viewModal" tabindex="-1">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">Detail Dokumen</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                  <p><strong>Judul:</strong> <span id="view-judul"></span></p>
-                  <p><strong>Kategori:</strong> <span id="view-kategori"></span></p>
-                  <p><strong>Deskripsi:</strong> <span id="view-deskripsi"></span></p>
-                  <p><strong>File:</strong> <a id="view-file" href="#" target="_blank">Lihat File</a></p>
-                </div>
-              </div>
-            </div>
+          <div class="mb-3">
+            <label>Deskripsi</label>
+            <textarea name="deskripsi" class="form-control"></textarea>
           </div>
-
-          <!-- Modal Hapus Dokumen -->
-          <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog">
-              <form method="POST" id="deleteForm" class="modal-content">
-                @csrf
-                @method('DELETE')
-
-                <div class="modal-header">
-                  <h5 class="modal-title" id="deleteModalLabel">Hapus Dokumen</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-
-                <div class="modal-body">
-                  <p>Yakin ingin menghapus dokumen <strong id="delete-title"></strong>?</p>
-                </div>
-
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                  <button type="submit" class="btn btn-danger">Hapus</button>
-                </div>
-              </form>
-            </div>
+          <div class="mb-3">
+            <label>Upload File</label>
+            <input type="file" name="file" class="form-control" required>
           </div>
-        @endsection
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
-        <script>
-          document.querySelectorAll('.edit-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-              const id = this.dataset.id;
-              fetch(`/admin/internal-documents/${id}`)
-                .then(res => res.json())
-                .then(data => {
-                  document.getElementById('editForm').action = `/admin/internal-documents/${id}`;
-                  document.getElementById('edit-id').value = data.id;
-                  document.getElementById('edit-judul').value = data.judul;
-                  document.getElementById('edit-kategori').value = data.kategori;
-                  document.getElementById('edit-deskripsi').value = data.deskripsi;
-                });
-            });
+  <div class="modal fade" id="editModal" tabindex="-1">
+    <div class="modal-dialog">
+      <form method="POST" enctype="multipart/form-data" id="editForm" class="modal-content">
+        @csrf
+        @method('PUT')
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Dokumen</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="id" id="edit-id">
+          <div class="mb-3">
+            <label>Judul</label>
+            <input type="text" name="judul" id="edit-judul" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label>Kategori</label>
+            <input type="text" name="kategori" id="edit-kategori" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label>Deskripsi</label>
+            <textarea name="deskripsi" id="edit-deskripsi" class="form-control"></textarea>
+          </div>
+          <div class="mb-3">
+            <label>Upload Ulang (Opsional)</label>
+            <input type="file" name="file" class="form-control">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Perbarui</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal fade" id="viewModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Detail Dokumen</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p><strong>Judul:</strong> <span id="view-judul"></span></p>
+          <p><strong>Kategori:</strong> <span id="view-kategori"></span></p>
+          <p><strong>Deskripsi:</strong> <span id="view-deskripsi"></span></p>
+          <p><strong>File:</strong> <a id="view-file" href="#" target="_blank">Lihat File</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Hapus Dokumen -->
+  <div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+      <form method="POST" id="deleteForm" class="modal-content">
+        @csrf
+        @method('DELETE')
+
+        <div class="modal-header">
+          <h5 class="modal-title">Hapus Dokumen</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          <p>Yakin ingin menghapus dokumen <strong id="delete-title"></strong>?</p>
+        </div>
+
+
+        <div class="modal-footer"><button type="submit" class="btn btn-danger">Hapus</button></div>
+      </form>
+    </div>
+  </div>
+
+
+  <script>
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const id = this.dataset.id;
+        fetch(`/admin/internal-documents/${id}`)
+          .then(res => res.json())
+          .then(data => {
+            document.getElementById('editForm').action = `/admin/internal-documents/${id}`;
+            document.getElementById('edit-id').value = data.id;
+            document.getElementById('edit-judul').value = data.judul;
+            document.getElementById('edit-kategori').value = data.kategori;
+            document.getElementById('edit-deskripsi').value = data.deskripsi;
           });
+      });
+    });
 
-          document.querySelectorAll('.view-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-              const id = this.dataset.id;
-              fetch(`/admin/internal-documents/${id}`)
-                .then(res => res.json())
-                .then(data => {
-                  document.getElementById('view-judul').textContent = data.judul;
-                  document.getElementById('view-kategori').textContent = data.kategori;
-                  document.getElementById('view-deskripsi').textContent = data.deskripsi;
-                  document.getElementById('view-file').href = `/storage/docs/${data.file}`;
-                });
-            });
+    document.querySelectorAll('.view-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const id = this.dataset.id;
+        fetch(`/admin/internal-documents/${id}`)
+          .then(res => res.json())
+          .then(data => {
+            document.getElementById('view-judul').textContent = data.judul;
+            document.getElementById('view-kategori').textContent = data.kategori;
+            document.getElementById('view-deskripsi').textContent = data.deskripsi;
+            document.getElementById('view-file').href = `/storage/docs/${data.file}`;
           });
+      });
+    });
 
-          $(document).ready(function() {
-            $('.delete-btn').on('click', function() {
-              const id = $(this).data('id');
-              const title = $(this).data('title');
-
-              $('#deleteForm').attr('action', `/admin/internal-documents/${id}`);
-              $('#delete-title').text(title);
-            });
-          });
-        </script>
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const id = this.dataset.id;
+        const title = this.dataset.title;
+        document.getElementById('deleteForm').action = `/admin/internal-documents/${id}`;
+        document.getElementById('delete-title').textContent = title;
+      });
+    });
+  </script>
+@endsection

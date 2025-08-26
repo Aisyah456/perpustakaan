@@ -58,16 +58,17 @@
           <span class="menu-text">Informasi</span>
         </a>
         <ul class="treeview-menu" style="{{ $informasiActive ? 'display:block;' : '' }}">
-          <li class="{{ request()->is('admin/partners*') ? 'active' : '' }}"><a
-              href="{{ url('/admin/partners') }}">Partner</a></li>
-          <li class="{{ request()->is('admin/berita*') ? 'active' : '' }}"><a
-              href="{{ url('/admin/berita') }}">Berita</a></li>
           <li class="{{ request()->is('admin/agenda*') ? 'active' : '' }}"><a
               href="{{ url('/admin/agenda') }}">Agenda</a></li>
           <li class="{{ request()->is('admin/artikel*') ? 'active' : '' }}"><a
               href="{{ url('/admin/artikel') }}">Artikel</a></li>
+          <li class="{{ request()->is('admin/berita*') ? 'active' : '' }}"><a
+              href="{{ url('/admin/berita') }}">Berita</a></li>
           <li class="{{ request()->is('admin/koleksi-terbaru*') ? 'active' : '' }}"><a
               href="{{ url('/admin/koleksi-terbaru') }}">Koleksi Terbaru</a></li>
+          <li class="{{ request()->is('admin/partners*') ? 'active' : '' }}"><a
+              href="{{ url('/admin/partners') }}">Partner</a></li>
+
         </ul>
       </li>
 
@@ -84,10 +85,15 @@
         <ul class="treeview-menu" style="{{ $layananActive ? 'display:block;' : '' }}">
           <li class="{{ request()->is('admin/pustaka*') ? 'active' : '' }}"><a
               href="{{ url('/admin/pustaka') }}">Bebas Pustaka</a></li>
-          <li class="{{ request()->is('admin/turnitin*') ? 'active' : '' }}"><a
-              href="{{ url('/admin/turnitin') }}">Turnitin</a></li>
+          <li class="{{ request()->is('/admin/konsultasi*') ? 'active' : '' }}"><a
+              href="{{ url('/admin/konsultasi') }}">Konsultasi</a></li>
           <li class="{{ request()->is('admin/referensi*') ? 'active' : '' }}"><a
               href="{{ url('/admin/referensi') }}">Referensi</a></li>
+          <li class="{{ request()->is('admin/turnitin*') ? 'active' : '' }}"><a
+              href="{{ url('/admin/turnitin') }}">Turnitin</a></li>
+          <li class="{{ request()->is('admin/usulan-buku*') ? 'active' : '' }}"><a
+              href="{{ url('/admin/usulan-buku') }}">Usulan Buku</a></li>
+
         </ul>
       </li>
 
@@ -139,20 +145,20 @@
       </li>
 
       {{-- Kalender --}}
-      <li class="{{ request()->is('admin/calendar*') ? 'active current-page' : '' }}">
+      {{-- <li class="{{ request()->is('admin/calendar*') ? 'active current-page' : '' }}">
         <a href="{{ url('/admin/calendar') }}">
           <i class="bi bi-calendar2"></i>
           <span class="menu-text">Kalender</span>
         </a>
-      </li>
+      </li> --}}
 
       {{-- Notifikasi --}}
-      <li class="{{ request()->is('admin/notifications*') ? 'active current-page' : '' }}">
+      {{-- <li class="{{ request()->is('admin/notifications*') ? 'active current-page' : '' }}">
         <a href="{{ url('/admin/notifications') }}">
           <i class="bi bi-bell"></i>
           <span class="menu-text">Notifikasi</span>
         </a>
-      </li>
+      </li> --}}
 
       {{-- Login & Signup --}}
       {{-- @php

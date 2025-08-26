@@ -23,6 +23,7 @@ use App\Http\Controllers\StandarsController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\ReferensiController;
 use App\Http\Controllers\StructureController;
+use App\Http\Controllers\KonsultasiController;
 use App\Http\Controllers\UsulanBukuController;
 use App\Http\Controllers\Admin\MenusController;
 use App\Http\Controllers\CekPinjamanController;
@@ -36,8 +37,8 @@ use App\Http\Controllers\EventLibraryController;
 use App\Http\Controllers\LibraryGuideController;
 use App\Http\Controllers\ResearchToolController;
 use App\Http\Controllers\Admin\PartnerController;
-use App\Http\Controllers\Admin\PlagiatController;
 
+use App\Http\Controllers\Admin\PlagiatController;
 use App\Http\Controllers\admin\PustakaController;
 use App\Http\Controllers\PublicRequestController;
 use App\Http\Controllers\Admin\JournallController;
@@ -51,6 +52,7 @@ use App\Http\Controllers\Admin\AdminRequestController;
 use App\Http\Controllers\Admin\LibraryEventController;
 use App\Http\Controllers\Admin\ToolsResearchController;
 use App\Http\Controllers\Admin\ExternalArchiveController;
+use App\Http\Controllers\Admin\KonsultasiAdminController;
 use App\Http\Controllers\Admin\CollectionLatestController;
 use App\Http\Controllers\Admin\InternalArchivesController;
 use App\Http\Controllers\Admin\InternalDocumentController;
@@ -84,11 +86,6 @@ Route::get('/profil-perpustakaan', function () {
     return view('home.profil.index', compact('structures'));
 })->name('profil-perpustakaan');
 
-
-
-// Profil Anggota
-// Route::get('/Profil', [StafController::class, 'index']);
-// Route::get('/profil/detai/{id}', [StafController::class, 'show']);
 
 // Profil Perpustakaan
 Route::view('/perpustakaan/visi-misi', 'home.profil.vismis')->name('perpustakaan.visi-misi');
@@ -135,8 +132,7 @@ Route::get('/panduan-perpustakaan/{id}', [PanduanController::class, 'show'])->na
 
 Route::view('/layanan/referensi', 'home.layanan.referensi.index')->name('layanan.referensi');
 Route::view('/layanan/sirkulasi', 'home.layanan.sirkulasi.app')->name('layanan.sirkulasi');
-// Route::get('/layanan/turnitin', [TurnitinController::class, 'index'])->name('turnitin.form');
-// Route::post('/layanan/turnitin', [TurnitinController::class, 'store'])->name('turnitin.store');
+
 
 // Form Referensi
 Route::post('/referensi/kirim', [ReferensiController::class, 'kirim'])->name('referensi.kirim');
@@ -147,15 +143,6 @@ Route::post('/layanan-referensi/kirim', [ReferensiController::class, 'kirim'])->
 Route::get('/turnitin', [TurnitinRequestsController::class, 'create'])->name('turnitin.form');
 Route::post('/turnitin', [TurnitinRequestsController::class, 'store'])->name('turnitin.store');
 
-// Form Literasi (dengan auth)
-// Route::middleware(['auth'])->group(function () {
-//     Route::get('/literasi', [LiterasiRequestController::class, 'create'])->name('literasi.form');
-//     Route::post('/literasi', [LiterasiRequestController::class, 'store'])->name('literasi.store');
-// });
-
-// Form Bebas Pustaka
-// Route::get('/formulir-bebas-pustaka', [BebasPustakaController::class, 'create']);
-// Route::post('/formulir-bebas-pustaka', [BebasPustakaController::class, 'store']);
 Route::get('/bebas-pustaka', [LibraryFreeController::class, 'index']);
 Route::post('/bebas-pustaka', [LibraryFreeController::class, 'store']);
 
@@ -176,6 +163,14 @@ Route::post('/admin/usulan-buku/{id}/verifikasi', [UsulanBukuController::class, 
 Route::get('/layanan/cek-pinjaman', [CekPinjamanController::class, 'index'])->name('cek-pinjaman');
 Route::post('/layanan/cek-pinjaman', [CekPinjamanController::class, 'cek'])->name('cek-pinjaman.cek');
 
+// Halaman form konsultasi
+Route::get('/layanan/konsultasi', [KonsultasiController::class, 'index'])
+    ->name('home.layanan.konsultasi.index');
+
+// Proses simpan data konsultasi
+Route::post('/layanan/konsultasi', [KonsultasiController::class, 'store'])
+    ->name('home.layanan.konsultasi.store');
+
 // Panduan & Koleksi
 Route::get('/panduan/layanan', [LibraryGuideController::class, 'index'])->name('library.layanan');
 Route::get('/panduan/ebook', [EbookController::class, 'index'])->name('ebook.index');
@@ -192,15 +187,6 @@ Route::controller(TurnitinRequestsController::class)->prefix('turnitin')->name('
     Route::get('/get-majors/{faculty_id}', 'getMajors')->name('getMajors');
     Route::post('/store', 'store')->name('store');
 });
-
-
-// Route::prefix('bebas-pustaka')->name('bebas-pustaka.')->group(function () {
-//     Route::get('/', [LibraryFreeController::class, 'index'])->name('index');
-//     Route::get('/create', [LibraryFreeController::class, 'create'])->name('create');
-//     Route::post('/store', [LibraryFreeController::class, 'store'])->name('store');
-//     Route::delete('/{libraryFree}', [LibraryFreeController::class, 'destroy'])->name('destroy');
-//     Route::patch('/{libraryFree}/status/{status}', [LibraryFreeController::class, 'updateStatus'])->name('updateStatus');
-// });
 
 // External Documents
 Route::prefix('dokumen-eksternal')->name('dokumen-eksternal.')->group(function () {
@@ -270,8 +256,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
 });
 
 // Redirect /admin ke /admin/login
-Route::redirect('/admin', '/admin/login');
-Route::redirect('/admin', '/admin/login');
+// Route::redirect('/admin', '/admin/login');
+// Route::redirect('/admin', '/admin/login');
 
 
 // Admin Dashboard
@@ -338,16 +324,24 @@ Route::prefix('admin')->name('admin.')->group(function () {
         'destroy' => 'internal-documents.destroy',
     ]);
 
-    Route::resource('referensi', \App\Http\Controllers\Admin\ReferensiController::class)->names([
-        'index'   => 'referensi.index',
-        'create'  => 'referensi.create',
-        'store'   => 'referensi.store',
-        'show'    => 'referensi.show',
-        'edit'    => 'referensi.edit',
-        'update'  => 'referensi.update',
-        'destroy' => 'referensi.destroy',
-    ]);
-
+    // Route::resource('referensi', \App\Http\Controllers\Admin\ReferensiController::class)->names([
+    //     'index'   => 'referensi.index',
+    //     'create'  => 'referensi.create',
+    //     'store'   => 'referensi.store',
+    //     'show'    => 'referensi.show',
+    //     'edit'    => 'referensi.edit',
+    //     'update'  => 'referensi.update',
+    //     'destroy' => 'referensi.destroy',
+    // ]);
+    Route::prefix('referensi')->name('referensi.')->group(function () {
+        Route::get('/', [App\Http\Controllers\Admin\ReferensiController::class, 'index'])->name('index');
+        Route::get('/create', [App\Http\Controllers\Admin\ReferensiController::class, 'create'])->name('create');
+        Route::post('/store', [App\Http\Controllers\Admin\ReferensiController::class, 'store'])->name('store');
+        Route::get('/{id}/show', [App\Http\Controllers\Admin\ReferensiController::class, 'show'])->name('show');
+        Route::get('/{id}/edit', [App\Http\Controllers\Admin\ReferensiController::class, 'edit'])->name('edit');
+        Route::put('/{id}/update', [App\Http\Controllers\Admin\ReferensiController::class, 'update'])->name('update');
+        Route::delete('/{id}/destroy', [App\Http\Controllers\Admin\ReferensiController::class, 'destroy'])->name('destroy');
+    });
     Route::resource('menus', MenusController::class)->names([
         'index'   => 'menus.index',
         'create'  => 'menus.create',
@@ -417,7 +411,27 @@ Route::prefix('admin')->name('admin.')->group(function () {
         'update'  => 'panduan.update',
         'destroy' => 'panduan.destroy',
     ]);
+
+    // Route::resource('usulan-buku', \App\Http\Controllers\Admin\UsulanBukuController::class)->names([
+    //     'index'   => 'usulan-buku.index',
+    //     'create'  => 'usulan-buku.create',
+    //     'store'   => 'usulan-buku.store',
+    //     'show'    => 'usulan-buku.show',
+    //     'edit'    => 'usulan-buku.edit',
+    //     'update'  => 'usulan-buku.update',
+    //     'destroy' => 'usulan-buku.destroy',
+    // ]);
+
+    Route::resource('usulan-buku', \App\Http\Controllers\Admin\UsulanBukuController::class);
+
+
+    Route::get('/konsultasi', [KonsultasiAdminController::class, 'index'])->name('konsultasi.index');
+    Route::get('/konsultasi/{id}', [KonsultasiAdminController::class, 'show'])->name('konsultasi.show');
+    Route::post('/konsultasi', [KonsultasiAdminController::class, 'store'])->name('konsultasi.store');
+    Route::put('/konsultasi/{id}', [KonsultasiAdminController::class, 'update'])->name('konsultasi.update');
+    Route::delete('/konsultasi/{id}', [KonsultasiAdminController::class, 'destroy'])->name('konsultasi.destroy');
 });
+
 
 
 

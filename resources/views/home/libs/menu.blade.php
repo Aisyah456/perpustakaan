@@ -52,14 +52,14 @@
                             <li><a href="/layanan/referensi"
                                 class="{{ request()->is('layanan/referensi') ? 'active' : '' }}">Referensi</a></li>
                             <li><a href="https://pustaka.thamrin.ac.id/" target="_blank">Usulan Buku</a></li>
-                            <li><a href="/layanan/cek-pinjaman"
+                            {{-- <li><a href="/layanan/cek-pinjaman"
                                 class="{{ request()->is('layanan/cek-pinjaman') ? 'active' : '' }}">Cek Pinjaman</a>
-                            </li>
-                            <li><a href="/layanan/layanan-bebas-pustaka-perpustakaan-umht"
+                            </li> --}}
+                            {{-- <li><a href="/layanan/layanan-bebas-pustaka-perpustakaan-umht"
                                 class="{{ request()->is('layanan/layanan-bebas-pustaka-perpustakaan-umht') ? 'active' : '' }}">Bebas
-                                Pustaka</a></li>
-                            <li><a href="/home/layanan/konsultasi"
-                                class="{{ request()->is('home/layanan/konsultasi') ? 'active' : '' }}">Layanan
+                                Pustaka</a></li> --}}
+                            <li><a href="/layanan/konsultasi"
+                                class="{{ request()->is('layanan/konsultasi') ? 'active' : '' }}">Layanan
                                 Konsultasi</a></li>
                           </ul>
                         </li>

@@ -24,6 +24,8 @@ class ExternalArchiveController extends Controller
             'link' => 'required|url|max:500',
         ]);
 
+        $documents = $request->all();
+
         ExternalDocument::create($request->all());
 
         return redirect()->back()->with('success', 'Dokumen berhasil ditambahkan.');

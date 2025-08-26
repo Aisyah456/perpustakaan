@@ -10,7 +10,7 @@ class ReferensiController extends Controller
 {
     public function index()
     {
-        $data = ReferensiRequest::latest()->paginate(10);
+        $data = ReferensiRequest::latest()->get(); // Menggunakan get() instead of paginate untuk tampilan sederhana
         return view('admin.layanan.referensi.index', compact('data'));
     }
 
@@ -18,49 +18,123 @@ class ReferensiController extends Controller
     {
         return view('admin.layanan.referensi.create');
     }
+
+    public function store(Request $request)
+    {
+        try {
+            $validatedData = $request->validate([
+                'nama' => 'required|string|max:255',
+                'email' => 'required|email|max:255',
+                'topik' => 'required|string|max:255',
+                'pesan' => 'required|string',
+                'status' => 'required|in:pending,diproses,selesai'
+            ]);
+
+            ReferensiRequest::create($validatedData);
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Permintaan referensi berhasil dibuat.'
+                ]);
+            }
+
+            return redirect()->route('admin.referensi.index')->with('success', 'Permintaan referensi berhasil dibuat.');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => $e->errors()
+                ], 422);
+            }
+            return back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Terjadi kesalahan saat menyimpan data.'
+                ], 500);
+            }
+            return back()->with('error', 'Terjadi kesalahan saat menyimpan data.')->withInput();
+        }
+    }
+
     public function show($id)
     {
         $data = ReferensiRequest::findOrFail($id);
-        return view('admin.referensi.show', compact('data'));
+        return view('admin.layanan.referensi.show', compact('data'));
     }
 
-    public function store(Request $request)
-    // {
-    //     $request->validate([
-    //         'nama' => 'required',
-    //         'email' => 'required|email',
-    //         'topik' => 'required',
-    //         'pesan' => 'required',
-    //     ]);
-
-    //     ReferensiRequest::create($request->all());
-    //     return redirect()->route('referensi.index')->with('success', 'Permintaan referensi berhasil dikirim.');
-    // }
-
+    public function edit($id)
     {
-        $request->validate([
-            'nama' => 'required',
-        ]);
+        $referensi = ReferensiRequest::findOrFail($id);
+        return view('admin.layanan.referensi.edit', compact('referensi'));
     }
 
-    public function edit(ReferensiRequest $referensi)
+    public function update(Request $request, $id)
     {
-        return view('admin.referensi.edit', compact('referensi'));
+        try {
+            $referensi = ReferensiRequest::findOrFail($id);
+
+            $validatedData = $request->validate([
+                'nama' => 'required|string|max:255',
+                'email' => 'required|email|max:255',
+                'topik' => 'required|string|max:255',
+                'pesan' => 'required|string',
+                'status' => 'required|in:pending,diproses,selesai'
+            ]);
+
+            $referensi->update($validatedData);
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Data referensi berhasil diperbarui.'
+                ]);
+            }
+
+            return redirect()->route('admin.referensi.index')->with('success', 'Data referensi berhasil diperbarui.');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => $e->errors()
+                ], 422);
+            }
+            return back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Terjadi kesalahan saat memperbarui data.'
+                ], 500);
+            }
+            return back()->with('error', 'Terjadi kesalahan saat memperbarui data.')->withInput();
+        }
     }
 
-    public function update(Request $request, ReferensiRequest $referensi)
+    public function destroy($id)
     {
-        $request->validate([
-            'status' => 'required|in:pending,diproses,selesai',
-        ]);
+        try {
+            $referensi = ReferensiRequest::findOrFail($id);
+            $referensi->delete();
 
-        $referensi->update($request->all());
-        return redirect()->route('admin.referensi.index')->with('success', 'Status referensi diperbarui.');
-    }
+            if (request()->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Data berhasil dihapus.'
+                ]);
+            }
 
-    public function destroy(ReferensiRequest $referensi)
-    {
-        $referensi->delete();
-        return back()->with('success', 'Data berhasil dihapus.');
+            return redirect()->route('admin.referensi.index')->with('success', 'Data berhasil dihapus.');
+        } catch (\Exception $e) {
+            if (request()->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Terjadi kesalahan saat menghapus data.'
+                ], 500);
+            }
+            return back()->with('error', 'Terjadi kesalahan saat menghapus data.');
+        }
     }
 }

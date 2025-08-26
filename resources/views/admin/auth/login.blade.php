@@ -4,8 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="csrf-token" content="{{ csrf_token() }}">
-  <title>Admin Login - {{ config('app.name') }}</title>
+  <title>Admin Login - MyApp</title>
 
   <!-- Bootstrap CSS -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
@@ -55,6 +54,45 @@
       transform: translateY(-2px);
       background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
     }
+
+    .alert {
+      border-radius: 10px;
+      border: none;
+    }
+
+    .form-control {
+      border-radius: 10px;
+    }
+
+    .form-check-input:checked {
+      background-color: #667eea;
+      border-color: #667eea;
+    }
+
+    .loading {
+      display: none;
+    }
+
+    .btn-login:disabled {
+      opacity: 0.7;
+      transform: none !important;
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #6c757d;
+      cursor: pointer;
+      z-index: 5;
+    }
+
+    .form-floating {
+      position: relative;
+    }
   </style>
 </head>
 
@@ -71,51 +109,30 @@
 
           <div class="card-body p-5">
             <!-- Flash Messages -->
-            @if (session('success'))
-              <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="fas fa-check-circle me-2"></i>
-                {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-              </div>
-            @endif
+            <div id="alert-container"></div>
 
-            @if (session('error'))
-              <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="fas fa-exclamation-circle me-2"></i>
-                {{ session('error') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-              </div>
-            @endif
-
-            <form method="POST" action="{{ route('admin.login') }}">
-              @csrf
-
+            <form id="loginForm">
               <!-- Email Field -->
               <div class="form-floating mb-3">
-                <input type="email" class="form-control @error('email') is-invalid @enderror" id="email"
-                  name="email" placeholder="name@example.com" value="{{ old('email') }}" required>
+                <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com"
+                  required>
                 <label for="email">
                   <i class="fas fa-envelope me-2"></i>Email Address
                 </label>
-                @error('email')
-                  <div class="invalid-feedback">
-                    {{ $message }}
-                  </div>
-                @enderror
+                <div class="invalid-feedback"></div>
               </div>
 
               <!-- Password Field -->
               <div class="form-floating mb-3">
-                <input type="password" class="form-control @error('password') is-invalid @enderror" id="password"
-                  name="password" placeholder="Password" required>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Password"
+                  required>
                 <label for="password">
                   <i class="fas fa-lock me-2"></i>Password
                 </label>
-                @error('password')
-                  <div class="invalid-feedback">
-                    {{ $message }}
-                  </div>
-                @enderror
+                <button type="button" class="password-toggle" onclick="togglePassword()">
+                  <i class="fas fa-eye" id="toggleIcon"></i>
+                </button>
+                <div class="invalid-feedback"></div>
               </div>
 
               <!-- Remember Me -->
@@ -128,17 +145,32 @@
 
               <!-- Login Button -->
               <button type="submit" class="btn btn-primary btn-login w-100 py-3">
-                <i class="fas fa-sign-in-alt me-2"></i>
-                Masuk ke Dashboard
+                <span class="normal-text">
+                  <i class="fas fa-sign-in-alt me-2"></i>
+                  Masuk ke Dashboard
+                </span>
+                <span class="loading">
+                  <i class="fas fa-spinner fa-spin me-2"></i>
+                  Sedang masuk...
+                </span>
               </button>
             </form>
+
+            <!-- Demo Credentials -->
+            <div class="mt-4 p-3 bg-light rounded">
+              <small class="text-muted">
+                <strong>Demo Credentials:</strong><br>
+                Email: admin@example.com<br>
+                Password: admin123
+              </small>
+            </div>
           </div>
         </div>
 
         <!-- Footer -->
         <div class="text-center mt-4">
           <p class="text-white opacity-75 mb-0">
-            &copy; {{ date('Y') }} {{ config('app.name') }}. All rights reserved.
+            &copy; 2024 MyApp. All rights reserved.
           </p>
         </div>
       </div>
@@ -147,6 +179,121 @@
 
   <!-- Bootstrap JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // Toggle password visibility
+    function togglePassword() {
+      const passwordInput = document.getElementById('password');
+      const toggleIcon = document.getElementById('toggleIcon');
+
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.className = 'fas fa-eye-slash';
+      } else {
+        passwordInput.type = 'password';
+        toggleIcon.className = 'fas fa-eye';
+      }
+    }
+
+    // Show alert message
+    function showAlert(message, type = 'danger') {
+      const alertContainer = document.getElementById('alert-container');
+      const alertHTML = `
+        <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+          <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} me-2"></i>
+          ${message}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      `;
+      alertContainer.innerHTML = alertHTML;
+
+      // Auto dismiss after 5 seconds
+      setTimeout(() => {
+        const alert = alertContainer.querySelector('.alert');
+        if (alert) {
+          const bsAlert = new bootstrap.Alert(alert);
+          bsAlert.close();
+        }
+      }, 5000);
+    }
+
+    // Clear validation errors
+    function clearErrors() {
+      document.querySelectorAll('.form-control').forEach(input => {
+        input.classList.remove('is-invalid');
+        const feedback = input.nextElementSibling?.nextElementSibling;
+        if (feedback && feedback.classList.contains('invalid-feedback')) {
+          feedback.textContent = '';
+        }
+      });
+    }
+
+    // Show validation error
+    function showError(fieldName, message) {
+      const field = document.getElementById(fieldName);
+      field.classList.add('is-invalid');
+      const feedback = field.nextElementSibling?.nextElementSibling;
+      if (feedback && feedback.classList.contains('invalid-feedback')) {
+        feedback.textContent = message;
+      }
+    }
+
+    // Handle form submission
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      clearErrors();
+
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const remember = document.getElementById('remember').checked;
+
+      // Basic validation
+      if (!email) {
+        showError('email', 'Email harus diisi');
+        return;
+      }
+
+      if (!password) {
+        showError('password', 'Password harus diisi');
+        return;
+      }
+
+      // Show loading state
+      const submitBtn = document.querySelector('.btn-login');
+      const normalText = submitBtn.querySelector('.normal-text');
+      const loadingText = submitBtn.querySelector('.loading');
+
+      submitBtn.disabled = true;
+      normalText.style.display = 'none';
+      loadingText.style.display = 'inline';
+
+      // Simulate login process
+      setTimeout(() => {
+        // Demo login logic
+        if (email === 'admin@example.com' && password === 'admin123') {
+          showAlert('Login berhasil! Mengalihkan ke dashboard...', 'success');
+          setTimeout(() => {
+            // Redirect to dashboard (in real app, this would be handled by server)
+            window.location.href = '#dashboard';
+          }, 1500);
+        } else {
+          showAlert('Email atau password salah. Silakan coba lagi.');
+
+          // Reset button state
+          submitBtn.disabled = false;
+          normalText.style.display = 'inline';
+          loadingText.style.display = 'none';
+        }
+      }, 1000);
+    });
+
+    // Auto-fill demo credentials when clicking the demo box
+    document.querySelector('.bg-light').addEventListener('click', function() {
+      document.getElementById('email').value = 'admin@example.com';
+      document.getElementById('password').value = 'admin123';
+    });
+  </script>
 </body>
 
 </html>

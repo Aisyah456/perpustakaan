@@ -6,7 +6,7 @@
 @section('content')
 
   <!-- Hal Utama
-                      ================================================== -->
+                        ================================================== -->
 
   <section class="py-5 bg-light">
     <div class="container py-5">
@@ -37,7 +37,7 @@
       <p>Senin – Jumat: 08.00 – 17.00 WIB<br>Sabtu & Minggu: Tutup</p>
 
 
-      <h4 class="mt-5">Form Konsultasi Online</h4>
+      <h4 class="mt-5">Form Permintaan Referensi Atau Jurnal</h4>
 
       {{-- Notifikasi pesan terkirim --}}
       @if (session('success'))

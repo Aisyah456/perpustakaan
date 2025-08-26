@@ -23,9 +23,14 @@ class KonsultasiController extends Controller
         $request->validate([
             'nama' => 'required|string|max:100',
             'nim_nidn' => 'required|string|max:30',
-            'email' => 'required|email',
+            'tahun_masuk' => 'nullable|integer|min:1900|max:2100',
+            'fakultas' => 'nullable|string|max:100',
+            'program_studi' => 'nullable|string|max:100',
+            'no_hp' => 'nullable|string|max:20',
+            'email' => 'required|email|max:100',
             'topik_konsultasi' => 'required|string|max:200',
             'pesan' => 'required|string',
+            'dosen_pembimbing' => 'nullable|string|max:100',
         ]);
 
         Konsultasi::create($request->all());

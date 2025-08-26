@@ -69,35 +69,35 @@
       </div>
     </section>
 
-    {{-- <section class="py-5 bg-light">
-      <div class="container">
-        <div class="row mb-5">
-          <div class="col-md-6">
-            <h1 class="fw-bold" style="color:orange;">e-Resources</h1>
-            <h4 class="text-success">& Layanan Perpustakaan UMHT</h4>
-            <hr style="border-top: 2px solid #0d4e15; width: 50%;">
+      {{-- <section class="py-5 bg-light">
+        <div class="container">
+          <div class="row mb-5">
+            <div class="col-md-6">
+              <h1 class="fw-bold" style="color:orange;">e-Resources</h1>
+              <h4 class="text-success">& Layanan Perpustakaan UMHT</h4>
+              <hr style="border-top: 2px solid #0d4e15; width: 50%;">
+            </div>
           </div>
-        </div>
 
-        <div class="row">
-          @foreach ($resources as $res)
-            <div class="col-md-6 mb-4">
-              <div class="card border-0 shadow-sm h-100">
-                @if ($res->image)
-                  <img src="{{ asset('lib/img/icons/' . $res->image) }}" class="card-img-top" alt="{{ $res->title }}">
-                @endif
-                <div class="card-body">
-                  <p>{{ $res->description }}</p>
-                  <a href="{{ $res->link }}" class="btn btn-danger me-2">
-                    <i class="bi bi-book"></i> {{ $res->button_label }}
-                  </a>
+          <div class="row">
+            @foreach ($resources as $res)
+              <div class="col-md-6 mb-4">
+                <div class="card border-0 shadow-sm h-100">
+                  @if ($res->image)
+                    <img src="{{ asset('lib/img/icons/' . $res->image) }}" class="card-img-top" alt="{{ $res->title }}">
+                  @endif
+                  <div class="card-body">
+                    <p>{{ $res->description }}</p>
+                    <a href="{{ $res->link }}" class="btn btn-danger me-2">
+                      <i class="bi bi-book"></i> {{ $res->button_label }}
+                    </a>
+                  </div>
                 </div>
               </div>
-            </div>
-          @endforeach
+            @endforeach
+          </div>
         </div>
-      </div>
-    </section> --}}
+      </section> --}}
 
     <!-- ABOUT US
         ================================================== -->
@@ -500,33 +500,7 @@
   </div>
 
 
-
-
-  <!-- EXTRA
-        ================================================== -->
   {{-- Section Utama Perpustakaan --}}
-  <section class="bg-img cover-background pb-19 pb-lg-24 secondary-overlay" data-overlay-dark="8"
-    data-background="{{ asset('lib/img/bg/bg-02.jpg') }}">
-    <div class="container">
-      <div class="row align-items-center">
-        <div class="col-lg-7 mb-1-9 mb-lg-0">
-          <div class="section-title02">
-            <h2 class="mb-0 ls-minus-2px display-5 font-weight-800 lh-1 w-100 text-white">
-              Menyediakan Akses Informasi Ilmiah untuk Mendukung Pendidikan dan Penelitian
-            </h2>
-          </div>
-        </div>
-        <div class="col-lg-5">
-          <div class="text-start text-lg-end">
-            <a href="{{ route('perpustakaan.visi-misi') }}" class="butn-style4 white-hover">
-              <span class="text-btn">Lihat Layanan Kami</span>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <section class="about-style-02" style="background: linear-gradient(135deg, #e6f2ed, #ffffff); padding: 60px 0;">
     <div class="container">
       <div class="row footer-address justify-content-center">
@@ -549,7 +523,7 @@
                   ilmiah,
                   repository, serta layanan data yang dapat menunjang kebutuhan penelitian dosen maupun mahasiswa.
                 </p>
-                <a href="{{ url('perpustakaan.visi-misi') }}" class="btn btn-success shadow-sm">
+                <a href="{{ url('perpustakaan/visi-misi') }}" class="btn btn-success shadow-sm">
                   Jelajahi Sumber Daya
                 </a>
               </div>
@@ -559,41 +533,6 @@
       </div>
     </div>
   </section>
-
-
-  {{-- Statistik Perpustakaan --}}
-  {{-- <section class="pt-0 pb-0 overflow-visible bg-transparent">
-    <div class="container">
-      <div class="counter-style01 text-center border-radius-10">
-        <div class="row mt-n1-9">
-
-          <div class="col-sm-6 col-lg-4 mt-1-9">
-            <div class="display-14 display-md-11 display-lg-8 mb-1 counter-number font-weight-800 text-secondary lh-1">
-              <div class="odometer odometer-auto-theme" data-count="10000">0</div>+
-            </div>
-            <p class="mb-0 opacity9">Koleksi Buku & Referensi</p>
-          </div>
-
-          <div class="col-sm-6 col-lg-4 mt-1-9">
-            <div class="display-14 display-md-11 display-lg-8 mb-1 counter-number font-weight-800 text-secondary lh-1">
-              <div class="odometer odometer-auto-theme" data-count="5000">0</div>+
-            </div>
-            <p class="mb-0 opacity9">Pengguna Terdaftar</p>
-          </div>
-
-          <div class="col-sm-6 col-lg-4 mt-1-9">
-            <div class="display-14 display-md-11 display-lg-8 mb-1 counter-number font-weight-800 text-secondary lh-1">
-              <div class="odometer odometer-auto-theme" data-count="8">0</div> Jam
-            </div>
-            <p class="mb-0 opacity9">Jam Operasional Aktif per Hari</p>
-          </div>
-
-        </div>
-      </div>
-    </div>
-  </section> --}}
-
-
 
   <!-- Agenda Kegiatan Mendatang
         ================================================== -->

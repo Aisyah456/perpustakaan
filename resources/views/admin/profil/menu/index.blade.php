@@ -226,7 +226,7 @@
                   <tr>
                     <td>{{ $menus->firstItem() + $index }}</td>
                     <td>
-                      <img src="{{ asset('lib/img/icons/' . $menu->foto) }}" class="menu-thumbnail"
+                      <img src="{{ asset('lib/img/menu/' . $menu->foto) }}" class="menu-thumbnail"
                         alt="Foto {{ $menu->judul }}" style="height: 60px;">
                     </td>
                     <td>

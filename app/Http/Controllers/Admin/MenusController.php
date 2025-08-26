@@ -11,7 +11,7 @@ class MenusController extends Controller
 {
     public function index()
     {
-        $menus = Menu::latest()->paginate(10);
+        $menus = Menu::latest()->paginate(5);
         return view('admin.profil.menu.index', compact('menus'));
     }
 

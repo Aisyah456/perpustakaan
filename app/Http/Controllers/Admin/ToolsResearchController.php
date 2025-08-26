@@ -11,7 +11,7 @@ class ToolsResearchController extends Controller
 {
     public function index()
     {
-        $tools = ResearchTool::latest()->paginate(10);
+        $tools = ResearchTool::latest()->paginate(5);
         return view('admin.dokumen.research.index', compact('tools'));
     }
 

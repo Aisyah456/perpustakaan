@@ -11,7 +11,7 @@ class InternalArchivesController extends Controller
 {
     public function index()
     {
-        $documents = InternalDocument::latest()->paginate(10);
+        $documents = InternalDocument::latest()->paginate(5);
         return view('admin.dokumen.internal.index', compact('documents'));
     }
 
