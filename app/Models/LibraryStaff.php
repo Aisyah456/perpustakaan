@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class LibraryStaff extends Model
 {
@@ -11,15 +12,11 @@ class LibraryStaff extends Model
 
     /**
      * Nama tabel yang digunakan oleh model ini.
-     * Karena nama tabel kita 'library_staff' (snake_case), 
-     * Laravel sebenarnya sudah mendeteksi ini secara otomatis, 
-     * tapi mendefinisikannya secara eksplisit adalah praktik yang baik.
      */
     protected $table = 'library_staff';
 
     /**
-     * Kolom yang dapat diisi secara massal.
-     * Sangat penting untuk keamanan agar tidak sembarang kolom bisa diinput.
+     * Kolom yang dapat diisi secara massal (Mass Assignment).
      */
     protected $fillable = [
         'name',
@@ -31,30 +28,33 @@ class LibraryStaff extends Model
     ];
 
     /**
-     * Casting tipe data.
-     * Memastikan 'is_head' selalu dibaca sebagai boolean, bukan integer 0/1.
-     * Memastikan 'order' selalu dibaca sebagai integer.
+     * Casting tipe data (Menggunakan metode standar Laravel modern).
+     * Memastikan format data keluar dari database sesuai dengan tipenya di React/Inertia.
      */
-    protected $casts = [
-        'is_head' => 'boolean',
-        'order' => 'integer',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'is_head' => 'boolean',
+            'order' => 'integer',
+        ];
+    }
 
     /**
      * Scope untuk mengambil hanya Kepala Perpustakaan.
-     * Penggunaan di Controller: LibraryStaff::head()->first();
+     * Contoh: LibraryStaff::head()->first();
      */
-    public function scopeHead($query)
+    public function scopeHead(Builder $query): Builder
     {
         return $query->where('is_head', true);
     }
 
     /**
      * Scope untuk mengambil staf biasa (bukan kepala).
-     * Penggunaan di Controller: LibraryStaff::stafOnly()->get();
+     * Catatan: Pengurutan sebaiknya dipisah agar query lebih fleksibel.
+     * Contoh: LibraryStaff::staffOnly()->orderBy('order', 'asc')->get();
      */
-    public function scopeStafOnly($query)
+    public function scopeStaffOnly(Builder $query): Builder
     {
-        return $query->where('is_head', false)->orderBy('order');
+        return $query->where('is_head', false);
     }
 }

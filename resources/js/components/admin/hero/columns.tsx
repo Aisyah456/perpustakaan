@@ -119,29 +119,26 @@ export const columns = (onEdit: (item: HeroRow) => void): ColumnDef<HeroRow>[] =
             };
 
             return (
-                <div className="text-right">
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0 focus-visible:ring-0">
-                                <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-40">
-                            <DropdownMenuLabel>Opsi Kelola</DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={() => onEdit(hero)} className="cursor-pointer">
-                                <Edit className="mr-2 h-4 w-4 text-blue-500" />
-                                Edit Banner
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                                onClick={onDelete}
-                                className="cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10"
-                            >
-                                <Trash2 className="mr-2 h-4 w-4" />
-                                Hapus
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                <div className="flex justify-end gap-2">
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 text-blue-500 hover:text-blue-600 hover:bg-blue-50"
+                        onClick={() => onEdit(hero)}
+                        title="Edit Banner"
+                    >
+                        <Edit className="h-4 w-4" />
+                    </Button>
+
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 text-destructive hover:text-red-600 hover:bg-destructive/10"
+                        onClick={onDelete}
+                        title="Hapus"
+                    >
+                        <Trash2 className="h-4 w-4" />
+                    </Button>
                 </div>
             );
         },

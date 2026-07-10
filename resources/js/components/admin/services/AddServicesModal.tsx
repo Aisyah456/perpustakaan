@@ -1,6 +1,7 @@
 import { useForm } from "@inertiajs/react";
-import { Plus, Trash2, Upload, X } from "lucide-react";
+import { Plus, Trash2, Upload } from "lucide-react";
 import { useState, useRef } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
     Dialog,
@@ -25,7 +26,7 @@ export default function AddServiceModal({ isOpen, onClose }: AddServiceModalProp
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const { data, setData, post, processing, errors, reset, clearErrors } = useForm({
-        icon: null as File | null, // Berubah dari string ke File
+        icon: null as File | null,
         title: "",
         subtitle: "",
         description: "",
@@ -38,6 +39,13 @@ export default function AddServiceModal({ isOpen, onClose }: AddServiceModalProp
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
+            // Validasi ukuran file di sisi client (maks 2MB)
+            if (file.size > 2 * 1024 * 1024) {
+                toast.error("Ukuran file terlalu besar", {
+                    description: "Maksimal ukuran file adalah 2MB.",
+                });
+                return;
+            }
             setData("icon", file);
             setPreview(URL.createObjectURL(file));
         }
@@ -72,10 +80,18 @@ export default function AddServiceModal({ isOpen, onClose }: AddServiceModalProp
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        // Inertia otomatis menggunakan FormData jika salah satu field adalah File
-        post('/admin/services', {
+        post("/admin/services", {
             preserveScroll: true,
             onSuccess: () => handleClose(),
+            onError: (errs) => {
+                // Toast untuk error validasi server
+                const firstMsg = Object.values(errs)[0];
+                if (firstMsg) {
+                    toast.error("Gagal menyimpan layanan", {
+                        description: firstMsg,
+                    });
+                }
+            },
         });
     };
 

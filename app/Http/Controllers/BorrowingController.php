@@ -20,7 +20,7 @@ class BorrowingController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'member_id' => 'required|exists:members,id',
+           'user_id' => 'required|exists:users,id',
             'book_id' => 'required|exists:books,id',
             'borrow_date' => 'required|date',
             'due_date' => 'required|date|after_or_equal:borrow_date',

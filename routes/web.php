@@ -105,10 +105,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
             'scientific-works'   => App\Http\Controllers\ScientificWorkController::class,
             'shelves'            => App\Http\Controllers\ShelfController::class,
             'borrowings'         => App\Http\Controllers\BorrowingController::class,
-            'references'         => App\Http\Controllers\BookReferenceController::class,
-            'library-clearances' => App\Http\Controllers\LibraryClearanceController::class,
-            'loans'              => App\Http\Controllers\LoanController::class,
+            // 'library-clearances' => App\Http\Controllers\LibraryClearanceController::class,
             'eresource-access'   => App\Http\Controllers\EresourceAccesController::class,
+            'staff'              => App\Http\Controllers\StaffController::class,
         ]);
 
         Route::resource('library-feedback', App\Http\Controllers\Api\LibraryFeedbackController::class)

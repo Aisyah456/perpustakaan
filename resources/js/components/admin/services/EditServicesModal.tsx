@@ -1,6 +1,7 @@
 import { useForm } from "@inertiajs/react";
 import { useEffect, useState, useRef } from "react";
-import { Plus, Trash2, Upload, X } from "lucide-react";
+import { Plus, Trash2, Upload } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
     Dialog,
@@ -8,7 +9,7 @@ import {
     DialogHeader,
     DialogTitle,
     DialogFooter,
-    DialogDescription
+    DialogDescription,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -27,7 +28,7 @@ export default function EditServiceModal({ isOpen, onClose, service }: Props) {
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const { data, setData, post, processing, errors, reset, clearErrors } = useForm({
-        _method: 'PUT', // Spoofing method untuk Laravel multipart/form-data
+        _method: "PUT",
         icon: null as File | string | null,
         title: "",
         subtitle: "",
@@ -38,33 +39,49 @@ export default function EditServiceModal({ isOpen, onClose, service }: Props) {
         is_active: true,
     });
 
-    // Sinkronisasi data saat modal dibuka atau service berganti
+    // PERBAIKAN: dependency array hanya `service?.id` dan `isOpen`.
+    // Jangan masukkan `setData` — referensinya tidak stabil dan menyebabkan
+    // infinite loop yang memicu GET request berulang ke /admin/services.
     useEffect(() => {
-        if (service) {
+        if (!service || !isOpen) return;
+
+        reset();
+
+        // setTimeout(0) memastikan reset() selesai dulu sebelum setData dipanggil
+        const timer = setTimeout(() => {
             setData({
-                _method: 'PUT',
+                _method: "PUT",
                 icon: service.icon || null,
                 title: service.title || "",
                 subtitle: service.subtitle || "",
                 description: service.description || "",
-                features: Array.isArray(service.features) ? service.features : [""],
+                features:
+                    Array.isArray(service.features) && service.features.length > 0
+                        ? service.features
+                        : [""],
                 link: service.link || "#",
                 order: service.order || 0,
                 is_active: !!service.is_active,
             });
 
-            // Jika icon sudah ada (string URL dari backend), set sebagai preview
-            if (typeof service.icon === 'string' && service.icon) {
+            if (typeof service.icon === "string" && service.icon) {
                 setPreview(service.icon);
-            } else {
-                setPreview(null);
             }
-        }
-    }, [service, isOpen]);
+        }, 0);
+
+        return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [service?.id, isOpen]);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
+            if (file.size > 2 * 1024 * 1024) {
+                toast.error("Ukuran file terlalu besar", {
+                    description: "Maksimal ukuran file adalah 2MB.",
+                });
+                return;
+            }
             setData("icon", file);
             setPreview(URL.createObjectURL(file));
         }
@@ -80,16 +97,23 @@ export default function EditServiceModal({ isOpen, onClose, service }: Props) {
         reset();
         clearErrors();
         setPreview(null);
+        if (fileInputRef.current) fileInputRef.current.value = "";
         onClose();
     };
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        // Menggunakan POST karena Laravel membutuhkan spoofing _method: PUT
-        // ketika mengirim data yang mengandung file/multipart
         post(`/admin/services/${service?.id}`, {
             preserveScroll: true,
             onSuccess: () => handleClose(),
+            onError: (errs) => {
+                const firstMsg = Object.values(errs)[0];
+                if (firstMsg) {
+                    toast.error("Gagal menyimpan perubahan", {
+                        description: firstMsg,
+                    });
+                }
+            },
         });
     };
 
@@ -148,7 +172,7 @@ export default function EditServiceModal({ isOpen, onClose, service }: Props) {
                             <Input
                                 id="title"
                                 value={data.title}
-                                onChange={e => setData("title", e.target.value)}
+                                onChange={(e) => setData("title", e.target.value)}
                             />
                             {errors.title && <p className="text-xs text-destructive">{errors.title}</p>}
                         </div>
@@ -157,7 +181,7 @@ export default function EditServiceModal({ isOpen, onClose, service }: Props) {
                             <Input
                                 id="link"
                                 value={data.link}
-                                onChange={e => setData("link", e.target.value)}
+                                onChange={(e) => setData("link", e.target.value)}
                             />
                         </div>
                     </div>
@@ -167,7 +191,7 @@ export default function EditServiceModal({ isOpen, onClose, service }: Props) {
                         <Input
                             id="subtitle"
                             value={data.subtitle}
-                            onChange={e => setData("subtitle", e.target.value)}
+                            onChange={(e) => setData("subtitle", e.target.value)}
                         />
                         {errors.subtitle && <p className="text-xs text-destructive">{errors.subtitle}</p>}
                     </div>
@@ -177,7 +201,7 @@ export default function EditServiceModal({ isOpen, onClose, service }: Props) {
                         <Textarea
                             id="description"
                             value={data.description}
-                            onChange={e => setData("description", e.target.value)}
+                            onChange={(e) => setData("description", e.target.value)}
                             rows={3}
                         />
                     </div>
@@ -202,13 +226,18 @@ export default function EditServiceModal({ isOpen, onClose, service }: Props) {
                                     <Input
                                         placeholder={`Fitur ${i + 1}`}
                                         value={f}
-                                        onChange={e => handleFeatureChange(i, e.target.value)}
+                                        onChange={(e) => handleFeatureChange(i, e.target.value)}
                                     />
                                     <Button
                                         type="button"
                                         variant="ghost"
                                         size="icon"
-                                        onClick={() => setData("features", data.features.filter((_, idx) => idx !== i))}
+                                        onClick={() =>
+                                            setData(
+                                                "features",
+                                                data.features.filter((_, idx) => idx !== i)
+                                            )
+                                        }
                                         className="text-destructive shrink-0"
                                         disabled={data.features.length <= 1}
                                     >
@@ -226,7 +255,7 @@ export default function EditServiceModal({ isOpen, onClose, service }: Props) {
                                 id="order"
                                 type="number"
                                 value={data.order}
-                                onChange={e => setData("order", parseInt(e.target.value) || 0)}
+                                onChange={(e) => setData("order", parseInt(e.target.value) || 0)}
                             />
                         </div>
                         <div className="flex items-center gap-3 pb-2 justify-end">
@@ -234,7 +263,7 @@ export default function EditServiceModal({ isOpen, onClose, service }: Props) {
                             <Switch
                                 id="is_active"
                                 checked={data.is_active}
-                                onCheckedChange={v => setData("is_active", v)}
+                                onCheckedChange={(v) => setData("is_active", v)}
                             />
                         </div>
                     </div>

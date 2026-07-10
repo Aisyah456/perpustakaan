@@ -1,41 +1,76 @@
 import Footer from '@/components/home/Footer';
 import Navbar from '@/components/home/Navbar';
-
 import { Head } from '@inertiajs/react';
+import { BookOpen, Users, Target, ShieldCheck, Briefcase } from 'lucide-react';
 
-import { BookOpen, Users, Target, ShieldCheck, Mail, Briefcase } from 'lucide-react';
+// 1. Interface disesuaikan dengan Schema Database Laravel
+export interface LibraryStaff {
+    id: number;
+    name: string;
+    title: string;
+    division: string | null;
+    image: string | null;
+    is_head: boolean | number | string; // Diperluas agar toleran terhadap tipe data database
+    order: number;
+    created_at?: string;
+    updated_at?: string;
+}
 
-export default function Profile() {
-    // Data Organisasi
-    const organization = {
-        head: {
-            name: "Dr. H. Ahmad Fauzi, M.Hum",
-            title: "Kepala Perpustakaan",
-            image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Ahmad"
-        },
-        staff: [
-            {
-                division: "Layanan & Sirkulasi",
-                members: [
-                    { name: "Siti Rahma, S.IPI", title: "Pustakawan Ahli", image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Siti" },
-                    { name: "Budi Setiawan", title: "Staf Sirkulasi", image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Budi" }
-                ]
-            },
-            {
-                division: "Teknologi Informasi",
-                members: [
-                    { name: "Rian Pratama, S.Kom", title: "IT Librarian", image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Rian" }
-                ]
-            },
-            {
-                division: "Administrasi",
-                members: [
-                    { name: "Dewi Lestari, A.Md", title: "Staf Tata Usaha", image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Dewi" }
-                ]
-            }
-        ]
+interface ProfileProps {
+    libraryStaff?: LibraryStaff[];
+    library_staff?: LibraryStaff[]; // Proteksi jika Laravel mengirimkan format snake_case
+}
+
+export default function Profile({ libraryStaff, library_staff }: ProfileProps) {
+    // Menggabungkan data secara aman dari kedua kemungkinan nama prop Inertia
+    const staffList = libraryStaff || library_staff || [];
+
+    // Helper untuk mendeteksi status Kepala Perpustakaan secara akurat
+    const checkIsHead = (staff: LibraryStaff) => {
+        return (
+            staff.is_head === true ||
+            staff.is_head === 1 ||
+            String(staff.is_head) === '1' ||
+            String(staff.is_head).toLowerCase() === 'true'
+        );
     };
-  
+
+    // Helper untuk menangani URL Gambar dari Laravel Storage
+    const getStaffImage = (imagePath: string | null, name: string) => {
+        if (!imagePath) {
+            return `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(name)}`;
+        }
+        return imagePath.startsWith('http') ? imagePath : `/storage/${imagePath}`;
+    };
+
+    // 2. Mengambil data Kepala Perpustakaan
+    const headStaff = staffList.find(staff => checkIsHead(staff));
+
+    const head = {
+        name: headStaff?.name || "Belum Ada Data",
+        title: headStaff?.title || "Kepala Perpustakaan",
+        image: getStaffImage(headStaff?.image || null, headStaff?.name || 'Head')
+    };
+
+    // 3. Memfilter staf biasa yang memiliki divisi
+    const staffMembers = staffList.filter(staff => !checkIsHead(staff) && staff.division);
+
+    // 4. Mengelompokkan staf berdasarkan divisi secara aman
+    const uniqueDivisions = [...new Set(staffMembers.map(staff => staff.division).filter(Boolean))] as string[];
+
+    const staffGrouped = uniqueDivisions.map(division => {
+        return {
+            division: division,
+            members: staffMembers
+                .filter(staff => staff.division === division)
+                .sort((a, b) => Number(a.order) - Number(b.order))
+                .map(staff => ({
+                    name: staff.name,
+                    title: staff.title,
+                    image: getStaffImage(staff.image, staff.name)
+                }))
+        };
+    });
 
     return (
         <>
@@ -113,7 +148,9 @@ export default function Profile() {
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-4">
-                                            <div className="h-10 w-10 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600 font-bold">08</div>
+                                            <div className="h-10 w-10 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600 font-bold">
+                                                {staffList.length > 0 ? staffMembers.length.toString().padStart(2, '0') : '00'}
+                                            </div>
                                             <div>
                                                 <p className="text-xs text-slate-400 font-medium">Staf Ahli</p>
                                                 <p className="text-sm font-bold text-slate-700">Pustakawan Berlisensi</p>
@@ -150,44 +187,55 @@ export default function Profile() {
                             </div>
 
                             {/* KEPALA PERPUSTAKAAN (CENTER) */}
-                            <div className="flex justify-center mb-16">
+                            <div className="flex justify-center mb-24">
                                 <div className="bg-white p-6 rounded-[2.5rem] border border-slate-200 shadow-xl w-full max-w-xs text-center relative group hover:border-indigo-600 transition-all duration-300">
                                     <div className="absolute inset-x-0 -top-12 flex justify-center">
                                         <img
-                                            src={organization.head.image}
-                                            alt={organization.head.name}
+                                            src={head.image}
+                                            alt={head.name}
                                             className="h-24 w-24 rounded-3xl bg-indigo-50 border-4 border-white shadow-md object-cover"
                                         />
                                     </div>
                                     <div className="pt-12">
-                                        <h4 className="text-lg font-bold text-slate-900 mb-1">{organization.head.name}</h4>
-                                        <p className="text-indigo-600 text-sm font-semibold uppercase tracking-wider">{organization.head.title}</p>
+                                        <h4 className="text-lg font-bold text-slate-900 mb-1">{head.name}</h4>
+                                        <p className="text-indigo-600 text-sm font-semibold uppercase tracking-wider">{head.title}</p>
                                     </div>
                                 </div>
                             </div>
 
                             {/* DIV STAFF PERBAGIAN */}
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                                {organization.staff.map((dept, index) => (
-                                    <div key={index} className="space-y-6">
-                                        <div className="flex items-center gap-2 px-4 py-2 bg-slate-100 rounded-xl w-fit mx-auto md:mx-0">
-                                            <Briefcase size={16} className="text-slate-500" />
-                                            <span className="text-xs font-bold text-slate-600 uppercase tracking-widest">{dept.division}</span>
-                                        </div>
-                                        <div className="space-y-4">
-                                            {dept.members.map((member, mIndex) => (
-                                                <div key={mIndex} className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4 hover:shadow-md hover:-translate-y-1 transition-all duration-300">
-                                                    <img src={member.image} alt={member.name} className="h-12 w-12 rounded-xl bg-slate-50" />
-                                                    <div>
-                                                        <h5 className="text-sm font-bold text-slate-900">{member.name}</h5>
-                                                        <p className="text-[11px] text-slate-500">{member.title}</p>
+                            {staffGrouped.length > 0 ? (
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                    {staffGrouped.map((dept, index) => (
+                                        <div key={index} className="space-y-6">
+                                            {/* Header Divisi */}
+                                            <div className="flex items-center gap-2 px-4 py-2 bg-slate-100 rounded-xl w-fit mx-auto md:mx-0">
+                                                <Briefcase size={16} className="text-slate-500" />
+                                                <span className="text-xs font-bold text-slate-600 uppercase tracking-widest">{dept.division}</span>
+                                            </div>
+
+                                            {/* Anggota Divisi */}
+                                            <div className="space-y-4">
+                                                {dept.members.map((member, mIndex) => (
+                                                    <div key={mIndex} className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4 hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+                                                        <img
+                                                            src={member.image}
+                                                            alt={member.name}
+                                                            className="h-12 w-12 rounded-xl bg-slate-50 object-cover"
+                                                        />
+                                                        <div>
+                                                            <h5 className="text-sm font-bold text-slate-900">{member.name}</h5>
+                                                            <p className="text-[11px] text-slate-500">{member.title}</p>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            ))}
+                                                ))}
+                                            </div>
                                         </div>
-                                    </div>
-                                ))}
-                            </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <p className="text-center text-slate-500">Belum ada data staf divisi yang ditambahkan.</p>
+                            )}
                         </section>
 
                     </div>

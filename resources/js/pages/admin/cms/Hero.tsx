@@ -1,16 +1,14 @@
-import { Head } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react'; // Tambahkan usePage
 import { Plus } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react'; // Tambahkan useEffect
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/admin/hero/data-table';
 import { columns } from '@/components/admin/hero/columns';
 import AddHeroModal from '@/components/admin/hero/AddHeroModal';
 import EditHeroModal from '@/components/admin/hero/EditHeroModal';
+import { Toaster, toast } from 'sonner'; // Import Sonner
 
-/* =========================
-   TYPE
-========================= */
 export interface HeroRow {
     id: number;
     badge_text: string;
@@ -24,16 +22,26 @@ export interface HeroRow {
 }
 
 interface Props {
-    heroes?: HeroRow[]; // ← biar aman kalau undefined
+    heroes?: HeroRow[];
 }
 
-/* =========================
-   COMPONENT
-========================= */
 export default function HeroCmsPage({ heroes = [] }: Props) {
+    // 1. Ambil flash data dari global props Inertia
+    const { flash } = usePage().props as any;
+
     const [addModalOpen, setAddModalOpen] = useState(false);
     const [editModalOpen, setEditModalOpen] = useState(false);
     const [selectedHero, setSelectedHero] = useState<HeroRow | null>(null);
+
+    // 2. Gunakan useEffect untuk mendeteksi perubahan pada flash message
+    useEffect(() => {
+        if (flash?.success) {
+            toast.success(flash.success);
+        }
+        if (flash?.error) {
+            toast.error(flash.error);
+        }
+    }, [flash]);
 
     const onEdit = (item: HeroRow) => {
         setSelectedHero(item);
@@ -44,8 +52,10 @@ export default function HeroCmsPage({ heroes = [] }: Props) {
         <AppLayout breadcrumbs={[{ title: 'Banner Hero', href: '#' }]}>
             <Head title="Manajemen Banner" />
 
-            <div className="flex flex-col gap-6 p-4">
+            {/* 3. Letakkan Toaster di sini agar notifikasi bisa muncul */}
+            <Toaster position="top-right" richColors closeButton />
 
+            <div className="flex flex-col gap-6 p-4">
                 {/* HEADER */}
                 <div className="flex justify-between items-center">
                     <div>

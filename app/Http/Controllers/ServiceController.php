@@ -81,34 +81,42 @@ class ServiceController extends Controller
         }
     }
 
+
     private function validateRequest(Request $request, $id = null): array
-    {
-        $rules = [
-            'title' => ['required', 'string', 'max:255'],
-            'subtitle' => ['required', 'string'],
-            'description' => ['nullable', 'string'],
-            'features' => ['nullable', 'array'],
-            'features.*' => ['nullable', 'string'],
-            'link' => ['nullable', 'string'],
-            'order' => ['required', 'integer'],
-            'is_active' => ['required', 'boolean'],
-        ];
-
-        // Jika Store: Ikon wajib file. Jika Update: Ikon boleh string (URL lama) atau file baru.
-        if (!$id) {
-            $rules['icon'] = ['required', 'image', 'mimes:jpg,jpeg,png,svg', 'max:2048'];
-        } else {
-            $rules['icon'] = ['nullable'];
-        }
-
-        $validated = $request->validate($rules);
-
-        // Cleanup features
-        $validated['features'] = collect($validated['features'] ?? [])
-            ->filter(fn($item) => !empty(trim($item)))
-            ->values()
-            ->toArray();
-
-        return $validated;
+{
+    // Konversi is_active ke boolean jika datang sebagai string dari form-data
+    if ($request->has('is_active')) {
+        $request->merge([
+            'is_active' => filter_var($request->is_active, FILTER_VALIDATE_BOOLEAN),
+        ]);
     }
+
+    $rules = [
+        'title' => ['required', 'string', 'max:255'],
+        'subtitle' => ['required', 'string'],
+        'description' => ['nullable', 'string'],
+        'features' => ['nullable', 'array'],
+        'features.*' => ['nullable', 'string'],
+        'link' => ['nullable', 'string'],
+        'order' => ['required', 'integer'],
+        'is_active' => ['required', 'boolean'],
+    ];
+
+    if (!$id) {
+        $rules['icon'] = ['required', 'image', 'mimes:jpg,jpeg,png,svg', 'max:2048'];
+    } else {
+        // Saat update, icon bisa berupa string (URL lama) atau file (upload baru)
+        $rules['icon'] = ['nullable']; 
+    }
+
+    $validated = $request->validate($rules);
+
+    // Bersihkan fitur yang kosong
+    $validated['features'] = collect($request->features ?? [])
+        ->filter(fn($item) => !empty(trim($item)))
+        ->values()
+        ->toArray();
+
+    return $validated;
+}
 }

@@ -24,7 +24,8 @@ class HandleAppearance
         Inertia::share([
             'appearance' => [
                 'title' => $profile->about_title ?? 'Default Title',
-                'logo' => $profile->logo ?? '/default-logo.png',
+                'logo' => ($profile) ? ($profile->logo ?? '/default-logo.png') : '/default-logo.png',
+                // 'logo' => $profile->logo ?? '/default-logo.png',
                 // Tambahkan data lainnya
             ],
         ]);

@@ -71,8 +71,15 @@ export default function EditHeroModal({ isOpen, onClose, hero }: EditHeroModalPr
         post(route('admin.hero.update', hero.id), {
             forceFormData: true,
             preserveScroll: true,
+            onBefore: () => {
+                // Konversi boolean ke number agar aman saat diterima Laravel via FormData
+                setData('is_active', data.is_active ? 1 : 0 as any);
+            },
             onSuccess: () => handleClose(),
-            onError: (err) => console.error("Simpan gagal:", err)
+            onError: (err) => {
+                console.error("Simpan gagal:", err);
+                // Jika error network terjadi, cek ukuran file di tab Network
+            }
         });
     };
 

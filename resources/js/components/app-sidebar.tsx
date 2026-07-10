@@ -111,20 +111,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           url: "#",
           icon: Book,
           items: [
-            { title: "Semua Koleksi", url: '#' },
-            { title: "Buku Fisik", url: '#' },
-            { title: "E-Book (Digital)", url: '#' },
-            { title: "Kategori & Rak", url: '#' },
-          ],
-        },
-        {
-          title: "Metadata",
-          url: "#",
-          icon: FolderTree,
-          items: [
-            { title: "Penulis", url: '#' },
-            { title: "Penerbit", url: '#' },
-            { title: "Tahun Terbit", url: '#' },
+            { title: "Semua Koleksi", url: '/admin/books' },
+            { title: "E-Book (Digital)", url: '/admin/ebooks' },
+            { title: "Kategori & Rak", url: '/admin/shelves' },
           ],
         },
         {
@@ -144,9 +133,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           url: "#",
           icon: ArrowRightLeft,
           items: [
-            { title: "Peminjaman Baru", url: '#' },
-            { title: "Pengembalian", url: '#' },
-            { title: "Riwayat Transaksi", url: '#' },
+            { title: "Riwayat Transaksi", url: '/admin/borrowings' },
             { title: "Denda & Sanksi", url: '#' },
           ],
         },

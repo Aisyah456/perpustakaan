@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\LibraryStaff;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class LibraryStaffController extends Controller
 {
@@ -12,7 +13,12 @@ class LibraryStaffController extends Controller
      */
     public function index()
     {
-        //
+        // Ambil seluruh staf
+        $libraryStaff = LibraryStaff::all();
+
+        return Inertia::render('profil/Index', [
+            'libraryStaff' => $libraryStaff
+        ]);
     }
 
     /**
